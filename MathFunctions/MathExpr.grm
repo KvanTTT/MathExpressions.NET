@@ -1,0 +1,66 @@
+"Name"    = 'Mathematics expressions'
+"Author"  = 'Ivan Kochurkin'
+"Version" = '1.0'
+"About"   = ''
+
+"Case Sensitive" = False 
+"Start Symbol"  = <Statements>
+
+Id = {Letter}{AlphaNumeric}*
+
+Number1 = {Digit}+('.'{Digit}*('('{Digit}*')')?)?
+Number2 = '.'{Digit}*('('{Digit}*')')?
+
+AddLiteral = '+' | '-'
+MultLiteral = '*' | '/'
+                                    
+<Statements> ::= <Statements> <Devider> <Statement>
+              | <Statements> <Devider>
+              | <Statement>              
+
+<Devider> ::= ';' | '.'
+           
+<Statement> ::= <Expression> '=' <Expression>                           
+             | <Expression>
+                                                         
+<Expression> ::= <FuncDef>
+              | <Addition>
+ 
+<FuncDef> ::= Id '(' <ExpressionList> ')'
+           | Id '' '(' <ExpressionList> ')'
+           | Id '(' <ExpressionList> ')' ''
+              
+<ExpressionList> ::= <ExpressionList> ',' <Expression>
+            |  <Expression>
+        
+<Addition> ::= <Addition> AddLiteral <Multiplication>
+            | <Addition> AddLiteral <FuncDef>
+            | <FuncDef> AddLiteral <Multiplication>
+            | <FuncDef> AddLiteral <FuncDef> 
+            | <Multiplication>           
+
+<Multiplication> ::= <Multiplication> MultLiteral <Exponentiation>
+                | <Multiplication> MultLiteral <FuncDef>  
+                | <FuncDef> MultLiteral <Exponentiation>
+                | <FuncDef> MultLiteral <FuncDef>
+                | <Exponentiation>
+                
+<Exponentiation> ::= <Exponentiation> '^' <Negation>
+                | <Exponentiation> '^' <FuncDef>
+                | <FuncDef> '^' <Negation>
+                | <FuncDef> '^' <FuncDef> 
+                | <Negation>
+
+<Negation> ::= AddLiteral <Value>
+                | AddLiteral <FuncDef>
+                | <Value>
+
+<Value> ::= Id
+          | Number1
+          | Number2
+          | '(' <Expression> ')'
+          | '|' <Expression> '|'
+          | '(' <Expression> ')' ''
+          | '|' <Expression> '|' ''
+          | Id ''
+    
