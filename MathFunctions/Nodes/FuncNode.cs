@@ -47,10 +47,11 @@ namespace MathFunctions
 		public FuncNode(KnownMathFunctionType type, IList<MathFuncNode> args)
 		{
 			FunctionType = type;
-			if (KnownMathFunction.UnaryFuncsNames.ContainsKey(type))
-				Name = KnownMathFunction.UnaryFuncsNames[type];
-			else if (KnownMathFunction.BinaryFuncsNames.ContainsKey(type))
-				Name = KnownMathFunction.BinaryFuncsNames[type];
+			string name;
+			if (KnownMathFunction.UnaryFuncsNames.TryGetValue(type, out name))
+				Name = name;
+			else if (KnownMathFunction.UnaryFuncsNames.TryGetValue(type, out name))
+				Name = name;
 			else
 				Name = FunctionType.ToString();
 			foreach (var arg in args)
@@ -67,15 +68,17 @@ namespace MathFunctions
 			var lowercasename = name.ToLower();
 			if (args.Count >= 2)
 			{
-				if (KnownMathFunction.BinaryNamesFuncs.ContainsKey(lowercasename))
-					FunctionType = KnownMathFunction.BinaryNamesFuncs[lowercasename];
+				KnownMathFunctionType functionType;
+				if (KnownMathFunction.BinaryNamesFuncs.TryGetValue(lowercasename, out functionType))
+					FunctionType = functionType;
 			}
 			else if (args.Count == 1)
 			{
-				if (KnownMathFunction.UnaryNamesFuncs.ContainsKey(lowercasename))
-					FunctionType = KnownMathFunction.UnaryNamesFuncs[lowercasename];
-				else if (KnownMathFunction.BinaryNamesFuncs.ContainsKey(lowercasename))
-					FunctionType = KnownMathFunction.BinaryNamesFuncs[lowercasename];
+				KnownMathFunctionType functionType;
+				if (KnownMathFunction.UnaryNamesFuncs.TryGetValue(lowercasename, out functionType))
+					FunctionType = functionType;
+				else if (KnownMathFunction.BinaryNamesFuncs.TryGetValue(lowercasename, out functionType))
+					FunctionType = functionType;
 			}
 			Name = lowercasename;
 			foreach (var arg in args)

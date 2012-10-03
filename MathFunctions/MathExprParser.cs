@@ -95,7 +95,7 @@ public class MathExprParser
 
 	private List<int> ArgsCount;
 	private List<KnownMathFunctionType?> ArgsFuncTypes;
-	private Stack<MathFuncNode> Args;
+	private Stack<MathFuncNode> Nodes;
 	private Stack<MathFunc> Funcs;
 
 	protected Dictionary<string, ConstNode> Parameters;
@@ -153,7 +153,7 @@ public class MathExprParser
 		Errors = new List<ParserError>();
 
 		ArgsCount = new List<int>();
-		Args = new Stack<MathFuncNode>();
+		Nodes = new Stack<MathFuncNode>();
 		ArgsFuncTypes = new List<KnownMathFunctionType?>();
 		Parameters = new Dictionary<string, ConstNode>();
 		Funcs = new Stack<MathFunc>();
@@ -257,15 +257,15 @@ public class MathExprParser
 
 			case ProductionIndex.Statement_Eq:
 				// <Statement> ::= <Expression> '=' <Expression>
-				arg2 = Args.Pop();
-				arg1 = Args.Pop();
+				arg2 = Nodes.Pop();
+				arg1 = Nodes.Pop();
 				Funcs.Push(new MathFunc(arg1, arg2, null, Parameters.Select(p => p.Value)));
 				Parameters.Clear();
 				break;
 
 			case ProductionIndex.Statement:
 				// <Statement> ::= <Expression>
-				Funcs.Push(new MathFunc(Args.Pop()));
+				Funcs.Push(new MathFunc(Nodes.Pop()));
 				break;
 
 			case ProductionIndex.Expression:
@@ -286,7 +286,7 @@ public class MathExprParser
 				// <FuncDef> ::= Id '(' <ExpressionList> ')' ''
 
 				PushFunction(r[0].Data.ToString());
-				Args.Push(new FuncNode(KnownMathFunctionType.Diff, new MathFuncNode[] { Args.Pop(), null }));
+				Nodes.Push(new FuncNode(KnownMathFunctionType.Diff, new MathFuncNode[] { Nodes.Pop(), null }));
 
 				break;
 
@@ -317,7 +317,7 @@ public class MathExprParser
 				{
 					ArgsCount[ArgsCount.Count - 1]++;
 					if (KnownMathFunction.BinaryNamesFuncs[r[1].Data.ToString()] == KnownMathFunctionType.Sub)
-						Args.Push(new FuncNode(KnownMathFunctionType.Neg, new MathFuncNode[] { Args.Pop() }));
+						Nodes.Push(new FuncNode(KnownMathFunctionType.Neg, new MathFuncNode[] { Nodes.Pop() }));
 				}
 				else
 					PushBinaryFunction(r[1].Data.ToString());
@@ -331,7 +331,7 @@ public class MathExprParser
 				{
 					ArgsCount[ArgsCount.Count - 1]++;
 					if (KnownMathFunction.BinaryNamesFuncs[r[1].Data.ToString()] == KnownMathFunctionType.Sub)
-						Args.Push(new FuncNode(KnownMathFunctionType.Neg, new MathFuncNode[] { Args.Pop() }));
+						Nodes.Push(new FuncNode(KnownMathFunctionType.Neg, new MathFuncNode[] { Nodes.Pop() }));
 				}
 				else
 					PushBinaryFunction(r[1].Data.ToString());
@@ -348,7 +348,7 @@ public class MathExprParser
 					PushFunc(KnownMathFunctionType.Add, 2);
 					if (KnownMathFunction.BinaryNamesFuncs[r[1].Data.ToString()] == KnownMathFunctionType.Sub)
 
-						Args.Push(new FuncNode(KnownMathFunctionType.Neg, new MathFuncNode[] { Args.Pop() }));
+						Nodes.Push(new FuncNode(KnownMathFunctionType.Neg, new MathFuncNode[] { Nodes.Pop() }));
 				}
 				else
 					PushBinaryFunction(r[1].Data.ToString());
@@ -362,7 +362,7 @@ public class MathExprParser
 				{
 					PushFunc(KnownMathFunctionType.Add, 2);
 					if (KnownMathFunction.BinaryNamesFuncs[r[1].Data.ToString()] == KnownMathFunctionType.Sub)
-						Args.Push(new FuncNode(KnownMathFunctionType.Neg, new MathFuncNode[] { Args.Pop() }));
+						Nodes.Push(new FuncNode(KnownMathFunctionType.Neg, new MathFuncNode[] { Nodes.Pop() }));
 				}
 				else
 					PushBinaryFunction(r[1].Data.ToString());
@@ -384,31 +384,13 @@ public class MathExprParser
 
 			// <Multiplication> ::= <Multiplication> MultLiteral <Exponentiation>
 			case ProductionIndex.Multiplication_Multliteral2:
-
 				// <Multiplication> ::= <Multiplication> MultLiteral <FuncDef>
 
 				if (MultiplicationMultiChilds)
 				{
 					if (KnownMathFunction.BinaryNamesFuncs[r[1].Data.ToString()] == KnownMathFunctionType.Div)
-						Args.Push(new FuncNode(KnownMathFunctionType.Exp, new MathFuncNode[] { Args.Pop(), new ValueNode(-1) }));
+						Nodes.Push(new FuncNode(KnownMathFunctionType.Exp, new MathFuncNode[] { Nodes.Pop(), new ValueNode(-1) }));
 					ArgsCount[ArgsCount.Count - 1]++;
-
-					/*arg2 = Args.Pop();
-					arg1 = Args.Pop();
-					bool isMult = KnownMathFunction.BinaryNamesFuncs[r[1].Data.ToString()] == KnownMathFunctionType.Mult;
-
-					if (arg1.Type == MathNodeType.Value && arg2.Type == MathNodeType.Value)
-					{
-						var arg = isMult ? arg1.Value * arg2.Value : arg1.Value / arg2.Value;
-						Args.Push(new ValueNode(new Rational<long>(arg.Numerator, arg.Denominator)));
-					}
-					else
-					{
-						Args.Push(arg1);
-						if (!isMult)
-							Args.Push(new FuncNode(KnownMathFunctionType.Exp, new MathFunctionNode[] { arg2, new ValueNode(-1) }));
-						ArgsCount[ArgsCount.Count - 1]++;
-					}*/
 				}
 				else
 					PushBinaryFunction(r[1].Data.ToString());
@@ -423,10 +405,8 @@ public class MathExprParser
 				break;
 
 			case ProductionIndex.Multiplication_Multliteral3:
-
 			// <Multiplication> ::= <FuncDef> MultLiteral <Exponentiation>
 			case ProductionIndex.Multiplication_Multliteral4:
-
 				// <Multiplication> ::= <FuncDef> MultLiteral <FuncDef>
 
 				if (MultiplicationMultiChilds)
@@ -434,55 +414,39 @@ public class MathExprParser
 					PushFunc(KnownMathFunctionType.Mult, 2);
 
 					if (KnownMathFunction.BinaryNamesFuncs[r[1].Data.ToString()] == KnownMathFunctionType.Div)
-						Args.Push(new FuncNode(KnownMathFunctionType.Exp, new MathFuncNode[] { Args.Pop(), new ValueNode(-1) }));
-
-					/*if (KnownMathFunction.BinaryNamesFuncs[r[1].Data.ToString()] == KnownMathFunctionType.Div)
-					{
-						arg2 = Args.Pop();
-						if (arg2.IsValue)
-							Args.Push(new ValueNode(new Rational<long>(arg2.Value.Denominator, arg2.Value.Numerator)));
-						else
-							Args.Push(new FuncNode(KnownMathFunctionType.Exp, new MathFunctionNode[] { arg2, new ValueNode(-1) }));
-					}*/
+						Nodes.Push(new FuncNode(KnownMathFunctionType.Exp, new MathFuncNode[] { Nodes.Pop(), new ValueNode(-1) }));
 				}
 				else
 					PushBinaryFunction(r[1].Data.ToString());
 				break;
 
 			case ProductionIndex.Exponentiation_Caret:
-
-			// <Exponentiation> ::= <Exponentiation> '^' <Negation>
+				// <Exponentiation> ::= <Exponentiation> '^' <Negation>
 			case ProductionIndex.Exponentiation_Caret2:
-
-			// <Exponentiation> ::= <Exponentiation> '^' <FuncDef>
+				// <Exponentiation> ::= <Exponentiation> '^' <FuncDef>
 			case ProductionIndex.Exponentiation_Caret3:
-
-			// <Exponentiation> ::= <FuncDef> '^' <Negation>
+				// <Exponentiation> ::= <FuncDef> '^' <Negation>
 			case ProductionIndex.Exponentiation_Caret4:
-
 				// <Exponentiation> ::= <FuncDef> '^' <FuncDef>
 
 				PushBinaryFunction(r[1].Data.ToString());
 				break;
 
 			case ProductionIndex.Exponentiation:
-
 				// <Exponentiation> ::= <Negation>
 				break;
 
 			case ProductionIndex.Negation_Addliteral:
-
-			// <Negation> ::= AddLiteral <Value>
+				// <Negation> ::= AddLiteral <Value>
 			case ProductionIndex.Negation_Addliteral2:
-
 				// <Negation> ::= AddLiteral <FuncDef>
-				if (Args.Peek().Type == MathNodeType.Value)
+				if (Nodes.Peek().Type == MathNodeType.Value)
 				{
 					if (r[0].Data.ToString() == "-")
-						Args.Push(new ValueNode(-((ValueNode)Args.Pop()).Value));
+						Nodes.Push(new ValueNode(-((ValueNode)Nodes.Pop()).Value));
 				}
 				else
-					Args.Push(new FuncNode(r[0].Data.ToString(), new MathFuncNode[] { Args.Pop() }));
+					Nodes.Push(new FuncNode(r[0].Data.ToString(), new MathFuncNode[] { Nodes.Pop() }));
 				break;
 
 			case ProductionIndex.Negation:
@@ -494,12 +458,13 @@ public class MathExprParser
 
 				// <Value> ::= Id
 				var id = r[0].Data.ToString();
-				if (Parameters.ContainsKey(id))
-					Args.Push(Parameters[id]);
+				ConstNode idValue;
+				if (Parameters.TryGetValue(id, out idValue))
+					Nodes.Push(idValue);
 				else
 				{
 					var newConst = new ConstNode(id);
-					Args.Push(newConst);
+					Nodes.Push(newConst);
 					Parameters.Add(id, newConst);
 				}
 				break;
@@ -528,7 +493,7 @@ public class MathExprParser
 						}
 					}
 					var result = Rational<long>.FromDecimal(intPart, fracPart, periodPart);
-					Args.Push(new ValueNode(result));
+					Nodes.Push(new ValueNode(result));
 				}
 				catch
 				{
@@ -544,20 +509,20 @@ public class MathExprParser
 			case ProductionIndex.Value_Pipe_Pipe:
 
 				// <Value> ::= '|' <Expression> '|'
-				Args.Push(new FuncNode(KnownMathFunctionType.Abs, new MathFuncNode[] { Args.Pop() }));
+				Nodes.Push(new FuncNode(KnownMathFunctionType.Abs, new MathFuncNode[] { Nodes.Pop() }));
 				break;
 
 			case ProductionIndex.Value_Lparan_Rparan_Apost:
 
 				// <Value> ::= '(' <Expression> ')' ''
-				Args.Push(new FuncNode(KnownMathFunctionType.Diff, new MathFuncNode[] { Args.Pop(), null }));
+				Nodes.Push(new FuncNode(KnownMathFunctionType.Diff, new MathFuncNode[] { Nodes.Pop(), null }));
 				break;
 
 			case ProductionIndex.Value_Pipe_Pipe_Apost:
 
 				// <Value> ::= '|' <Expression> '|' ''
-				Args.Push(new FuncNode(KnownMathFunctionType.Diff, new MathFuncNode[] {
-						new FuncNode(KnownMathFunctionType.Abs, new MathFuncNode[] { Args.Pop() }), null }));
+				Nodes.Push(new FuncNode(KnownMathFunctionType.Diff, new MathFuncNode[] {
+						new FuncNode(KnownMathFunctionType.Abs, new MathFuncNode[] { Nodes.Pop() }), null }));
 				break;
 
 			/*case ProductionIndex.Value_Id_Apost:
@@ -589,18 +554,19 @@ public class MathExprParser
 
 	protected void PushBinaryFunction(string mathFunction)
 	{
-		var arg2 = Args.Pop();
-		var arg1 = Args.Pop();
-		Args.Push(new FuncNode(mathFunction, new MathFuncNode[] { arg1, arg2 }));
+		var arg2 = Nodes.Pop();
+		var arg1 = Nodes.Pop();
+		Nodes.Push(new FuncNode(mathFunction, new MathFuncNode[] { arg1, arg2 }));
 	}
 
 	protected void PushFunction(string mathFunction)
 	{
-		var args = new MathFuncNode[ArgsCount[ArgsCount.Count - 1]];
-		for (int i = 0; i < ArgsCount[ArgsCount.Count - 1]; i++)
-			args[ArgsCount[ArgsCount.Count - 1] - 1 - i] = Args.Pop();
+		var lastArgsCount = ArgsCount[ArgsCount.Count - 1];
+		var args = new MathFuncNode[lastArgsCount];
+		for (int i = 0; i < lastArgsCount; i++)
+			args[lastArgsCount - 1 - i] = Nodes.Pop();
 
-		Args.Push(new FuncNode(mathFunction, args));
+		Nodes.Push(new FuncNode(mathFunction, args));
 		ArgsCount.RemoveAt(ArgsCount.Count - 1);
 		ArgsFuncTypes.RemoveAt(ArgsFuncTypes.Count - 1);
 	}

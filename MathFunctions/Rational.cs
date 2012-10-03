@@ -218,6 +218,16 @@ namespace MathFunctions
 				(T)Convert.ChangeType(denominator, typeof(T)));
 		}
 
+		/// <summary>
+		/// Convert decimal to fraction
+		/// </summary>
+		/// <param name="value">decimal value to convert</param>
+		/// <param name="result">result fraction if conversation is succsess</param>
+		/// <param name="decimalPlaces">precision of considereation frac part of value</param>
+		/// <param name="trimZeroes">trim zeroes on the right part of the value or not</param>
+		/// <param name="minPeriodRepeat">minimum period repeating</param>
+		/// <param name="digitsForReal">precision for determination value to real if period has not been founded</param>
+		/// <returns></returns>
 		public static bool FromDecimal(decimal value, out Rational<T> result, 
 			int decimalPlaces = 28, bool trimZeroes = false, decimal minPeriodRepeat = 2, int digitsForReal = 9)
 		{

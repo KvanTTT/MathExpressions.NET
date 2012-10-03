@@ -26,10 +26,11 @@ namespace MathFunctions
 			foreach (var statement in Parser.Statements)
 			{
 				var funcNode = statement.LeftNode.Childs[0].Name;
-				if (KnownMathFunction.UnaryNamesFuncs.ContainsKey(funcNode))
-					Derivatives.Add(KnownMathFunction.UnaryNamesFuncs[funcNode], statement);
-				else if (KnownMathFunction.BinaryNamesFuncs.ContainsKey(funcNode))
-					Derivatives.Add(KnownMathFunction.BinaryNamesFuncs[funcNode], statement);
+				KnownMathFunctionType value;
+				if (KnownMathFunction.UnaryNamesFuncs.TryGetValue(funcNode, out value))
+					Derivatives.Add(value, statement);
+				else if (KnownMathFunction.BinaryNamesFuncs.TryGetValue(funcNode, out value))
+					Derivatives.Add(value, statement);
 			}
 		}
 

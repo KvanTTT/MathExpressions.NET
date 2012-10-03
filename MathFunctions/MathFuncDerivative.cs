@@ -110,6 +110,7 @@ namespace MathFunctions
 					GetDerivative(funcNode.Childs[0]));
 			}
 		}
+
 		private MathFuncNode MakeSubstitution(MathFuncNode left, MathFuncNode right, FuncNode currentFunc)
 		{
 			LeftNode = left;

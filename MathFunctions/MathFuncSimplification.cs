@@ -14,24 +14,6 @@ namespace MathFunctions
 
 		#region Helpers
 
-		private bool IncArray(int[] ar, int[] lengthAr)
-		{
-			int c = 1;
-			for (int i = 0; i < ar.Length; i++)
-			{
-				ar[i] += c;
-				if (ar[i] == lengthAr[i])
-				{
-					ar[i] = 0;
-					c = 1;
-				}
-				else
-					c = 0;
-			}
-
-			return c == 0;
-		}
-
 		private MathFuncNode Simplify(MathFuncNode node)
 		{
 			var funcNode = node as FuncNode;
@@ -245,6 +227,24 @@ namespace MathFunctions
 			}
 			else
 				return null;
+		}
+
+		private bool IncArray(int[] ar, int[] lengthAr)
+		{
+			int c = 1;
+			for (int i = 0; i < ar.Length; i++)
+			{
+				ar[i] += c;
+				if (ar[i] == lengthAr[i])
+				{
+					ar[i] = 0;
+					c = 1;
+				}
+				else
+					c = 0;
+			}
+
+			return c == 0;
 		}
 
 		private MathFuncNode MultValues(FuncNode funcNode)

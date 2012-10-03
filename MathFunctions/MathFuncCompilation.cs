@@ -44,9 +44,9 @@ namespace MathFunctions
 
 	public partial class MathFunc
 	{
-		const string NamespaceName = "MathFunc";
+		const string NamespaceName = "MathFuncLib";
 		const string ClassName = "MathFunc";
-		const string FuncName = "Func";
+		const string FuncName = "Calculate";
 
 		private struct VariableLifetimeCycle
 		{
@@ -78,13 +78,20 @@ namespace MathFunctions
 
 			ImportMath(assembly);
 
-			var globalClass = new TypeDefinition(ClassName, ClassName, 
-				TypeAttributes.Public | TypeAttributes.BeforeFieldInit | TypeAttributes.Sealed | TypeAttributes.AnsiClass);
+			var globalClass = new TypeDefinition(NamespaceName, ClassName,
+				TypeAttributes.Public | TypeAttributes.BeforeFieldInit | TypeAttributes.Sealed | TypeAttributes.AnsiClass | TypeAttributes.Abstract,
+				assembly.MainModule.TypeSystem.Object);
 
 			var globalBody = new MethodDefinition(FuncName,
-				MethodAttributes.Public | MethodAttributes.Static | MethodAttributes.HideBySig, assembly.MainModule.TypeSystem.Void);
-			
+				MethodAttributes.Public | MethodAttributes.Static | MethodAttributes.HideBySig, assembly.MainModule.TypeSystem.Double);
+
 			var globalIlProcessor = globalBody.Body.GetILProcessor();
+			globalIlProcessor.Body.Method.Parameters.Add(new ParameterDefinition(Variable.Name, ParameterAttributes.None, 
+				assembly.MainModule.TypeSystem.Double));
+			if (Parameters != null)
+				foreach (var param in Parameters)
+					globalIlProcessor.Body.Method.Parameters.Add(new ParameterDefinition(param.Name, ParameterAttributes.None,
+					assembly.MainModule.TypeSystem.Double));
 
 			DefineLocals();
 			IlInstructions = new List<OpCodeArg>();
@@ -93,9 +100,8 @@ namespace MathFunctions
 			OptimizeInstructions();
 			OptimizeLocalVariables(ref LocalVarNumber);
 
-			var doubleType = assembly.MainModule.Import(typeof(double));
 			for (int i = 0; i < LocalVarNumber; i++)
-				globalBody.Body.Variables.Add(new VariableDefinition(doubleType));
+				globalBody.Body.Variables.Add(new VariableDefinition(assembly.MainModule.TypeSystem.Double));
 
 			foreach (var instr in IlInstructions)
 				EmitInstruction(globalIlProcessor, instr);
@@ -130,9 +136,10 @@ namespace MathFunctions
 			if (funcNode == null)
 				return;
 
-			if (FuncNodes.ContainsKey(funcNode))
+			CountNumber value;
+			if (FuncNodes.TryGetValue(funcNode, out value))
 			{
-				funcNode.Number = FuncNodes[funcNode].Number;
+				funcNode.Number = value.Number;
 				FuncNodes[funcNode].Count += 1;
 			}
 			else
@@ -169,7 +176,7 @@ namespace MathFunctions
 
 				case MathNodeType.Constant:
 				case MathNodeType.Variable:
-					IlInstructions.Add(new OpCodeArg(OpCodes.Ldarg, node.Number + 1));
+					IlInstructions.Add(new OpCodeArg(OpCodes.Ldarg, node.Number));
 					break;
 
 				case MathNodeType.Function:
@@ -257,10 +264,10 @@ namespace MathFunctions
 									IlInstructions.Add(new OpCodeArg(OpCodes.Mul));
 								}
 
-								//x = x * x;
 								if (power <= 1)
 									break;
 
+								//x = x * x;
 								IlInstructions.Add(new OpCodeArg(OpCodes.Ldloc, funcNode.Number + 1));
 								IlInstructions.Add(new OpCodeArg(OpCodes.Ldloc, funcNode.Number + 1));
 								IlInstructions.Add(new OpCodeArg(OpCodes.Mul));
@@ -281,11 +288,12 @@ namespace MathFunctions
 					break;
 			}
 
-			if (KnownMathFunction.TypesMethods.ContainsKey((KnownMathFunctionType)funcNode.FunctionType))
+			MethodReference value;
+			if (TypesReferences.TryGetValue((KnownMathFunctionType)funcNode.FunctionType, out value))
 			{
 				foreach (var child in funcNode.Childs)
 					EmitNode(child);
-				IlInstructions.Add(new OpCodeArg(OpCodes.Call, TypesReferences[(KnownMathFunctionType)funcNode.FunctionType]));
+				IlInstructions.Add(new OpCodeArg(OpCodes.Call, value));
 				if (FuncNodes[funcNode].Count > 1)
 				{
 					IlInstructions.Add(new OpCodeArg(OpCodes.Stloc, funcNode.Number));
@@ -396,8 +404,6 @@ namespace MathFunctions
 
 		private void OptimizeLocalVariables(ref int localVarNumber)
 		{
-			bool[,] localVaribales = new bool[IlInstructions.Count, localVarNumber];
-
 			List<List<VariableLifetimeCycle>> localVariablesLifeCycles = new List<List<VariableLifetimeCycle>>(localVarNumber);
 			for (int i = 0; i < localVarNumber; i++)
 				localVariablesLifeCycles.Add(new List<VariableLifetimeCycle>());
@@ -411,40 +417,50 @@ namespace MathFunctions
 					cycles[cycles.Count - 1] = new VariableLifetimeCycle(cycles[cycles.Count - 1].BeginInd, i);
 				}
 
-			for (int i = 0; i < localVariablesLifeCycles.Count; i++)
-				for (int j = 0; j < localVariablesLifeCycles[i].Count; j++)
-					for (int k = localVariablesLifeCycles[i][j].BeginInd; k <= localVariablesLifeCycles[i][j].EndInd; k++)
-						localVaribales[k, i] = true;
-
-			int localMaxNumber = 0;
-			for (int i = 0; i < IlInstructions.Count; i++)
-			{
-				if (IlInstructions[i].OpCode == OpCodes.Stloc)
-				{
-					var minNumber = FindMinNumber(localVaribales, i);
-					var oldNumber = (int)IlInstructions[i].Arg;
-					if (minNumber < oldNumber)
-					{
-						if (minNumber > localMaxNumber)
-							localMaxNumber = minNumber;
-
-						IlInstructions[i] = new OpCodeArg(OpCodes.Stloc, minNumber);
-
-						int j = i;
-						while (j < IlInstructions.Count && localVaribales[j, oldNumber])
+			for (int i = 1; i < localVariablesLifeCycles.Count; i++)
+				for (int k = 0; k < i; k++)
+					for (int j = 0; j < localVariablesLifeCycles[i].Count; j++)
+						if (!IsIntersect(localVariablesLifeCycles[i][j], localVariablesLifeCycles[k]))
 						{
-							localVaribales[j, minNumber] = true;
-							localVaribales[j, oldNumber] = false;
-							if (IlInstructions[j].OpCode == OpCodes.Ldloc &&
-								(int)IlInstructions[j].Arg == oldNumber)
-								IlInstructions[j] = new OpCodeArg(OpCodes.Ldloc, minNumber);
-							j++;
-						}
-					}
-				}
-			}
+							IlInstructions[localVariablesLifeCycles[i][j].BeginInd] = new OpCodeArg(OpCodes.Stloc, k);
+							for (int l = localVariablesLifeCycles[i][j].BeginInd + 1; l <= localVariablesLifeCycles[i][j].EndInd; l++)
+								if (IlInstructions[l].OpCode == OpCodes.Ldloc && (int)IlInstructions[l].Arg == i)
+									IlInstructions[l] = new OpCodeArg(OpCodes.Ldloc, k);
 
-			localVarNumber = localMaxNumber + 1;
+							localVariablesLifeCycles[k].Add(localVariablesLifeCycles[i][j]);
+							localVariablesLifeCycles[i].RemoveAt(j);
+						}
+
+			for (int i = localVariablesLifeCycles.Count - 1; i >= 0; i--)
+				if (localVariablesLifeCycles[i].Count == 0)
+					localVariablesLifeCycles.RemoveAt(i);
+				else
+					break;
+
+			localVarNumber = localVariablesLifeCycles.Count;
+		}
+
+		private bool IsIntersect(VariableLifetimeCycle cycle1, List<VariableLifetimeCycle> cycles)
+		{
+			foreach (var cycle in cycles)
+				if (IsIntersect(cycle1, cycle))
+					return true;
+			return false;
+		}
+
+		private bool IsIntersect(VariableLifetimeCycle cycle1, VariableLifetimeCycle cycle2)
+		{
+			if (cycle1.BeginInd >= cycle2.BeginInd && cycle1.BeginInd <= cycle2.EndInd)
+				return true;
+
+			if (cycle1.EndInd >= cycle2.BeginInd && cycle1.EndInd <= cycle2.EndInd)
+				return true;
+
+			// inside.
+			if (cycle2.BeginInd >= cycle1.BeginInd && cycle2.BeginInd <= cycle1.EndInd)
+				return true;
+
+			return false;
 		}
 
 		private static int FindMinNumber(bool[,] localVaribales, int ind)

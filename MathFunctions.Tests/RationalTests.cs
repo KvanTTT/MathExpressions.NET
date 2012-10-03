@@ -110,7 +110,7 @@ namespace MathFunctions.Tests
 
 			Assert.IsFalse(Rational<long>.FromDecimal(0.12345678m, out r, 28, true, 2, 8));
 
-			Assert.IsTrue(Rational<long>.FromDecimal(0.12121212121212121m, out r, 28, true, 2, 10));
+			Assert.IsTrue(Rational<long>.FromDecimal(0.12121212121212121m, out r, 28, true, 2, 9));
 			Assert.IsTrue(new Rational<long>(4, 33) == r);
 		}
 	}
