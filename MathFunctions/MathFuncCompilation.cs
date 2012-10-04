@@ -166,12 +166,13 @@ namespace MathFunctions
 			}
 		}
 
-		private void EmitNode(MathFuncNode node)
+		private void EmitNode(MathFuncNode node, bool abs = false)
 		{
 			switch (node.Type)
 			{
 				case MathNodeType.Value:
-					IlInstructions.Add(new OpCodeArg(OpCodes.Ldc_R8, node.Value.ToDouble()));
+					IlInstructions.Add(new OpCodeArg(OpCodes.Ldc_R8, 
+						abs ? Math.Abs(node.Value.ToDouble()) : node.Value.ToDouble()));
 					break;
 
 				case MathNodeType.Constant:
@@ -184,7 +185,7 @@ namespace MathFunctions
 					var func = FuncNodes[funcNode];
 					if (!func.Calculated)
 					{
-						EmitFunc(funcNode);
+						EmitFunc(funcNode, abs);
 						func.Calculated = true;
 					}
 					else
@@ -193,7 +194,7 @@ namespace MathFunctions
 			}
 		}
 
-		private void EmitFunc(FuncNode funcNode)
+		private void EmitFunc(FuncNode funcNode, bool abs = false)
 		{
 			switch (funcNode.FunctionType)
 			{
@@ -211,7 +212,10 @@ namespace MathFunctions
 					return;
 				case KnownMathFunctionType.Neg:
 					EmitNode(funcNode.Childs[0]);
-					IlInstructions.Add(new OpCodeArg(OpCodes.Neg));
+					
+					if (!abs)
+						IlInstructions.Add(new OpCodeArg(OpCodes.Neg));
+					
 					if (FuncNodes[funcNode].Count > 1)
 					{
 						IlInstructions.Add(new OpCodeArg(OpCodes.Stloc, funcNode.Number));
@@ -221,10 +225,20 @@ namespace MathFunctions
 				case KnownMathFunctionType.Exp:
 					if (funcNode.Childs[1].IsValue && funcNode.Childs[1].Value.IsInteger)
 					{
-						int power = (int)funcNode.Childs[1].Value.Numerator;
-						
+						int powerValue = (int)funcNode.Childs[1].Value.Numerator;
+						int power = Math.Abs(powerValue);
+						if (abs)
+							powerValue = power;
+
+						if (powerValue < 0)
+							IlInstructions.Add(new OpCodeArg(OpCodes.Ldc_R8, 1.0));
+
 						EmitNode(funcNode.Childs[0]);
 
+						if (power == 1)
+						{
+						}
+						else
 						if (power <= 3)
 						{
 							IlInstructions.Add(new OpCodeArg(OpCodes.Stloc, funcNode.Number));
@@ -278,6 +292,9 @@ namespace MathFunctions
 							while (power != 0);
 						}
 
+						if (powerValue < 0)
+							IlInstructions.Add(new OpCodeArg(OpCodes.Div));
+
 						if (FuncNodes[funcNode].Count > 1)
 						{
 							IlInstructions.Add(new OpCodeArg(OpCodes.Stloc, funcNode.Number));
@@ -291,8 +308,15 @@ namespace MathFunctions
 			MethodReference value;
 			if (TypesReferences.TryGetValue((KnownMathFunctionType)funcNode.FunctionType, out value))
 			{
-				foreach (var child in funcNode.Childs)
-					EmitNode(child);
+				if (funcNode.FunctionType == KnownMathFunctionType.Exp && abs)
+				{
+					EmitNode(funcNode.Childs[0]);
+					EmitNode(funcNode.Childs[1].Abs());
+				}
+				else
+					foreach (var child in funcNode.Childs)
+						EmitNode(child);
+
 				IlInstructions.Add(new OpCodeArg(OpCodes.Call, value));
 				if (FuncNodes[funcNode].Count > 1)
 				{
@@ -304,9 +328,59 @@ namespace MathFunctions
 
 		private void EmitAddMultFunc(FuncNode funcNode, OpCode opCode)
 		{
-			EmitNode(funcNode.Childs[0]);
-			for (int i = 1; i < funcNode.Childs.Count; i++)
+			MathFuncNode firstItem = null;
+			if (opCode == OpCodes.Mul)
 			{
+				firstItem = funcNode.Childs.FirstOrDefault(node =>
+					{
+						var func = node as FuncNode;
+						return !(func != null && FuncNodes[func].Count == 1 && func.FunctionType == KnownMathFunctionType.Exp && func.Childs[1].LessThenZero());
+					});
+			}
+			else if (opCode == OpCodes.Add)
+			{
+				firstItem = funcNode.Childs.FirstOrDefault(node =>
+				{
+					var func = node as FuncNode;
+					return !(func != null && FuncNodes[func].Count == 1 && func.LessThenZero());
+				});
+			}
+
+			if (firstItem != null)
+				EmitNode(firstItem);
+
+			for (int i = 0; i < funcNode.Childs.Count; i++)
+			{
+				if (funcNode.Childs[i] == firstItem)
+					continue;
+
+				var func = funcNode.Childs[i] as FuncNode;
+				if (opCode == OpCodes.Mul)
+				{
+					if (func != null && FuncNodes[func].Count == 1 && func.FunctionType == KnownMathFunctionType.Exp && func.Childs[1].LessThenZero())
+					{
+						EmitNode(funcNode.Childs[i], true);
+						IlInstructions.Add(new OpCodeArg(OpCodes.Div));
+						continue;
+					}
+
+					EmitNode(funcNode.Childs[i]);
+					if (IlInstructions[IlInstructions.Count - 1].OpCode == OpCodes.Ldc_R8 && (double)IlInstructions[IlInstructions.Count - 1].Arg == 1.0)
+						IlInstructions.RemoveAt(IlInstructions.Count - 1);
+					else
+						IlInstructions.Add(new OpCodeArg(opCode));
+					continue;
+				}
+				else if (opCode == OpCodes.Add)
+				{
+					if (func != null && FuncNodes[func].Count == 1 && func.LessThenZero())
+					{
+						EmitNode(funcNode.Childs[i].Childs[0], true);
+						IlInstructions.Add(new OpCodeArg(OpCodes.Sub));
+						continue;
+					}
+				}
+
 				EmitNode(funcNode.Childs[i]);
 				IlInstructions.Add(new OpCodeArg(opCode));
 			}

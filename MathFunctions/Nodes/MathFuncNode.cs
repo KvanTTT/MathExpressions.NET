@@ -249,5 +249,40 @@ namespace MathFunctions
 					return this;
 			}
 		}
+
+		public bool LessThenZero()
+		{
+			switch (Type)
+			{
+				case MathNodeType.Value:
+					return Value < 0;
+				case MathNodeType.Variable:
+				case MathNodeType.Constant:
+					return false;
+				case MathNodeType.Function:
+					return ((FuncNode)this).FunctionType == KnownMathFunctionType.Neg;
+				default:
+					return false;
+			}
+		}
+
+		public MathFuncNode Abs()
+		{
+			switch (Type)
+			{
+				case MathNodeType.Value:
+					return new ValueNode(Value.Abs());
+				case MathNodeType.Variable:
+				case MathNodeType.Constant:
+					return this;
+				case MathNodeType.Function:
+					if (((FuncNode)this).FunctionType == KnownMathFunctionType.Neg)
+						return this.Childs[0];
+					else
+						return this;
+				default:
+					return this;
+			}
+		}
 	}
 }

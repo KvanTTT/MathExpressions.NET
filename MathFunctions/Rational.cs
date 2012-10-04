@@ -139,6 +139,11 @@ namespace MathFunctions
 			get { return Math.Abs(this.denominator.ToInt64(CultureInfo.InvariantCulture)) == 1; }
 		}
 
+		public Rational<T> Abs()
+		{
+			return this < 0 ? -this : this;
+		}
+
 		/// <summary>
 		/// Gets the MaxValue
 		/// </summary>
