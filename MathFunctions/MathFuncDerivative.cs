@@ -46,6 +46,7 @@ namespace MathFunctions
 
 		private MathFuncNode GetFuncDerivative(FuncNode funcNode)
 		{
+			MathFunc value;
 			if (funcNode.IsKnown)
 			{
 				if (funcNode.FunctionType == KnownMathFunctionType.Add ||
@@ -88,9 +89,9 @@ namespace MathFunctions
 
 					var constNode = funcNode.Childs[1] as ConstNode;
 					if (constNode != null)
-						return new FuncNode(KnownMathFunctionType.Mult, 
+						return new FuncNode(KnownMathFunctionType.Mult,
 								new ConstNode(constNode.Name),
-								new FuncNode(KnownMathFunctionType.Exp, 
+								new FuncNode(KnownMathFunctionType.Exp,
 									(MathFuncNode)funcNode.Childs[0].Clone(),
 									new FuncNode(KnownMathFunctionType.Add, new ConstNode(constNode.Name), new ValueNode(-1))
 								),
@@ -99,8 +100,11 @@ namespace MathFunctions
 				}
 				else if (funcNode.FunctionType == KnownMathFunctionType.Diff)
 					return GetDerivative(GetDerivative(funcNode.Childs[0]));
+			}
 
-				var sub = Helper.Derivatives[(KnownMathFunctionType)funcNode.FunctionType];
+			if (Helper.Derivatives.TryGetValue(funcNode.Name, out value))
+			{
+				var sub = value;
 				var subNode = MakeSubstitution(sub.LeftNode.Childs[0], sub.RightNode, funcNode);
 				GetDerivatives(subNode);
 				return subNode;

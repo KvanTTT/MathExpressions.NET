@@ -8,23 +8,76 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-namespace MathFunctions.GUI.Properties
-{
+namespace MathFunctions.GUI.Properties {
+    
+    
+    [global::System.Runtime.CompilerServices.CompilerGeneratedAttribute()]
+    [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.VisualStudio.Editors.SettingsDesigner.SettingsSingleFileGenerator", "10.0.0.0")]
+    internal sealed partial class Settings : global::System.Configuration.ApplicationSettingsBase {
+        
+        private static Settings defaultInstance = ((Settings)(global::System.Configuration.ApplicationSettingsBase.Synchronized(new Settings())));
+        
+        public static Settings Default {
+            get {
+                return defaultInstance;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("")]
+        public string InputExpression {
+            get {
+                return ((string)(this["InputExpression"]));
+            }
+            set {
+                this["InputExpression"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute(@"(f(x) / g(x))' = (f(x)' * g(x) + f(x) * g(x)') / g(x)^2;
+(f(x) ^ g(x))' = f(x) ^ g(x) * (f(x)' * g(x) / f(x) + g(x)' * ln(f(x)));
 
+neg(f(x))' = neg(f(x)');
 
-	[global::System.Runtime.CompilerServices.CompilerGeneratedAttribute()]
-	[global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.VisualStudio.Editors.SettingsDesigner.SettingsSingleFileGenerator", "10.0.0.0")]
-	internal sealed partial class Settings : global::System.Configuration.ApplicationSettingsBase
-	{
+sin(f(x))' = cos(f(x)) * f(x)';
+cos(f(x))' = -sin(f(x)) * f(x)';
+tan(f(x))' = f(x)' / cos(f(x)) ^ 2;
+cot(f(x))' = -f(x)' / sin(f(x)) ^ 2;
 
-		private static Settings defaultInstance = ((Settings)(global::System.Configuration.ApplicationSettingsBase.Synchronized(new Settings())));
+arcsin(f(x))' = f(x)' / sqrt(1 - f(x) ^ 2);
+arccos(f(x))' = -f(x)' / sqrt(1 - f(x) ^ 2);
+arctan(f(x))' = f(x)' / (1 + f(x) ^ 2);
+arccot(f(x))' = -f(x)' / (1 + f(x) ^ 2);
 
-		public static Settings Default
-		{
-			get
-			{
-				return defaultInstance;
-			}
-		}
-	}
+sinh(f(x))' = f(x)' * cosh(x);
+cosh(f(x))' = f(x)' * sinh(x);
+arcsinh(f(x))' = f(x)' / sqrt(f(x) ^ 2 + 1);
+arcosh(f(x))' = f(x)' / sqrt(f(x) ^ 2 - 1);
+
+ln(f(x))' = f(x)' / f(x);
+log(f(x), g(x))' = g'(x)/(g(x)*ln(f(x))) - (f'(x)*ln(g(x)))/(f(x)*ln(f(x))^2);")]
+        public string Derivatives {
+            get {
+                return ((string)(this["Derivatives"]));
+            }
+            set {
+                this["Derivatives"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("True")]
+        public bool RealTimeUpdate {
+            get {
+                return ((bool)(this["RealTimeUpdate"]));
+            }
+            set {
+                this["RealTimeUpdate"] = value;
+            }
+        }
+    }
 }

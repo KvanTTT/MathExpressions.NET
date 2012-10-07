@@ -31,6 +31,9 @@
 			System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(frmMain));
 			this.splitContainer3 = new System.Windows.Forms.SplitContainer();
 			this.splitContainer2 = new System.Windows.Forms.SplitContainer();
+			this.btnCalculate = new System.Windows.Forms.Button();
+			this.cbRealTimeUpdate = new System.Windows.Forms.CheckBox();
+			this.btnRebuildDerivatives = new System.Windows.Forms.Button();
 			this.tbDerivatives = new System.Windows.Forms.TextBox();
 			this.label2 = new System.Windows.Forms.Label();
 			this.label1 = new System.Windows.Forms.Label();
@@ -48,7 +51,6 @@
 			this.dgvErrors = new System.Windows.Forms.DataGridView();
 			this.clnPos = new System.Windows.Forms.DataGridViewTextBoxColumn();
 			this.clnDescription = new System.Windows.Forms.DataGridViewTextBoxColumn();
-			this.btnRebuildDerivatives = new System.Windows.Forms.Button();
 			((System.ComponentModel.ISupportInitialize)(this.splitContainer3)).BeginInit();
 			this.splitContainer3.Panel1.SuspendLayout();
 			this.splitContainer3.Panel2.SuspendLayout();
@@ -93,6 +95,8 @@
 			// 
 			// splitContainer2.Panel1
 			// 
+			this.splitContainer2.Panel1.Controls.Add(this.btnCalculate);
+			this.splitContainer2.Panel1.Controls.Add(this.cbRealTimeUpdate);
 			this.splitContainer2.Panel1.Controls.Add(this.btnRebuildDerivatives);
 			this.splitContainer2.Panel1.Controls.Add(this.tbDerivatives);
 			this.splitContainer2.Panel1.Controls.Add(this.label2);
@@ -109,6 +113,41 @@
 			this.splitContainer2.SplitterDistance = 587;
 			this.splitContainer2.TabIndex = 11;
 			// 
+			// btnCalculate
+			// 
+			this.btnCalculate.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
+			this.btnCalculate.Location = new System.Drawing.Point(236, 262);
+			this.btnCalculate.Name = "btnCalculate";
+			this.btnCalculate.Size = new System.Drawing.Size(104, 26);
+			this.btnCalculate.TabIndex = 26;
+			this.btnCalculate.Text = "Calculate";
+			this.btnCalculate.UseVisualStyleBackColor = true;
+			this.btnCalculate.Click += new System.EventHandler(this.btnCalculate_Click);
+			// 
+			// cbRealTimeUpdate
+			// 
+			this.cbRealTimeUpdate.AutoSize = true;
+			this.cbRealTimeUpdate.Checked = true;
+			this.cbRealTimeUpdate.CheckState = System.Windows.Forms.CheckState.Checked;
+			this.cbRealTimeUpdate.Location = new System.Drawing.Point(118, 269);
+			this.cbRealTimeUpdate.Name = "cbRealTimeUpdate";
+			this.cbRealTimeUpdate.Size = new System.Drawing.Size(112, 17);
+			this.cbRealTimeUpdate.TabIndex = 25;
+			this.cbRealTimeUpdate.Text = "Real Time Update";
+			this.cbRealTimeUpdate.UseVisualStyleBackColor = true;
+			this.cbRealTimeUpdate.CheckedChanged += new System.EventHandler(this.cbRealTimeUpdate_CheckedChanged);
+			// 
+			// btnRebuildDerivatives
+			// 
+			this.btnRebuildDerivatives.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
+			this.btnRebuildDerivatives.Location = new System.Drawing.Point(470, 263);
+			this.btnRebuildDerivatives.Name = "btnRebuildDerivatives";
+			this.btnRebuildDerivatives.Size = new System.Drawing.Size(104, 26);
+			this.btnRebuildDerivatives.TabIndex = 24;
+			this.btnRebuildDerivatives.Text = "Rebuild derivatives";
+			this.btnRebuildDerivatives.UseVisualStyleBackColor = true;
+			this.btnRebuildDerivatives.Click += new System.EventHandler(this.btnRebuildDerivatives_Click);
+			// 
 			// tbDerivatives
 			// 
 			this.tbDerivatives.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
@@ -119,7 +158,7 @@
 			this.tbDerivatives.Multiline = true;
 			this.tbDerivatives.Name = "tbDerivatives";
 			this.tbDerivatives.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
-			this.tbDerivatives.Size = new System.Drawing.Size(562, 229);
+			this.tbDerivatives.Size = new System.Drawing.Size(562, 244);
 			this.tbDerivatives.TabIndex = 23;
 			this.tbDerivatives.Text = resources.GetString("tbDerivatives.Text");
 			// 
@@ -254,7 +293,7 @@
 			this.tabPage2.Location = new System.Drawing.Point(4, 22);
 			this.tabPage2.Name = "tabPage2";
 			this.tabPage2.Padding = new System.Windows.Forms.Padding(3);
-			this.tabPage2.Size = new System.Drawing.Size(369, 338);
+			this.tabPage2.Size = new System.Drawing.Size(353, 322);
 			this.tabPage2.TabIndex = 1;
 			this.tabPage2.Text = "Derivative";
 			this.tabPage2.UseVisualStyleBackColor = true;
@@ -267,7 +306,7 @@
 			this.tbDerivativeIlCode.Name = "tbDerivativeIlCode";
 			this.tbDerivativeIlCode.ReadOnly = true;
 			this.tbDerivativeIlCode.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
-			this.tbDerivativeIlCode.Size = new System.Drawing.Size(363, 332);
+			this.tbDerivativeIlCode.Size = new System.Drawing.Size(347, 316);
 			this.tbDerivativeIlCode.TabIndex = 3;
 			// 
 			// dgvErrors
@@ -299,17 +338,6 @@
 			this.clnDescription.ReadOnly = true;
 			this.clnDescription.Width = 500;
 			// 
-			// btnRebuildDerivatives
-			// 
-			this.btnRebuildDerivatives.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-			this.btnRebuildDerivatives.Location = new System.Drawing.Point(441, 248);
-			this.btnRebuildDerivatives.Name = "btnRebuildDerivatives";
-			this.btnRebuildDerivatives.Size = new System.Drawing.Size(133, 32);
-			this.btnRebuildDerivatives.TabIndex = 24;
-			this.btnRebuildDerivatives.Text = "Rebuild derivatives";
-			this.btnRebuildDerivatives.UseVisualStyleBackColor = true;
-			this.btnRebuildDerivatives.Click += new System.EventHandler(this.btnRebuildDerivatives_Click);
-			// 
 			// frmMain
 			// 
 			this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -317,6 +345,7 @@
 			this.ClientSize = new System.Drawing.Size(952, 586);
 			this.Controls.Add(this.splitContainer3);
 			this.Name = "frmMain";
+			this.FormClosed += new System.Windows.Forms.FormClosedEventHandler(this.frmMain_FormClosed);
 			this.Load += new System.EventHandler(this.frmMain_Load);
 			this.splitContainer3.Panel1.ResumeLayout(false);
 			this.splitContainer3.Panel2.ResumeLayout(false);
@@ -364,6 +393,8 @@
 		private System.Windows.Forms.TextBox tbDerivativeIlCode;
 		private System.Windows.Forms.TextBox tbDerivatives;
 		private System.Windows.Forms.Button btnRebuildDerivatives;
+		private System.Windows.Forms.CheckBox cbRealTimeUpdate;
+		private System.Windows.Forms.Button btnCalculate;
 
 
 

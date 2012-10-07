@@ -8,7 +8,7 @@ namespace MathFunctions
 	public static class Helper
 	{
 		public static MathExprParser Parser;
-		public static Dictionary<KnownMathFunctionType, MathFunc> Derivatives;
+		public static Dictionary<string, MathFunc> Derivatives;
 		public static List<MathFunc> Simplications;
 		public static List<MathFunc> Permutations;
 
@@ -21,16 +21,13 @@ namespace MathFunctions
 		{
 			Parser.Parse(str);
 
-			Derivatives = new Dictionary<KnownMathFunctionType, MathFunc>();
+			Derivatives = new Dictionary<string, MathFunc>();
 
 			foreach (var statement in Parser.Statements)
 			{
-				var funcNode = statement.LeftNode.Childs[0].Name;
-				KnownMathFunctionType value;
-				if (KnownMathFunction.UnaryNamesFuncs.TryGetValue(funcNode, out value))
-					Derivatives.Add(value, statement);
-				else if (KnownMathFunction.BinaryNamesFuncs.TryGetValue(funcNode, out value))
-					Derivatives.Add(value, statement);
+				var funcNodeName = statement.LeftNode.Childs[0].Name;
+
+				Derivatives.Add(funcNodeName, statement);
 			}
 		}
 

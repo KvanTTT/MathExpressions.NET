@@ -1,7 +1,36 @@
 ﻿<?xml version='1.0' encoding='utf-8'?>
-<SettingsFile xmlns="http://schemas.microsoft.com/VisualStudio/2004/01/settings" CurrentProfile="(Default)">
-  <Profiles>
-    <Profile Name="(Default)" />
-  </Profiles>
-  <Settings />
+<SettingsFile xmlns="http://schemas.microsoft.com/VisualStudio/2004/01/settings" CurrentProfile="(Default)" GeneratedClassNamespace="MathFunctions.GUI.Properties" GeneratedClassName="Settings">
+  <Profiles />
+  <Settings>
+    <Setting Name="InputExpression" Type="System.String" Scope="User">
+      <Value Profile="(Default)" />
+    </Setting>
+    <Setting Name="Derivatives" Type="System.String" Scope="User">
+      <Value Profile="(Default)">(f(x) / g(x))' = (f(x)' * g(x) + f(x) * g(x)') / g(x)^2;
+(f(x) ^ g(x))' = f(x) ^ g(x) * (f(x)' * g(x) / f(x) + g(x)' * ln(f(x)));
+
+neg(f(x))' = neg(f(x)');
+
+sin(f(x))' = cos(f(x)) * f(x)';
+cos(f(x))' = -sin(f(x)) * f(x)';
+tan(f(x))' = f(x)' / cos(f(x)) ^ 2;
+cot(f(x))' = -f(x)' / sin(f(x)) ^ 2;
+
+arcsin(f(x))' = f(x)' / sqrt(1 - f(x) ^ 2);
+arccos(f(x))' = -f(x)' / sqrt(1 - f(x) ^ 2);
+arctan(f(x))' = f(x)' / (1 + f(x) ^ 2);
+arccot(f(x))' = -f(x)' / (1 + f(x) ^ 2);
+
+sinh(f(x))' = f(x)' * cosh(x);
+cosh(f(x))' = f(x)' * sinh(x);
+arcsinh(f(x))' = f(x)' / sqrt(f(x) ^ 2 + 1);
+arcosh(f(x))' = f(x)' / sqrt(f(x) ^ 2 - 1);
+
+ln(f(x))' = f(x)' / f(x);
+log(f(x), g(x))' = g'(x)/(g(x)*ln(f(x))) - (f'(x)*ln(g(x)))/(f(x)*ln(f(x))^2);</Value>
+    </Setting>
+    <Setting Name="RealTimeUpdate" Type="System.Boolean" Scope="User">
+      <Value Profile="(Default)">True</Value>
+    </Setting>
+  </Settings>
 </SettingsFile>
