@@ -44,6 +44,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="MathFuncDerivativeTest.cs" />
     <Compile Include="MathFuncCompilationTests.cs" />
     <Compile Include="MathFuncSample.cs" />
     <Compile Include="MathFuncSimplificationTests.cs" />

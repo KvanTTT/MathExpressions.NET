@@ -10,7 +10,9 @@ namespace MathFunctions
 	{
 		public MathFunc GetDerivative()
 		{
-			return new MathFunc(Simplify(GetDerivative(Root)));
+			var result = Simplify(GetDerivative(Root));
+			result.Sort();
+			return new MathFunc(result);
 		}
 
 		#region Helpers

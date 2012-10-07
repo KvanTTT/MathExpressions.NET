@@ -9,7 +9,9 @@ namespace MathFunctions
 	{
 		public MathFunc Simplify()
 		{
-			return new MathFunc(Simplify(Root));
+			var result = Simplify(Root);
+			result.Sort();
+			return new MathFunc(result);
 		}
 
 		#region Helpers
@@ -27,9 +29,8 @@ namespace MathFunctions
 					case KnownMathFunctionType.Neg:
 						if (funcNode.Childs[0].Type == MathNodeType.Value)
 							return new ValueNode(-funcNode.Childs[0].Value);
-						else
-							if (funcNode.Childs.Any(child => child.IsValue))
-								return Calculate(funcNode.FunctionType, funcNode.Childs.Select(child => (ValueNode)child).ToList()) ?? funcNode;
+						else if (funcNode.Childs[0].Type == MathNodeType.Function && ((FuncNode)funcNode.Childs[0]).FunctionType == KnownMathFunctionType.Neg)
+							return funcNode.Childs[0].Childs[0];
 						break;
 
 					case KnownMathFunctionType.Add:
@@ -40,14 +41,17 @@ namespace MathFunctions
 					case KnownMathFunctionType.Mult:
 						BuildMultichildTree(funcNode);
 						var addResult = BreakOnAddNodes(funcNode);
-						var powerNode = ReducePowers(funcNode);
-						var multResult = MultValues(powerNode);
-
+						var multResult = MultValues(funcNode);
 						bool isNeg = multResult.Type == MathNodeType.Function && ((FuncNode)multResult).FunctionType == KnownMathFunctionType.Neg;
-						MathFuncNode negNode = isNeg ? multResult.Childs[0] : multResult;
-						return addResult != null && addResult.NodeCount <= (isNeg ? negNode.Childs.Count + 1 : negNode.Childs.Count) ?
+						var powerNode = ReducePowers(isNeg ? multResult.Childs[0] : multResult);
+						//multResult = MultValues(powerNode);
+						powerNode.Childs = powerNode.Childs.Except(powerNode.Childs.Where(child => child.Type == MathNodeType.Value &&
+							child.Value == 1)).ToList();
+
+						return addResult != null && addResult.NodeCount <= (isNeg ? powerNode.NodeCount + 1 : powerNode.NodeCount) ?
 							addResult :
-							multResult;
+								(isNeg ? (powerNode.Type == MathNodeType.Value ?
+									(MathFuncNode)(new ValueNode(-powerNode.Value)) : new FuncNode(KnownMathFunctionType.Neg, powerNode)) : powerNode);
 
 					case KnownMathFunctionType.Exp:
 						if (funcNode.Childs[0].Type == MathNodeType.Function)
@@ -116,17 +120,37 @@ namespace MathFunctions
 		private void BuildMultichildTree(FuncNode beginNode)
 		{
 			var newChilds = new List<MathFuncNode>();
-			BuildMultichildTree(beginNode, beginNode, newChilds);
+			BuildMultichildTree(beginNode, beginNode, newChilds, false);
 			beginNode.Childs = newChilds;
 		}
 
-		private void BuildMultichildTree(FuncNode beginNode, FuncNode funcNode, List<MathFuncNode> newChilds)
+		private void BuildMultichildTree(FuncNode beginNode, FuncNode funcNode, List<MathFuncNode> newChilds, bool neg)
 		{
 			foreach (var child in funcNode.Childs)
 			{
 				var childFuncNode = child as FuncNode;
-				if (childFuncNode != null && childFuncNode.FunctionType == beginNode.FunctionType)
-					BuildMultichildTree(beginNode, childFuncNode, newChilds);
+				if (childFuncNode != null)
+				{
+					if (childFuncNode.FunctionType == beginNode.FunctionType)
+					{
+						BuildMultichildTree(beginNode, childFuncNode, newChilds, neg);
+						continue;
+					}
+					else if (childFuncNode.FunctionType == KnownMathFunctionType.Neg)
+					{
+						BuildMultichildTree(beginNode, childFuncNode, newChilds, !neg);
+						continue;
+					}
+				}
+
+				if (neg && (beginNode.FunctionType == KnownMathFunctionType.Add ||
+					(beginNode.FunctionType == KnownMathFunctionType.Mult && child == funcNode.Childs.First())))
+				{
+					if (child.Type == MathNodeType.Value)
+						newChilds.Add(new ValueNode(-child.Value));
+					else
+						newChilds.Add(new FuncNode(KnownMathFunctionType.Neg, child));
+				}
 				else
 					newChilds.Add(child);
 			}
@@ -134,31 +158,43 @@ namespace MathFunctions
 
 		private MathFuncNode ReduceAddition(MathFuncNode node1, MathFuncNode node2)
 		{
-			var valueNodes1 = node1.Type == MathNodeType.Function &&
-				(node1 as FuncNode).FunctionType == KnownMathFunctionType.Mult ?
-				node1.Childs.Where(child => child.IsValue).ToList() :
-				node1.IsValue ?
-				new List<MathFuncNode>() { node1 } :
-				new List<MathFuncNode>() { new ValueNode(1) };
-			var notValueNodes1 = node1.Type == MathNodeType.Function &&
-				(node1 as FuncNode).FunctionType == KnownMathFunctionType.Mult ?
-				node1.Childs.Where(child => !child.IsValue).ToList() :
-				node1.IsValue ?
-				new List<MathFuncNode>() { } :
-				new List<MathFuncNode>() { node1 };
+			var node1neg = node1.Type == MathNodeType.Function && (node1 as FuncNode).FunctionType == KnownMathFunctionType.Neg;
+			var node2neg = node2.Type == MathNodeType.Function && (node2 as FuncNode).FunctionType == KnownMathFunctionType.Neg;
+			var node11 = node1neg ? node1.Childs[0] : node1;
+			var node21 = node2neg ? node2.Childs[0] : node2;
 
-			var valueNodes2 = node2.Type == MathNodeType.Function &&
-				(node2 as FuncNode).FunctionType == KnownMathFunctionType.Mult ?
-				node2.Childs.Where(child => child.IsValue).ToList() :
-				node2.IsValue ?
-				new List<MathFuncNode>() { node2 } :
-				new List<MathFuncNode>() { new ValueNode(1) };
-			var notValueNodes2 = node2.Type == MathNodeType.Function &&
-				(node2 as FuncNode).FunctionType == KnownMathFunctionType.Mult ?
-				node2.Childs.Where(child => !child.IsValue).ToList() :
-				node2.IsValue ?
+			MathFuncNode valueNode1 = null;
+			if (node11.Type == MathNodeType.Function &&
+				(node11 as FuncNode).FunctionType == KnownMathFunctionType.Mult)
+					valueNode1 = node11.Childs.Where(child => child.IsValue).FirstOrDefault();
+			if (valueNode1 == null)
+				valueNode1 = node11.IsValue ? node11 : new ValueNode(new Rational<long>(1, 1));
+			var value1 = valueNode1.Value;
+			if (node1neg)
+				value1 *= -1;
+
+			MathFuncNode valueNode2 = null;
+			if (node21.Type == MathNodeType.Function &&
+				(node21 as FuncNode).FunctionType == KnownMathFunctionType.Mult)
+				valueNode2 = node21.Childs.Where(child => child.IsValue).FirstOrDefault();
+			if (valueNode2 == null)
+				valueNode2 = node11.IsValue ? node21 : new ValueNode(new Rational<long>(1, 1));
+			var value2 = valueNode2.Value;
+			if (node2neg)
+				value2 *= -1;
+
+			var notValueNodes1 = node11.Type == MathNodeType.Function &&
+				(node11 as FuncNode).FunctionType == KnownMathFunctionType.Mult ?
+				node11.Childs.Where(child => !child.IsValue).ToList() :
+				node11.IsValue ?
 				new List<MathFuncNode>() { } :
-				new List<MathFuncNode>() { node2 };
+				new List<MathFuncNode>() { node11 };
+			var notValueNodes2 = node21.Type == MathNodeType.Function &&
+				(node21 as FuncNode).FunctionType == KnownMathFunctionType.Mult ?
+				node21.Childs.Where(child => !child.IsValue).ToList() :
+				node21.IsValue ?
+				new List<MathFuncNode>() { } :
+				new List<MathFuncNode>() { node21 };
 
 			var mult1 = new FuncNode(KnownMathFunctionType.Mult, notValueNodes1.ToList());
 			var mult2 = new FuncNode(KnownMathFunctionType.Mult, notValueNodes2.ToList());
@@ -167,11 +203,8 @@ namespace MathFunctions
 
 			if (mult1.Equals(mult2))
 			{
-				var generalNodes = new List<MathFuncNode>();
-				generalNodes.AddRange(valueNodes1);
-				generalNodes.AddRange(valueNodes2);
 				var resultNodes = new List<MathFuncNode>();
-				resultNodes.Add(AddValues(new FuncNode(KnownMathFunctionType.Add, generalNodes)));
+				resultNodes.Add(new ValueNode(value1 + value2));
 				resultNodes.AddRange(notValueNodes1);
 				return Simplify(new FuncNode(KnownMathFunctionType.Mult, resultNodes));
 			}
@@ -254,13 +287,13 @@ namespace MathFunctions
 			return c == 0;
 		}
 
-		private MathFuncNode MultValues(FuncNode funcNode)
+		private MathFuncNode MultValues(MathFuncNode funcNode)
 		{
 			var values = funcNode.Childs
 				.Where(child => child.Type == MathNodeType.Value)
 				.Select(valueChild => valueChild.Value);
 
-			values = values.Union(funcNode.Childs
+			values = values.Concat(funcNode.Childs
 				.Where(child => child.Type == MathNodeType.Function && ((FuncNode)child).FunctionType == KnownMathFunctionType.Neg)
 				.Select(valueChild => new Rational<long>(-1, 1)));
 
@@ -273,7 +306,7 @@ namespace MathFunctions
 
 			var notValuesNodes = funcNode.Childs
 				.Where(child => child.Type != MathNodeType.Value && !(child.Type == MathNodeType.Function && ((FuncNode)child).FunctionType == KnownMathFunctionType.Neg))
-				.Union(funcNode.Childs
+				.Concat(funcNode.Childs
 				.Where(child => child.Type == MathNodeType.Function && ((FuncNode)child).FunctionType == KnownMathFunctionType.Neg)
 				.Select(negChild => negChild.Childs[0])).ToList();
 
@@ -309,8 +342,11 @@ namespace MathFunctions
 			}
 		}
 
-		private FuncNode ReducePowers(FuncNode funcNode)
+		private MathFuncNode ReducePowers(MathFuncNode funcNode)
 		{
+			if (funcNode.Type != MathNodeType.Function)
+				return funcNode;
+
 			var newChilds = new List<MathFuncNode>();
 			bool[] markedNodes = new bool[funcNode.Childs.Count];
 
@@ -341,7 +377,12 @@ namespace MathFunctions
 			}
 
 			if (funcNode.Childs.Count != newChilds.Count)
-				return new FuncNode(KnownMathFunctionType.Mult, newChilds);
+			{
+				if (newChilds.Count == 1)
+					return newChilds[0];
+				else
+					return new FuncNode(KnownMathFunctionType.Mult, newChilds);
+			}
 			else
 				return funcNode;
 		}

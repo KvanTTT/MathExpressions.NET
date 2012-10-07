@@ -137,6 +137,7 @@ namespace MathFunctions
 				return;
 
 			CountNumber value;
+			var hash = funcNode.GetHashCode();
 			if (FuncNodes.TryGetValue(funcNode, out value))
 			{
 				funcNode.Number = value.Number;

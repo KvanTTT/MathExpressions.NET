@@ -50,7 +50,7 @@ namespace MathFunctions
 			string name;
 			if (KnownMathFunction.UnaryFuncsNames.TryGetValue(type, out name))
 				Name = name;
-			else if (KnownMathFunction.UnaryFuncsNames.TryGetValue(type, out name))
+			else if (KnownMathFunction.BinaryFuncsNames.TryGetValue(type, out name))
 				Name = name;
 			else
 				Name = FunctionType.ToString();
@@ -147,7 +147,7 @@ namespace MathFunctions
 							KnownMathFunctionType.Exp });
 
 					case KnownMathFunctionType.Neg:
-						return "-" + Childs[0].ToString(this);
+						return Childs[0].Type != MathNodeType.Function ? "-" + Childs[0].ToString(this) : "-(" + Childs[0].ToString(this) + ")";
 
 					case KnownMathFunctionType.Diff:
 						return "(" + Childs[0].ToString(this) + ")'";
@@ -245,7 +245,7 @@ namespace MathFunctions
 			int hash = 0;
 			foreach (var child in Childs)
 				hash ^= child.GetHashCode();
-			return hash;
+			return hash ^ (FunctionType != null ? (int)FunctionType : Name.GetHashCode());
 		}
 	}
 }
