@@ -99,7 +99,12 @@ namespace MathFunctions
 							);
 				}
 				else if (funcNode.FunctionType == KnownMathFunctionType.Diff)
-					return GetDerivative(GetDerivative(funcNode.Childs[0]));
+				{
+					if (funcNode.Childs[0].Type == MathNodeType.Function && ((FuncNode)funcNode.Childs[0]).IsKnown)
+						return GetDerivative(GetDerivative(funcNode.Childs[0]));
+					else
+						return new FuncNode(KnownMathFunctionType.Mult, funcNode, GetDerivative(funcNode.Childs[0]));
+				}
 			}
 
 			if (Helper.Derivatives.TryGetValue(funcNode.Name, out value))

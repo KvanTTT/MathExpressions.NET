@@ -84,6 +84,7 @@ namespace MathFunctions
 					BinaryFuncsNames.Add(binaryNameFunc.Value, binaryNameFunc.Key);
 				}
 
+			
 			TypesMethods = new Dictionary<KnownMathFunctionType, MethodInfo>()
 			{
 				{ KnownMathFunctionType.Sin, typeof(Math).GetMethod("Sin", new Type[] { typeof(double) }) },

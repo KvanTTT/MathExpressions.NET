@@ -21,7 +21,7 @@ namespace MathFunctions.Tests
 			var mathFunc = new MathFunc("(2 * -x + 1) ^ (2 * x + 1) * Sin((2 * x + 1) ^ 3)");
 			//var mathFunc = new MathFunc("(2 * x + 1) * (2 * x + 1) * (3 * (x + 5) + x)");
 
-			mathFunc.Compile();
+			//mathFunc.Compile();
 		}
 	}
 }

@@ -11,7 +11,7 @@ namespace MathFunctions
 		{
 			var result = Simplify(Root);
 			result.Sort();
-			return new MathFunc(result);
+			return new MathFunc(result, Variable, Parameters.Select(p => p.Value));
 		}
 
 		#region Helpers
@@ -44,7 +44,6 @@ namespace MathFunctions
 						var multResult = MultValues(funcNode);
 						bool isNeg = multResult.Type == MathNodeType.Function && ((FuncNode)multResult).FunctionType == KnownMathFunctionType.Neg;
 						var powerNode = ReducePowers(isNeg ? multResult.Childs[0] : multResult);
-						//multResult = MultValues(powerNode);
 						powerNode.Childs = powerNode.Childs.Except(powerNode.Childs.Where(child => child.Type == MathNodeType.Value &&
 							child.Value == 1)).ToList();
 
@@ -72,6 +71,7 @@ namespace MathFunctions
 						}
 
 						return ExpValue(funcNode);
+
 
 					default:
 						if (funcNode.Childs.Any(child => child.IsValue))
@@ -178,7 +178,7 @@ namespace MathFunctions
 				(node21 as FuncNode).FunctionType == KnownMathFunctionType.Mult)
 				valueNode2 = node21.Childs.Where(child => child.IsValue).FirstOrDefault();
 			if (valueNode2 == null)
-				valueNode2 = node11.IsValue ? node21 : new ValueNode(new Rational<long>(1, 1));
+				valueNode2 = node21.IsValue ? node21 : new ValueNode(new Rational<long>(1, 1));
 			var value2 = valueNode2.Value;
 			if (node2neg)
 				value2 *= -1;

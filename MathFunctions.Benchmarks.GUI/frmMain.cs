@@ -148,7 +148,7 @@ namespace MathPowVsMultTest.Gui
 
 			if (cbApprox.Checked)
 			{
-				var regression = new PolynominalRegression(xData, yData, (int)udApproxPolygonPow.Value);
+				var regression = new PolynominalRegression(yData, (int)udApproxPolygonPow.Value);
 
 				var curve = graphPane.AddCurve(methodName + " (approx)",
 					xData,

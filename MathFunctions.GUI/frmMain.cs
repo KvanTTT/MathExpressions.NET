@@ -82,19 +82,17 @@ namespace MathFunctions.GUI
 		{
 			dgvErrors.Rows.Clear();
 
+			var mathFuncAssembly = new MathFuncAssemblyCecil();
+			mathFuncAssembly.Init();
+
+			var Var = string.IsNullOrEmpty(tbVar.Text) ? null : new VarNode(tbVar.Text.ToLowerInvariant());
+
+			MathFunc simplifiedFunc = null;
 			try
 			{
-				var simpleFunc = new MathFunc(tbInput.Text).Simplify();
-				tbSimplification.Text = simpleFunc.ToString();
-
-				//var compileFunc = new MathFunc(simpleFunc.Root, true);
-				//compileFunc.Compile();
-
-				//var sb = new StringBuilder();
-				//compileFunc.Instructions.ToList().ForEach(instr => sb.AppendLine(instr.ToString()));
-
-				//tbIlCode.Text = sb.ToString();
-			}
+				simplifiedFunc = new MathFunc(tbInput.Text, tbVar.Text).Simplify();
+				tbSimplification.Text = simplifiedFunc.ToString();
+			} 
 			catch (Exception ex)
 			{
 				dgvErrors.Rows.Add(string.Empty, ex.Message);
@@ -106,18 +104,29 @@ namespace MathFunctions.GUI
 				tbDerivativeIlCode.Text = null;
 			}
 
+			try
+			{
+				var compileFunc = new MathFunc(tbInput.Text, tbVar.Text, true, true);
+				compileFunc.Compile(mathFuncAssembly, "Func");
+
+				var sb = new StringBuilder();
+				compileFunc.Instructions.ToList().ForEach(instr => sb.AppendLine(instr.ToString()));
+				tbIlCode.Text = sb.ToString();
+			}
+			catch (Exception ex)
+			{
+				dgvErrors.Rows.Add(string.Empty, ex.Message);
+				tbIlCode.Text = null;
+			}
+
 			if (tbSimplification.Text != string.Empty)
+			{
+				MathFunc derivativeFunc = null;
 				try
 				{
-					var compileDerivativeFunc = new MathFunc(tbInput.Text).GetDerivative();
+					derivativeFunc = new MathFunc(tbInput.Text).GetDerivative();
 
-					tbDerivative.Text = compileDerivativeFunc.ToString();
-
-					/*compileDerivativeFunc.Compile();
-					var sb = new StringBuilder();
-					compileDerivativeFunc.Instructions.ToList().ForEach(instr => sb.AppendLine(instr.ToString()));
-
-					tbDerivativeIlCode.Text = sb.ToString();*/
+					tbDerivative.Text = derivativeFunc.ToString();
 				}
 				catch (Exception ex)
 				{
@@ -125,9 +134,26 @@ namespace MathFunctions.GUI
 					foreach (var error in Helper.Parser.Errors)
 						dgvErrors.Rows.Add(error.Position == null ? string.Empty : error.Position.Column.ToString(), error.Message);
 					tbDerivative.Text = null;
-					tbIlCode.Text = null;
 					tbDerivativeIlCode.Text = null;
 				}
+
+				try
+				{
+					var compileDerivativeFunc = new MathFunc(tbDerivative.Text, tbVar.Text, true, true);
+					compileDerivativeFunc.Compile(mathFuncAssembly, "FuncDer");
+					var sb = new StringBuilder();
+					compileDerivativeFunc.Instructions.ToList().ForEach(instr => sb.AppendLine(instr.ToString()));
+
+					tbDerivativeIlCode.Text = sb.ToString();
+				}
+				catch (Exception ex)
+				{
+					dgvErrors.Rows.Add(string.Empty, ex.Message);
+					tbDerivativeIlCode.Text = null;
+				}
+			}
+
+			mathFuncAssembly.Finalize();
 		}
 	}
 }

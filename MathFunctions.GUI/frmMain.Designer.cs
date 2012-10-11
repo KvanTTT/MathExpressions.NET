@@ -31,6 +31,8 @@
 			System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(frmMain));
 			this.splitContainer3 = new System.Windows.Forms.SplitContainer();
 			this.splitContainer2 = new System.Windows.Forms.SplitContainer();
+			this.tbVar = new System.Windows.Forms.TextBox();
+			this.label5 = new System.Windows.Forms.Label();
 			this.btnCalculate = new System.Windows.Forms.Button();
 			this.cbRealTimeUpdate = new System.Windows.Forms.CheckBox();
 			this.btnRebuildDerivatives = new System.Windows.Forms.Button();
@@ -83,8 +85,8 @@
 			// splitContainer3.Panel2
 			// 
 			this.splitContainer3.Panel2.Controls.Add(this.dgvErrors);
-			this.splitContainer3.Size = new System.Drawing.Size(952, 586);
-			this.splitContainer3.SplitterDistance = 400;
+			this.splitContainer3.Size = new System.Drawing.Size(894, 534);
+			this.splitContainer3.SplitterDistance = 402;
 			this.splitContainer3.TabIndex = 13;
 			// 
 			// splitContainer2
@@ -95,6 +97,8 @@
 			// 
 			// splitContainer2.Panel1
 			// 
+			this.splitContainer2.Panel1.Controls.Add(this.tbVar);
+			this.splitContainer2.Panel1.Controls.Add(this.label5);
 			this.splitContainer2.Panel1.Controls.Add(this.btnCalculate);
 			this.splitContainer2.Panel1.Controls.Add(this.cbRealTimeUpdate);
 			this.splitContainer2.Panel1.Controls.Add(this.btnRebuildDerivatives);
@@ -109,14 +113,34 @@
 			// splitContainer2.Panel2
 			// 
 			this.splitContainer2.Panel2.Controls.Add(this.splitContainer4);
-			this.splitContainer2.Size = new System.Drawing.Size(952, 400);
-			this.splitContainer2.SplitterDistance = 587;
+			this.splitContainer2.Size = new System.Drawing.Size(894, 402);
+			this.splitContainer2.SplitterDistance = 540;
 			this.splitContainer2.TabIndex = 11;
+			// 
+			// tbVar
+			// 
+			this.tbVar.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
+			this.tbVar.Location = new System.Drawing.Point(407, 301);
+			this.tbVar.Name = "tbVar";
+			this.tbVar.Size = new System.Drawing.Size(107, 20);
+			this.tbVar.TabIndex = 28;
+			this.tbVar.Text = "x";
+			// 
+			// label5
+			// 
+			this.label5.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
+			this.label5.AutoSize = true;
+			this.label5.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
+			this.label5.Location = new System.Drawing.Point(372, 302);
+			this.label5.Name = "label5";
+			this.label5.Size = new System.Drawing.Size(29, 16);
+			this.label5.TabIndex = 27;
+			this.label5.Text = "Var";
 			// 
 			// btnCalculate
 			// 
 			this.btnCalculate.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-			this.btnCalculate.Location = new System.Drawing.Point(236, 262);
+			this.btnCalculate.Location = new System.Drawing.Point(206, 266);
 			this.btnCalculate.Name = "btnCalculate";
 			this.btnCalculate.Size = new System.Drawing.Size(104, 26);
 			this.btnCalculate.TabIndex = 26;
@@ -126,10 +150,11 @@
 			// 
 			// cbRealTimeUpdate
 			// 
+			this.cbRealTimeUpdate.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
 			this.cbRealTimeUpdate.AutoSize = true;
 			this.cbRealTimeUpdate.Checked = true;
 			this.cbRealTimeUpdate.CheckState = System.Windows.Forms.CheckState.Checked;
-			this.cbRealTimeUpdate.Location = new System.Drawing.Point(118, 269);
+			this.cbRealTimeUpdate.Location = new System.Drawing.Point(117, 272);
 			this.cbRealTimeUpdate.Name = "cbRealTimeUpdate";
 			this.cbRealTimeUpdate.Size = new System.Drawing.Size(112, 17);
 			this.cbRealTimeUpdate.TabIndex = 25;
@@ -140,7 +165,7 @@
 			// btnRebuildDerivatives
 			// 
 			this.btnRebuildDerivatives.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-			this.btnRebuildDerivatives.Location = new System.Drawing.Point(470, 263);
+			this.btnRebuildDerivatives.Location = new System.Drawing.Point(411, 266);
 			this.btnRebuildDerivatives.Name = "btnRebuildDerivatives";
 			this.btnRebuildDerivatives.Size = new System.Drawing.Size(104, 26);
 			this.btnRebuildDerivatives.TabIndex = 24;
@@ -158,7 +183,7 @@
 			this.tbDerivatives.Multiline = true;
 			this.tbDerivatives.Name = "tbDerivatives";
 			this.tbDerivatives.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
-			this.tbDerivatives.Size = new System.Drawing.Size(562, 244);
+			this.tbDerivatives.Size = new System.Drawing.Size(503, 247);
 			this.tbDerivatives.TabIndex = 23;
 			this.tbDerivatives.Text = resources.GetString("tbDerivatives.Text");
 			// 
@@ -167,7 +192,7 @@
 			this.label2.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
 			this.label2.AutoSize = true;
 			this.label2.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
-			this.label2.Location = new System.Drawing.Point(14, 358);
+			this.label2.Location = new System.Drawing.Point(14, 331);
 			this.label2.Name = "label2";
 			this.label2.Size = new System.Drawing.Size(87, 16);
 			this.label2.TabIndex = 22;
@@ -178,7 +203,7 @@
 			this.label1.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
 			this.label1.AutoSize = true;
 			this.label1.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
-			this.label1.Location = new System.Drawing.Point(14, 327);
+			this.label1.Location = new System.Drawing.Point(14, 360);
 			this.label1.Name = "label1";
 			this.label1.Size = new System.Drawing.Size(69, 16);
 			this.label1.TabIndex = 21;
@@ -188,20 +213,20 @@
 			// 
 			this.tbSimplification.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-			this.tbSimplification.Location = new System.Drawing.Point(118, 357);
+			this.tbSimplification.Location = new System.Drawing.Point(117, 330);
 			this.tbSimplification.Name = "tbSimplification";
 			this.tbSimplification.ReadOnly = true;
-			this.tbSimplification.Size = new System.Drawing.Size(456, 20);
+			this.tbSimplification.Size = new System.Drawing.Size(397, 20);
 			this.tbSimplification.TabIndex = 20;
 			// 
 			// tbDerivative
 			// 
 			this.tbDerivative.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-			this.tbDerivative.Location = new System.Drawing.Point(118, 331);
+			this.tbDerivative.Location = new System.Drawing.Point(117, 356);
 			this.tbDerivative.Name = "tbDerivative";
 			this.tbDerivative.ReadOnly = true;
-			this.tbDerivative.Size = new System.Drawing.Size(456, 20);
+			this.tbDerivative.Size = new System.Drawing.Size(397, 20);
 			this.tbDerivative.TabIndex = 19;
 			// 
 			// label3
@@ -209,7 +234,7 @@
 			this.label3.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
 			this.label3.AutoSize = true;
 			this.label3.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
-			this.label3.Location = new System.Drawing.Point(14, 297);
+			this.label3.Location = new System.Drawing.Point(13, 300);
 			this.label3.Name = "label3";
 			this.label3.Size = new System.Drawing.Size(36, 16);
 			this.label3.TabIndex = 18;
@@ -219,9 +244,9 @@
 			// 
 			this.tbInput.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-			this.tbInput.Location = new System.Drawing.Point(118, 298);
+			this.tbInput.Location = new System.Drawing.Point(117, 301);
 			this.tbInput.Name = "tbInput";
-			this.tbInput.Size = new System.Drawing.Size(456, 20);
+			this.tbInput.Size = new System.Drawing.Size(247, 20);
 			this.tbInput.TabIndex = 17;
 			this.tbInput.Text = "2 + 2 * 2";
 			this.tbInput.TextChanged += new System.EventHandler(this.tbInput_TextChanged);
@@ -240,8 +265,8 @@
 			// splitContainer4.Panel2
 			// 
 			this.splitContainer4.Panel2.Controls.Add(this.tabControl1);
-			this.splitContainer4.Size = new System.Drawing.Size(361, 400);
-			this.splitContainer4.SplitterDistance = 48;
+			this.splitContainer4.Size = new System.Drawing.Size(350, 402);
+			this.splitContainer4.SplitterDistance = 52;
 			this.splitContainer4.TabIndex = 12;
 			// 
 			// label4
@@ -262,7 +287,7 @@
 			this.tabControl1.Location = new System.Drawing.Point(0, 0);
 			this.tabControl1.Name = "tabControl1";
 			this.tabControl1.SelectedIndex = 0;
-			this.tabControl1.Size = new System.Drawing.Size(361, 348);
+			this.tabControl1.Size = new System.Drawing.Size(350, 346);
 			this.tabControl1.TabIndex = 2;
 			// 
 			// tabPage1
@@ -271,7 +296,7 @@
 			this.tabPage1.Location = new System.Drawing.Point(4, 22);
 			this.tabPage1.Name = "tabPage1";
 			this.tabPage1.Padding = new System.Windows.Forms.Padding(3);
-			this.tabPage1.Size = new System.Drawing.Size(353, 322);
+			this.tabPage1.Size = new System.Drawing.Size(342, 320);
 			this.tabPage1.TabIndex = 0;
 			this.tabPage1.Text = "Simplification";
 			this.tabPage1.UseVisualStyleBackColor = true;
@@ -284,7 +309,7 @@
 			this.tbIlCode.Name = "tbIlCode";
 			this.tbIlCode.ReadOnly = true;
 			this.tbIlCode.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
-			this.tbIlCode.Size = new System.Drawing.Size(347, 316);
+			this.tbIlCode.Size = new System.Drawing.Size(336, 314);
 			this.tbIlCode.TabIndex = 2;
 			// 
 			// tabPage2
@@ -320,7 +345,7 @@
 			this.dgvErrors.Name = "dgvErrors";
 			this.dgvErrors.ReadOnly = true;
 			this.dgvErrors.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
-			this.dgvErrors.Size = new System.Drawing.Size(952, 182);
+			this.dgvErrors.Size = new System.Drawing.Size(894, 128);
 			this.dgvErrors.TabIndex = 13;
 			this.dgvErrors.CellDoubleClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.dgvErrors_CellDoubleClick);
 			// 
@@ -342,7 +367,7 @@
 			// 
 			this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
 			this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-			this.ClientSize = new System.Drawing.Size(952, 586);
+			this.ClientSize = new System.Drawing.Size(894, 534);
 			this.Controls.Add(this.splitContainer3);
 			this.Name = "frmMain";
 			this.FormClosed += new System.Windows.Forms.FormClosedEventHandler(this.frmMain_FormClosed);
@@ -395,6 +420,8 @@
 		private System.Windows.Forms.Button btnRebuildDerivatives;
 		private System.Windows.Forms.CheckBox cbRealTimeUpdate;
 		private System.Windows.Forms.Button btnCalculate;
+        private System.Windows.Forms.TextBox tbVar;
+        private System.Windows.Forms.Label label5;
 
 
 

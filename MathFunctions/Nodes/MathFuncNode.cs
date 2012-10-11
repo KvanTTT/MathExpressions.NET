@@ -9,6 +9,7 @@ namespace MathFunctions
 	{
 		internal List<MathFuncNode> Childs = new List<MathFuncNode>();
 		internal int Number = -1;
+		internal int ArgNumber = -1;
 
 		#region Properties
 		

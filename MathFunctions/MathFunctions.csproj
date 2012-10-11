@@ -47,6 +47,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="MathFuncAssemblyCecil.cs" />
     <Compile Include="MathFuncCompilation.cs" />
     <Compile Include="MathFuncDerivative.cs" />
     <Compile Include="MathFuncSimplification.cs" />

@@ -7,8 +7,14 @@ namespace MathFunctions
 {
 	public partial class MathFunc
 	{
-		private List<ConstNode> Parameters;
-		private VarNode Variable;
+		public VarNode Variable
+		{
+			get;
+			private set;
+		}
+
+		private Dictionary<string, ConstNode> Parameters = new Dictionary<string, ConstNode>();
+		private Dictionary<string, FuncNode> UnknownFuncs = new Dictionary<string, FuncNode>();
 
 		public MathFuncNode LeftNode
 		{
@@ -30,7 +36,7 @@ namespace MathFunctions
 			protected set;
 		}
 
-		public MathFunc(string str)
+		public MathFunc(string str, string v = null, bool calculateConstants = false, bool simplify = false)
 		{
 			if (!Helper.Parser.Parse(str))
 				throw new Exception("Impossible to parse input string");
@@ -39,15 +45,27 @@ namespace MathFunctions
 			RightNode = Helper.Parser.FirstStatement.RightNode;
 			Root = RightNode;
 
-			ConstToVars();
-			Variable.Number = 0;
+			if (string.IsNullOrEmpty(v))
+				ConstToVars();
+			else
+			{
+				Variable = new VarNode(v);
+				ConstToVar(Root);
+			}
+
+			FindParamsAndUnknownFuncs(Root);
 
 			Root.Sort();
 			Root = Simplify(Root);
+			CalculateConstants = calculateConstants;
+			if (calculateConstants || simplify)
+				Root = Simplify(Root);
 		}
 
-		public MathFunc(MathFuncNode root, bool calculateConstants = false, bool simplify = false)
-			: this(new FuncNode("f", new List<MathFuncNode>() { new VarNode("x") }), root, null, null,
+		public MathFunc(MathFuncNode root, 
+			VarNode variable = null, IEnumerable<ConstNode> parameters = null,
+			bool calculateConstants = false, bool simplify = false)
+			: this(new FuncNode("f", new List<MathFuncNode>() { variable }), root, variable, parameters,
 				calculateConstants, simplify)
 		{
 		}
@@ -60,15 +78,14 @@ namespace MathFunctions
 			RightNode = right;
 			Root = RightNode;
 
-			if (variable == null)
+			Variable = variable;
+			if (Variable == null)
 				ConstToVars();
-			Variable.Number = 0;
 			if (parameters != null)
-			{
-				Parameters = parameters.Except(parameters.Where(p => p.Name == Variable.Name)).ToList();
-				for (int i = 0; i < Parameters.Count; i++)
-					Parameters[i].Number = Variable.Number + i + 1;
-			}
+				Parameters = parameters.Except(parameters.Where(p => p.Name == Variable.Name))
+					.ToDictionary(node => node.Name);
+
+			FindParamsAndUnknownFuncs(Root);
 
 			Root.Sort();
 			CalculateConstants = calculateConstants;
@@ -179,7 +196,7 @@ namespace MathFunctions
 					break;
 
 				case KnownMathFunctionType.Abs:
-					//return new ValueNode(Math.Abs(args[0].Value.ToDouble()));
+					temp = args[0].Value.Abs().ToDouble();
 					break;
 
 				case KnownMathFunctionType.Sgn:
@@ -229,7 +246,7 @@ namespace MathFunctions
 						else if (secondNode.Type == MathNodeType.Variable)
 							Variable = (VarNode)secondNode;
 					}
-					GetFirstParam(LeftNode);
+					GetFirstParam(RightNode);
 					if (Variable == null)
 						Variable = new VarNode("x");
 				}
@@ -265,6 +282,23 @@ namespace MathFunctions
 					node.Childs[i] = Variable;
 				else
 					ConstToVar(node.Childs[i]);
+		}
+
+		protected void FindParamsAndUnknownFuncs(MathFuncNode node)
+		{
+			foreach (var child in node.Childs)
+				FindParamsAndUnknownFuncs(child);
+
+			if (node.Type == MathNodeType.Function && !((FuncNode)node).IsKnown)
+			{
+				if (!UnknownFuncs.ContainsKey(node.Name))
+					UnknownFuncs.Add(node.Name, (FuncNode)node);
+			}
+			else if (node.Type == MathNodeType.Constant)
+			{
+				if (!Parameters.ContainsKey(node.Name))
+					Parameters.Add(node.Name, (ConstNode)node);
+			}
 		}
 
 		public bool IsValue

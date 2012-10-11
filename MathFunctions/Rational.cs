@@ -553,7 +553,10 @@ namespace MathFunctions
 			decimal n = Convert.ToDecimal(numerator);
 			decimal d = Convert.ToDecimal(denominator);
 
-			// greatest common divisor
+			if (n == 1 && d == 1)
+				return;
+
+			// greatest commondivisor
 			decimal gcd = Rational<T>.GCD(n, d);
 			if (gcd != Decimal.One && gcd != Decimal.Zero)
 			{
