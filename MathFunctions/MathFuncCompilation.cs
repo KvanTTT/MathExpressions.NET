@@ -56,10 +56,10 @@ namespace MathFunctions
 
 	public partial class MathFunc
 	{
-		const string NamespaceName = "MathFuncLib";
-		const string ClassName = "MathFunc";
+		private const string NamespaceName = "MathFuncLib";
+		private const string ClassName = "MathFunc";
 
-		public double DerDeltaX = 0.000001;
+		public double DerivativeDelta = 0.000001;
 
 		public MathFuncAssemblyCecil MathFuncAssembly
 		{
@@ -435,7 +435,7 @@ namespace MathFunctions
 			if (isUnknownFunc)
 				IlInstructions.Add(new OpCodeArg(OpCodes.Ldarg, diffFunc.ArgNumber));
 			EmitNode(arg);
-			IlInstructions.Add(new OpCodeArg(OpCodes.Ldc_R8, DerDeltaX));
+			IlInstructions.Add(new OpCodeArg(OpCodes.Ldc_R8, DerivativeDelta));
 			IlInstructions.Add(new OpCodeArg(OpCodes.Add));
 			if (isUnknownFunc)
 				IlInstructions.Add(new OpCodeArg(OpCodes.Callvirt, MathFuncAssembly.InvokeFuncRef));
@@ -446,7 +446,7 @@ namespace MathFunctions
 			EmitNode(diffFunc);
 
 			IlInstructions.Add(new OpCodeArg(OpCodes.Sub));
-			IlInstructions.Add(new OpCodeArg(OpCodes.Ldc_R8, 1.0 / DerDeltaX));
+			IlInstructions.Add(new OpCodeArg(OpCodes.Ldc_R8, 1.0 / DerivativeDelta));
 			IlInstructions.Add(new OpCodeArg(OpCodes.Mul));
 
 			return true;
@@ -572,6 +572,7 @@ namespace MathFunctions
 					}
 
 					if (firstOpCode == OpCodes.Ldloc && IlInstructions[i + 1].OpCode == OpCodes.Stloc)
+					{
 						if ((int)IlInstructions[i].Arg == (int)IlInstructions[i + 1].Arg)
 						{
 							IlInstructions.RemoveRange(i, 2);
@@ -604,6 +605,7 @@ namespace MathFunctions
 								continue;
 							}
 						}
+					}
 
 					if (firstOpCode == OpCodes.Stloc && IlInstructions[i + 1].OpCode == OpCodes.Ldloc &&
 						(int)IlInstructions[i].Arg == (int)IlInstructions[i + 1].Arg)
@@ -632,7 +634,7 @@ namespace MathFunctions
 
 		#endregion
 
-		#region Emit to Mono.Cecil
+		#region Emitting to Mono.Cecil
 		
 		private static void EmitInstruction(ILProcessor ilProcessor, OpCodeArg instr)
 		{

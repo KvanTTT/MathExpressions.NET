@@ -105,6 +105,10 @@ namespace MathFunctions
 					else
 						return new FuncNode(KnownMathFunctionType.Mult, funcNode, GetDerivative(funcNode.Childs[0]));
 				}
+				else if (funcNode.FunctionType == KnownMathFunctionType.Neg)
+				{
+					return new FuncNode(KnownMathFunctionType.Neg, GetDerivative(funcNode.Childs[0]));
+				}
 			}
 
 			if (Helper.Derivatives.TryGetValue(funcNode.Name, out value))

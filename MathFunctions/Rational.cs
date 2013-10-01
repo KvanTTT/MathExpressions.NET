@@ -306,15 +306,10 @@ namespace MathFunctions
 
 				if (!periodFound)
 				{
-					if (fracPartTrimEnd.Length >= digitsForReal)
-						return false;
-					else
-					{
-						result = new Rational<T>(long.Parse(strs[0]), 1, false);
-						if (fracPartTrimEnd.Length != 0)
-							result = new Rational<T>(ulong.Parse(fracPartTrimEnd), TenInPower(fracPartTrimEnd.Length));
-						return true;
-					}
+					result = new Rational<T>(long.Parse(strs[0]), 1, false);
+					if (fracPartTrimEnd.Length != 0)
+						result += new Rational<T>(ulong.Parse(fracPartTrimEnd), TenInPower(fracPartTrimEnd.Length));
+					return fracPartTrimEnd.Length < digitsForReal;
 				}
 
 				return true;
@@ -865,23 +860,12 @@ namespace MathFunctions
 
 		#region Operators
 
-		/// <summary>
-		/// Negation
-		/// </summary>
-		/// <param name="r"></param>
-		/// <returns></returns>
 		public static Rational<T> operator -(Rational<T> r)
 		{
 			T numerator = (T)Convert.ChangeType(-Convert.ToDecimal(r.numerator), typeof(T));
 			return new Rational<T>(numerator, r.denominator);
 		}
 
-		/// <summary>
-		/// Addition
-		/// </summary>
-		/// <param name="r1"></param>
-		/// <param name="r2"></param>
-		/// <returns></returns>
 		public static Rational<T> operator +(Rational<T> r1, Rational<T> r2)
 		{
 			decimal n1 = Convert.ToDecimal(r1.numerator);
@@ -904,23 +888,11 @@ namespace MathFunctions
 			return new Rational<T>((T)Convert.ChangeType(numerator, typeof(T)), (T)Convert.ChangeType(denominator, typeof(T)));
 		}
 
-		/// <summary>
-		/// Subtraction
-		/// </summary>
-		/// <param name="r1"></param>
-		/// <param name="r2"></param>
-		/// <returns></returns>
 		public static Rational<T> operator -(Rational<T> r1, Rational<T> r2)
 		{
 			return r1 + (-r2);
 		}
 
-		/// <summary>
-		/// Multiplication
-		/// </summary>
-		/// <param name="r1"></param>
-		/// <param name="r2"></param>
-		/// <returns></returns>
 		public static Rational<T> operator *(Rational<T> r1, Rational<T> r2)
 		{
 			decimal numerator = Convert.ToDecimal(r1.numerator) * Convert.ToDecimal(r2.numerator);
@@ -929,106 +901,44 @@ namespace MathFunctions
 			return new Rational<T>((T)Convert.ChangeType(numerator, typeof(T)), (T)Convert.ChangeType(denominator, typeof(T)));
 		}
 
-		/// <summary>
-		/// Division
-		/// </summary>
-		/// <param name="r1"></param>
-		/// <param name="r2"></param>
-		/// <returns></returns>
 		public static Rational<T> operator /(Rational<T> r1, Rational<T> r2)
 		{
 			return r1 * new Rational<T>(r2.denominator, r2.numerator);
 		}
 
-		/// <summary>
-		/// Less than
-		/// </summary>
-		/// <param name="r1"></param>
-		/// <param name="r2"></param>
-		/// <returns></returns>
 		public static bool operator <(Rational<T> r1, Rational<T> r2)
 		{
 			return r1.CompareTo(r2) < 0;
 		}
 
-		/// <summary>
-		/// Less than or equal to
-		/// </summary>
-		/// <param name="r1"></param>
-		/// <param name="r2"></param>
-		/// <returns></returns>
 		public static bool operator <=(Rational<T> r1, Rational<T> r2)
 		{
 			return r1.CompareTo(r2) <= 0;
 		}
 
-		/// <summary>
-		/// Greater than
-		/// </summary>
-		/// <param name="r1"></param>
-		/// <param name="r2"></param>
-		/// <returns></returns>
 		public static bool operator >(Rational<T> r1, Rational<T> r2)
 		{
 			return r1.CompareTo(r2) > 0;
 		}
 
-		/// <summary>
-		/// Greater than or equal to
-		/// </summary>
-		/// <param name="r1"></param>
-		/// <param name="r2"></param>
-		/// <returns></returns>
 		public static bool operator >=(Rational<T> r1, Rational<T> r2)
 		{
 			return r1.CompareTo(r2) >= 0;
 		}
 
-		/// <summary>
-		/// Equal to
-		/// </summary>
-		/// <param name="r1"></param>
-		/// <param name="r2"></param>
-		/// <returns></returns>
 		public static bool operator ==(Rational<T> r1, Rational<T> r2)
 		{
 			return r1.CompareTo(r2) == 0;
 		}
 
-		/// <summary>
-		/// Not equal to
-		/// </summary>
-		/// <param name="r1"></param>
-		/// <param name="r2"></param>
-		/// <returns></returns>
 		public static bool operator !=(Rational<T> r1, Rational<T> r2)
 		{
 			return r1.CompareTo(r2) != 0;
 		}
 
-		public static bool operator ==(Rational<T> r1, decimal r2)
+		public static implicit operator Rational<T>(int d)
 		{
-			return r1.ToDecimal(CultureInfo.InvariantCulture) == r2;
-		}
-
-		public static bool operator ==(decimal r1, Rational<T> r2)
-		{
-			return r2 == r1;
-		}
-
-		public static bool operator !=(Rational<T> r1, decimal r2)
-		{
-			return r1.ToDecimal(CultureInfo.InvariantCulture) != r2;
-		}
-
-		public static bool operator !=(decimal r1, Rational<T> r2)
-		{
-			return r2 != r1;
-		}
-
-		public static implicit operator Rational<T>(decimal d)
-		{
-			return Rational<T>.Approximate(d);
+			return new Rational<T>(d, 1, false);
 		}
 
 		#endregion Operators

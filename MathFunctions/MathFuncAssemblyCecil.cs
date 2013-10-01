@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using Mono.Cecil;
+using System.IO;
 
 namespace MathFunctions
 {
@@ -53,15 +54,15 @@ namespace MathFunctions
 			DoubleType = Assembly.MainModule.TypeSystem.Double;
 
 			Class = new TypeDefinition(NamespaceName, ClassName,
-				TypeAttributes.Public | TypeAttributes.BeforeFieldInit | TypeAttributes.Sealed | TypeAttributes.AnsiClass | TypeAttributes.Abstract,
+				TypeAttributes.Public | TypeAttributes.BeforeFieldInit |
+				TypeAttributes.Sealed |TypeAttributes.AnsiClass | TypeAttributes.Abstract,
 				Assembly.MainModule.TypeSystem.Object);
 		}
 
-		public void Finalize()
+		public void Finalize(string path, string fileName = "")
 		{
 			Assembly.MainModule.Types.Add(Class);
-
-			Assembly.Write(NamespaceName + ".dll");
+			Assembly.Write(Path.Combine(path, string.IsNullOrEmpty(fileName) ? NamespaceName + ".dll" : fileName));
 		}
 
 		private void ImportMath(AssemblyDefinition assembly)

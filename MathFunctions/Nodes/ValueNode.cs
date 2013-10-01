@@ -29,6 +29,11 @@ namespace MathFunctions
 			Name = Value.ToString();
 		}
 
+		public ValueNode(int value)
+		{
+			Value = new Rational<long>(value, 1);
+		}
+
 		public ValueNode(Rational<long> value)
 		{
 			Value = value;

@@ -62,7 +62,7 @@ namespace MathFunctions.Tests
 		{
 			var f = new MathFunc("1 / x");
 			var derivative = f.GetDerivative();
-			Assert.IsTrue(derivative == "-x ^ -2");
+			Assert.IsTrue(derivative == "-(x ^ -2)");
 		}
 
 		[Test]
@@ -92,8 +92,7 @@ namespace MathFunctions.Tests
 		[Test]
 		public void Derivative1()
 		{
-			var derivative = new MathFunc("x ^ 3 + sin(3 * ln(x * 1)) + x ^ ln(2 * sin(3 * ln(x))) - 2 * x ^ 3")
-				.GetDerivative();
+			var derivative = new MathFunc("x ^ 3 + sin(3 * ln(x * 1)) + x ^ ln(2 * sin(3 * ln(x))) - 2 * x ^ 3").GetDerivative();
 			derivative.Sort();
 			Assert.IsTrue(derivative.Equals("(ln(2 * sin(3 * ln(x))) * x ^ -1 + 3 * ln(x) * cos(3 * ln(x)) * x ^ -1 * sin(3 * ln(x)) ^ -1) * x ^ ln(2 * sin(3 * ln(x))) + 3 * cos(3 * ln(x)) * x ^ -1 + -(3 * x ^ 2)"));
 		}

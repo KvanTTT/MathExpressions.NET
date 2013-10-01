@@ -86,7 +86,7 @@ namespace MathFunctions
 			if (FunctionType == KnownMathFunctionType.Sqrt)
 			{
 				FunctionType = KnownMathFunctionType.Exp;
-				Childs.Add(new ValueNode(0.5m));
+				Childs.Add(new ValueNode(new Rational<long>(1, 2)));
 			}
 		}
 

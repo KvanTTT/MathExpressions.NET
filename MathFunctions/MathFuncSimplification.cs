@@ -100,7 +100,7 @@ namespace MathFunctions
 			var notValuesNodes = funcNode.Childs
 				.Where(child => child.Type != MathNodeType.Value).ToList();
 
-			if (result == 0.0m)
+			if (result == 0)
 				return
 					notValuesNodes.Count == 0 ? new ValueNode(0) :
 					notValuesNodes.Count == 1 ? notValuesNodes.First() :
@@ -310,13 +310,13 @@ namespace MathFunctions
 				.Where(child => child.Type == MathNodeType.Function && ((FuncNode)child).FunctionType == KnownMathFunctionType.Neg)
 				.Select(negChild => negChild.Childs[0])).ToList();
 
-			if (result == 1.0m)
+			if (result == 1)
 			{
 				return notValuesNodes.Count == 0 ? new ValueNode(1) :
 					notValuesNodes.Count == 1 ? notValuesNodes.First() :
 					new FuncNode(KnownMathFunctionType.Mult, notValuesNodes);
 			}
-			else if (result == -1.0m)
+			else if (result == -1)
 			{
 				return notValuesNodes.Count == 0 ? (MathFuncNode)(new ValueNode(-1)) :
 					notValuesNodes.Count == 1 ? new FuncNode(KnownMathFunctionType.Neg, notValuesNodes.First()) :
@@ -399,14 +399,23 @@ namespace MathFunctions
 					return new ValueNode(1);
 				else if (bValue.Value == 1)
 					return funcNode.Childs[0];
-				else if (funcNode.Childs[0].Type == MathNodeType.Value)
-					return new ValueNode((decimal)Math.Pow(funcNode.Childs[0].Value.ToDouble(), bValue.Value.ToDouble()));
+				/*else if (funcNode.Childs[0].Type == MathNodeType.Value)
+				{
+					double a = funcNode.Childs[0].Value.ToDouble();
+					double b = bValue.Value.ToDouble();
+					double r = b == 0.5 ? Math.Sqrt(a) : Math.Pow(a, b);
+					Rational<long> result;
+					Rational<long>.FromDecimal((decimal)r, out result);
+					return new ValueNode(result);
+				}*/
 				else if (bValue.Value.IsInteger && funcNode.Childs[0].Type == MathNodeType.Function &&
-					((FuncNode)funcNode.Childs[0]).FunctionType == KnownMathFunctionType.Neg) 
+					((FuncNode)funcNode.Childs[0]).FunctionType == KnownMathFunctionType.Neg)
+				{
 					if (bValue.Value.Numerator % 2 == 0)
 						return new FuncNode(KnownMathFunctionType.Exp, funcNode.Childs[0].Childs[0], new ValueNode(bValue.Value));
 					else
 						return new FuncNode(KnownMathFunctionType.Neg, new FuncNode(KnownMathFunctionType.Exp, funcNode.Childs[0].Childs[0], new ValueNode(bValue.Value)));
+				}
 			}
 
 			var aValue = funcNode.Childs[0] as ValueNode;

@@ -9,13 +9,19 @@ using System.Windows.Forms;
 using System.IO;
 using GOLD;
 using MathFunctions.GUI.Properties;
+using System.Globalization;
+using System.Threading;
 
 namespace MathFunctions.GUI
 {
 	public partial class frmMain : Form
 	{
+		MathFuncAssemblyCecil Assembly;
+
 		public frmMain()
 		{
+			Thread.CurrentThread.CurrentCulture = CultureInfo.InvariantCulture;
+			Thread.CurrentThread.CurrentUICulture = CultureInfo.InvariantCulture;
 			InitializeComponent();
 		}
 
@@ -82,17 +88,17 @@ namespace MathFunctions.GUI
 		{
 			dgvErrors.Rows.Clear();
 
-			var mathFuncAssembly = new MathFuncAssemblyCecil();
-			mathFuncAssembly.Init();
+			Assembly = new MathFuncAssemblyCecil();
+			Assembly.Init();
 
-			var Var = string.IsNullOrEmpty(tbVar.Text) ? null : new VarNode(tbVar.Text.ToLowerInvariant());
+			var variable = string.IsNullOrEmpty(tbVar.Text) ? null : new VarNode(tbVar.Text.ToLowerInvariant());
 
 			MathFunc simplifiedFunc = null;
 			try
 			{
 				simplifiedFunc = new MathFunc(tbInput.Text, tbVar.Text).Simplify();
 				tbSimplification.Text = simplifiedFunc.ToString();
-			} 
+			}
 			catch (Exception ex)
 			{
 				dgvErrors.Rows.Add(string.Empty, ex.Message);
@@ -107,7 +113,7 @@ namespace MathFunctions.GUI
 			try
 			{
 				var compileFunc = new MathFunc(tbInput.Text, tbVar.Text, true, true);
-				compileFunc.Compile(mathFuncAssembly, "Func");
+				compileFunc.Compile(Assembly, "Func");
 
 				var sb = new StringBuilder();
 				compileFunc.Instructions.ToList().ForEach(instr => sb.AppendLine(instr.ToString()));
@@ -125,7 +131,6 @@ namespace MathFunctions.GUI
 				try
 				{
 					derivativeFunc = new MathFunc(tbInput.Text).GetDerivative();
-
 					tbDerivative.Text = derivativeFunc.ToString();
 				}
 				catch (Exception ex)
@@ -140,7 +145,8 @@ namespace MathFunctions.GUI
 				try
 				{
 					var compileDerivativeFunc = new MathFunc(tbDerivative.Text, tbVar.Text, true, true);
-					compileDerivativeFunc.Compile(mathFuncAssembly, "FuncDer");
+					compileDerivativeFunc.DerivativeDelta = double.Parse(tbDerivativeDelta.Text);
+					compileDerivativeFunc.Compile(Assembly, "FuncDer");
 					var sb = new StringBuilder();
 					compileDerivativeFunc.Instructions.ToList().ForEach(instr => sb.AppendLine(instr.ToString()));
 
@@ -152,8 +158,15 @@ namespace MathFunctions.GUI
 					tbDerivativeIlCode.Text = null;
 				}
 			}
+		}
 
-			mathFuncAssembly.Finalize();
+		private void btnSave_Click(object sender, EventArgs e)
+		{
+			if (saveFileDialog1.ShowDialog() == System.Windows.Forms.DialogResult.OK)
+			{
+				if (Assembly != null)
+					Assembly.Finalize(Path.GetDirectoryName(saveFileDialog1.FileName), Path.GetFileName(saveFileDialog1.FileName));
+			}
 		}
 	}
 }

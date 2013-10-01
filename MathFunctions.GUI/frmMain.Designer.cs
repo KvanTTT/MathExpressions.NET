@@ -53,6 +53,9 @@
 			this.dgvErrors = new System.Windows.Forms.DataGridView();
 			this.clnPos = new System.Windows.Forms.DataGridViewTextBoxColumn();
 			this.clnDescription = new System.Windows.Forms.DataGridViewTextBoxColumn();
+			this.tbDerivativeDelta = new System.Windows.Forms.TextBox();
+			this.btnSave = new System.Windows.Forms.Button();
+			this.saveFileDialog1 = new System.Windows.Forms.SaveFileDialog();
 			((System.ComponentModel.ISupportInitialize)(this.splitContainer3)).BeginInit();
 			this.splitContainer3.Panel1.SuspendLayout();
 			this.splitContainer3.Panel2.SuspendLayout();
@@ -85,8 +88,8 @@
 			// splitContainer3.Panel2
 			// 
 			this.splitContainer3.Panel2.Controls.Add(this.dgvErrors);
-			this.splitContainer3.Size = new System.Drawing.Size(894, 534);
-			this.splitContainer3.SplitterDistance = 402;
+			this.splitContainer3.Size = new System.Drawing.Size(949, 613);
+			this.splitContainer3.SplitterDistance = 461;
 			this.splitContainer3.TabIndex = 13;
 			// 
 			// splitContainer2
@@ -97,6 +100,7 @@
 			// 
 			// splitContainer2.Panel1
 			// 
+			this.splitContainer2.Panel1.Controls.Add(this.btnSave);
 			this.splitContainer2.Panel1.Controls.Add(this.tbVar);
 			this.splitContainer2.Panel1.Controls.Add(this.label5);
 			this.splitContainer2.Panel1.Controls.Add(this.btnCalculate);
@@ -113,16 +117,16 @@
 			// splitContainer2.Panel2
 			// 
 			this.splitContainer2.Panel2.Controls.Add(this.splitContainer4);
-			this.splitContainer2.Size = new System.Drawing.Size(894, 402);
-			this.splitContainer2.SplitterDistance = 540;
+			this.splitContainer2.Size = new System.Drawing.Size(949, 461);
+			this.splitContainer2.SplitterDistance = 599;
 			this.splitContainer2.TabIndex = 11;
 			// 
 			// tbVar
 			// 
 			this.tbVar.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-			this.tbVar.Location = new System.Drawing.Point(407, 301);
+			this.tbVar.Location = new System.Drawing.Point(294, 369);
 			this.tbVar.Name = "tbVar";
-			this.tbVar.Size = new System.Drawing.Size(107, 20);
+			this.tbVar.Size = new System.Drawing.Size(51, 20);
 			this.tbVar.TabIndex = 28;
 			this.tbVar.Text = "x";
 			// 
@@ -130,19 +134,19 @@
 			// 
 			this.label5.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
 			this.label5.AutoSize = true;
-			this.label5.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
-			this.label5.Location = new System.Drawing.Point(372, 302);
+			this.label5.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
+			this.label5.Location = new System.Drawing.Point(265, 373);
 			this.label5.Name = "label5";
-			this.label5.Size = new System.Drawing.Size(29, 16);
+			this.label5.Size = new System.Drawing.Size(23, 13);
 			this.label5.TabIndex = 27;
 			this.label5.Text = "Var";
 			// 
 			// btnCalculate
 			// 
 			this.btnCalculate.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-			this.btnCalculate.Location = new System.Drawing.Point(206, 266);
+			this.btnCalculate.Location = new System.Drawing.Point(383, 366);
 			this.btnCalculate.Name = "btnCalculate";
-			this.btnCalculate.Size = new System.Drawing.Size(104, 26);
+			this.btnCalculate.Size = new System.Drawing.Size(77, 26);
 			this.btnCalculate.TabIndex = 26;
 			this.btnCalculate.Text = "Calculate";
 			this.btnCalculate.UseVisualStyleBackColor = true;
@@ -154,7 +158,7 @@
 			this.cbRealTimeUpdate.AutoSize = true;
 			this.cbRealTimeUpdate.Checked = true;
 			this.cbRealTimeUpdate.CheckState = System.Windows.Forms.CheckState.Checked;
-			this.cbRealTimeUpdate.Location = new System.Drawing.Point(117, 272);
+			this.cbRealTimeUpdate.Location = new System.Drawing.Point(118, 372);
 			this.cbRealTimeUpdate.Name = "cbRealTimeUpdate";
 			this.cbRealTimeUpdate.Size = new System.Drawing.Size(112, 17);
 			this.cbRealTimeUpdate.TabIndex = 25;
@@ -165,9 +169,9 @@
 			// btnRebuildDerivatives
 			// 
 			this.btnRebuildDerivatives.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-			this.btnRebuildDerivatives.Location = new System.Drawing.Point(411, 266);
+			this.btnRebuildDerivatives.Location = new System.Drawing.Point(487, 336);
 			this.btnRebuildDerivatives.Name = "btnRebuildDerivatives";
-			this.btnRebuildDerivatives.Size = new System.Drawing.Size(104, 26);
+			this.btnRebuildDerivatives.Size = new System.Drawing.Size(87, 26);
 			this.btnRebuildDerivatives.TabIndex = 24;
 			this.btnRebuildDerivatives.Text = "Rebuild derivatives";
 			this.btnRebuildDerivatives.UseVisualStyleBackColor = true;
@@ -183,7 +187,7 @@
 			this.tbDerivatives.Multiline = true;
 			this.tbDerivatives.Name = "tbDerivatives";
 			this.tbDerivatives.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
-			this.tbDerivatives.Size = new System.Drawing.Size(503, 247);
+			this.tbDerivatives.Size = new System.Drawing.Size(562, 311);
 			this.tbDerivatives.TabIndex = 23;
 			this.tbDerivatives.Text = resources.GetString("tbDerivatives.Text");
 			// 
@@ -192,7 +196,7 @@
 			this.label2.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
 			this.label2.AutoSize = true;
 			this.label2.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
-			this.label2.Location = new System.Drawing.Point(14, 331);
+			this.label2.Location = new System.Drawing.Point(15, 399);
 			this.label2.Name = "label2";
 			this.label2.Size = new System.Drawing.Size(87, 16);
 			this.label2.TabIndex = 22;
@@ -203,7 +207,7 @@
 			this.label1.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
 			this.label1.AutoSize = true;
 			this.label1.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
-			this.label1.Location = new System.Drawing.Point(14, 360);
+			this.label1.Location = new System.Drawing.Point(15, 428);
 			this.label1.Name = "label1";
 			this.label1.Size = new System.Drawing.Size(69, 16);
 			this.label1.TabIndex = 21;
@@ -213,20 +217,20 @@
 			// 
 			this.tbSimplification.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-			this.tbSimplification.Location = new System.Drawing.Point(117, 330);
+			this.tbSimplification.Location = new System.Drawing.Point(118, 398);
 			this.tbSimplification.Name = "tbSimplification";
 			this.tbSimplification.ReadOnly = true;
-			this.tbSimplification.Size = new System.Drawing.Size(397, 20);
+			this.tbSimplification.Size = new System.Drawing.Size(456, 20);
 			this.tbSimplification.TabIndex = 20;
 			// 
 			// tbDerivative
 			// 
 			this.tbDerivative.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-			this.tbDerivative.Location = new System.Drawing.Point(117, 356);
+			this.tbDerivative.Location = new System.Drawing.Point(118, 424);
 			this.tbDerivative.Name = "tbDerivative";
 			this.tbDerivative.ReadOnly = true;
-			this.tbDerivative.Size = new System.Drawing.Size(397, 20);
+			this.tbDerivative.Size = new System.Drawing.Size(456, 20);
 			this.tbDerivative.TabIndex = 19;
 			// 
 			// label3
@@ -234,7 +238,7 @@
 			this.label3.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
 			this.label3.AutoSize = true;
 			this.label3.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
-			this.label3.Location = new System.Drawing.Point(13, 300);
+			this.label3.Location = new System.Drawing.Point(13, 339);
 			this.label3.Name = "label3";
 			this.label3.Size = new System.Drawing.Size(36, 16);
 			this.label3.TabIndex = 18;
@@ -244,9 +248,9 @@
 			// 
 			this.tbInput.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-			this.tbInput.Location = new System.Drawing.Point(117, 301);
+			this.tbInput.Location = new System.Drawing.Point(118, 340);
 			this.tbInput.Name = "tbInput";
-			this.tbInput.Size = new System.Drawing.Size(247, 20);
+			this.tbInput.Size = new System.Drawing.Size(342, 20);
 			this.tbInput.TabIndex = 17;
 			this.tbInput.Text = "2 + 2 * 2";
 			this.tbInput.TextChanged += new System.EventHandler(this.tbInput_TextChanged);
@@ -260,13 +264,14 @@
 			// 
 			// splitContainer4.Panel1
 			// 
+			this.splitContainer4.Panel1.Controls.Add(this.tbDerivativeDelta);
 			this.splitContainer4.Panel1.Controls.Add(this.label4);
 			// 
 			// splitContainer4.Panel2
 			// 
 			this.splitContainer4.Panel2.Controls.Add(this.tabControl1);
-			this.splitContainer4.Size = new System.Drawing.Size(350, 402);
-			this.splitContainer4.SplitterDistance = 52;
+			this.splitContainer4.Size = new System.Drawing.Size(346, 461);
+			this.splitContainer4.SplitterDistance = 59;
 			this.splitContainer4.TabIndex = 12;
 			// 
 			// label4
@@ -287,7 +292,7 @@
 			this.tabControl1.Location = new System.Drawing.Point(0, 0);
 			this.tabControl1.Name = "tabControl1";
 			this.tabControl1.SelectedIndex = 0;
-			this.tabControl1.Size = new System.Drawing.Size(350, 346);
+			this.tabControl1.Size = new System.Drawing.Size(346, 398);
 			this.tabControl1.TabIndex = 2;
 			// 
 			// tabPage1
@@ -296,7 +301,7 @@
 			this.tabPage1.Location = new System.Drawing.Point(4, 22);
 			this.tabPage1.Name = "tabPage1";
 			this.tabPage1.Padding = new System.Windows.Forms.Padding(3);
-			this.tabPage1.Size = new System.Drawing.Size(342, 320);
+			this.tabPage1.Size = new System.Drawing.Size(338, 372);
 			this.tabPage1.TabIndex = 0;
 			this.tabPage1.Text = "Simplification";
 			this.tabPage1.UseVisualStyleBackColor = true;
@@ -309,7 +314,7 @@
 			this.tbIlCode.Name = "tbIlCode";
 			this.tbIlCode.ReadOnly = true;
 			this.tbIlCode.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
-			this.tbIlCode.Size = new System.Drawing.Size(336, 314);
+			this.tbIlCode.Size = new System.Drawing.Size(332, 366);
 			this.tbIlCode.TabIndex = 2;
 			// 
 			// tabPage2
@@ -318,7 +323,7 @@
 			this.tabPage2.Location = new System.Drawing.Point(4, 22);
 			this.tabPage2.Name = "tabPage2";
 			this.tabPage2.Padding = new System.Windows.Forms.Padding(3);
-			this.tabPage2.Size = new System.Drawing.Size(353, 322);
+			this.tabPage2.Size = new System.Drawing.Size(367, 368);
 			this.tabPage2.TabIndex = 1;
 			this.tabPage2.Text = "Derivative";
 			this.tabPage2.UseVisualStyleBackColor = true;
@@ -331,7 +336,7 @@
 			this.tbDerivativeIlCode.Name = "tbDerivativeIlCode";
 			this.tbDerivativeIlCode.ReadOnly = true;
 			this.tbDerivativeIlCode.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
-			this.tbDerivativeIlCode.Size = new System.Drawing.Size(347, 316);
+			this.tbDerivativeIlCode.Size = new System.Drawing.Size(361, 362);
 			this.tbDerivativeIlCode.TabIndex = 3;
 			// 
 			// dgvErrors
@@ -345,7 +350,7 @@
 			this.dgvErrors.Name = "dgvErrors";
 			this.dgvErrors.ReadOnly = true;
 			this.dgvErrors.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
-			this.dgvErrors.Size = new System.Drawing.Size(894, 128);
+			this.dgvErrors.Size = new System.Drawing.Size(949, 148);
 			this.dgvErrors.TabIndex = 13;
 			this.dgvErrors.CellDoubleClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.dgvErrors_CellDoubleClick);
 			// 
@@ -363,13 +368,39 @@
 			this.clnDescription.ReadOnly = true;
 			this.clnDescription.Width = 500;
 			// 
+			// tbDerivativeDelta
+			// 
+			this.tbDerivativeDelta.Location = new System.Drawing.Point(89, 14);
+			this.tbDerivativeDelta.Name = "tbDerivativeDelta";
+			this.tbDerivativeDelta.Size = new System.Drawing.Size(100, 20);
+			this.tbDerivativeDelta.TabIndex = 12;
+			this.tbDerivativeDelta.Text = "0.000001";
+			// 
+			// btnSave
+			// 
+			this.btnSave.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
+			this.btnSave.Location = new System.Drawing.Point(487, 366);
+			this.btnSave.Name = "btnSave";
+			this.btnSave.Size = new System.Drawing.Size(86, 26);
+			this.btnSave.TabIndex = 29;
+			this.btnSave.Text = "Save";
+			this.btnSave.UseVisualStyleBackColor = true;
+			this.btnSave.Click += new System.EventHandler(this.btnSave_Click);
+			// 
+			// saveFileDialog1
+			// 
+			this.saveFileDialog1.DefaultExt = "dll";
+			this.saveFileDialog1.FileName = "MathFuncLib";
+			this.saveFileDialog1.Filter = "Assemblies (*.dll)|*.dll";
+			// 
 			// frmMain
 			// 
 			this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
 			this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-			this.ClientSize = new System.Drawing.Size(894, 534);
+			this.ClientSize = new System.Drawing.Size(949, 613);
 			this.Controls.Add(this.splitContainer3);
 			this.Name = "frmMain";
+			this.Text = "Math func simplification & derivatives";
 			this.FormClosed += new System.Windows.Forms.FormClosedEventHandler(this.frmMain_FormClosed);
 			this.Load += new System.EventHandler(this.frmMain_Load);
 			this.splitContainer3.Panel1.ResumeLayout(false);
@@ -422,6 +453,9 @@
 		private System.Windows.Forms.Button btnCalculate;
         private System.Windows.Forms.TextBox tbVar;
         private System.Windows.Forms.Label label5;
+        private System.Windows.Forms.TextBox tbDerivativeDelta;
+        private System.Windows.Forms.Button btnSave;
+		private System.Windows.Forms.SaveFileDialog saveFileDialog1;
 
 
 
