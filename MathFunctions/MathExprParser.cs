@@ -94,7 +94,7 @@ public class MathExprParser
 	public List<ParserError> Errors;
 
 	private List<int> ArgsCount;
-	private List<KnownMathFunctionType?> ArgsFuncTypes;
+	private List<KnownFuncType?> ArgsFuncTypes;
 	private Stack<MathFuncNode> Nodes;
 	private Stack<MathFunc> Funcs;
 
@@ -154,7 +154,7 @@ public class MathExprParser
 
 		ArgsCount = new List<int>();
 		Nodes = new Stack<MathFuncNode>();
-		ArgsFuncTypes = new List<KnownMathFunctionType?>();
+		ArgsFuncTypes = new List<KnownFuncType?>();
 		Parameters = new Dictionary<string, ConstNode>();
 		Funcs = new Stack<MathFunc>();
 
@@ -286,7 +286,7 @@ public class MathExprParser
 				// <FuncDef> ::= Id '(' <ExpressionList> ')' ''
 
 				PushFunction(r[0].Data.ToString());
-				Nodes.Push(new FuncNode(KnownMathFunctionType.Diff, new MathFuncNode[] { Nodes.Pop(), null }));
+				Nodes.Push(new FuncNode(KnownFuncType.Diff, new MathFuncNode[] { Nodes.Pop(), null }));
 
 				break;
 
@@ -303,7 +303,7 @@ public class MathExprParser
 
 				// <Expression> ::= <Addition>
 				if (AdditionMultiChilds)
-					PushOrRemoveFunc(KnownMathFunctionType.Add);
+					PushOrRemoveFunc(KnownFuncType.Add);
 
 				break;
 
@@ -311,13 +311,13 @@ public class MathExprParser
 
 				// <Addition> ::= <Addition> AddLiteral <Multiplication>
 				if (MultiplicationMultiChilds)
-					PushOrRemoveFunc(KnownMathFunctionType.Mult);
+					PushOrRemoveFunc(KnownFuncType.Mult);
 
 				if (AdditionMultiChilds)
 				{
 					ArgsCount[ArgsCount.Count - 1]++;
-					if (KnownMathFunction.BinaryNamesFuncs[r[1].Data.ToString()] == KnownMathFunctionType.Sub)
-						Nodes.Push(new FuncNode(KnownMathFunctionType.Neg, new MathFuncNode[] { Nodes.Pop() }));
+					if (KnownFunc.BinaryNamesFuncs[r[1].Data.ToString()] == KnownFuncType.Sub)
+						Nodes.Push(new FuncNode(KnownFuncType.Neg, new MathFuncNode[] { Nodes.Pop() }));
 				}
 				else
 					PushBinaryFunction(r[1].Data.ToString());
@@ -330,8 +330,8 @@ public class MathExprParser
 				if (AdditionMultiChilds)
 				{
 					ArgsCount[ArgsCount.Count - 1]++;
-					if (KnownMathFunction.BinaryNamesFuncs[r[1].Data.ToString()] == KnownMathFunctionType.Sub)
-						Nodes.Push(new FuncNode(KnownMathFunctionType.Neg, new MathFuncNode[] { Nodes.Pop() }));
+					if (KnownFunc.BinaryNamesFuncs[r[1].Data.ToString()] == KnownFuncType.Sub)
+						Nodes.Push(new FuncNode(KnownFuncType.Neg, new MathFuncNode[] { Nodes.Pop() }));
 				}
 				else
 					PushBinaryFunction(r[1].Data.ToString());
@@ -341,14 +341,14 @@ public class MathExprParser
 
 				// <Addition> ::= <FuncDef> AddLiteral <Multiplication>
 				if (MultiplicationMultiChilds)
-					PushOrRemoveFunc(KnownMathFunctionType.Mult);
+					PushOrRemoveFunc(KnownFuncType.Mult);
 
 				if (AdditionMultiChilds)
 				{
-					PushFunc(KnownMathFunctionType.Add, 2);
-					if (KnownMathFunction.BinaryNamesFuncs[r[1].Data.ToString()] == KnownMathFunctionType.Sub)
+					PushFunc(KnownFuncType.Add, 2);
+					if (KnownFunc.BinaryNamesFuncs[r[1].Data.ToString()] == KnownFuncType.Sub)
 
-						Nodes.Push(new FuncNode(KnownMathFunctionType.Neg, new MathFuncNode[] { Nodes.Pop() }));
+						Nodes.Push(new FuncNode(KnownFuncType.Neg, new MathFuncNode[] { Nodes.Pop() }));
 				}
 				else
 					PushBinaryFunction(r[1].Data.ToString());
@@ -360,9 +360,9 @@ public class MathExprParser
 
 				if (AdditionMultiChilds)
 				{
-					PushFunc(KnownMathFunctionType.Add, 2);
-					if (KnownMathFunction.BinaryNamesFuncs[r[1].Data.ToString()] == KnownMathFunctionType.Sub)
-						Nodes.Push(new FuncNode(KnownMathFunctionType.Neg, new MathFuncNode[] { Nodes.Pop() }));
+					PushFunc(KnownFuncType.Add, 2);
+					if (KnownFunc.BinaryNamesFuncs[r[1].Data.ToString()] == KnownFuncType.Sub)
+						Nodes.Push(new FuncNode(KnownFuncType.Neg, new MathFuncNode[] { Nodes.Pop() }));
 				}
 				else
 					PushBinaryFunction(r[1].Data.ToString());
@@ -373,10 +373,10 @@ public class MathExprParser
 				// <Addition> ::= <Multiplication>
 
 				if (MultiplicationMultiChilds)
-					PushOrRemoveFunc(KnownMathFunctionType.Mult);
+					PushOrRemoveFunc(KnownFuncType.Mult);
 
 				if (AdditionMultiChilds)
-					PushFunc(KnownMathFunctionType.Add);
+					PushFunc(KnownFuncType.Add);
 
 				break;
 
@@ -388,8 +388,8 @@ public class MathExprParser
 
 				if (MultiplicationMultiChilds)
 				{
-					if (KnownMathFunction.BinaryNamesFuncs[r[1].Data.ToString()] == KnownMathFunctionType.Div)
-						Nodes.Push(new FuncNode(KnownMathFunctionType.Exp, new MathFuncNode[] { Nodes.Pop(), new ValueNode(-1) }));
+					if (KnownFunc.BinaryNamesFuncs[r[1].Data.ToString()] == KnownFuncType.Div)
+						Nodes.Push(new FuncNode(KnownFuncType.Exp, new MathFuncNode[] { Nodes.Pop(), new ValueNode(-1) }));
 					ArgsCount[ArgsCount.Count - 1]++;
 				}
 				else
@@ -401,7 +401,7 @@ public class MathExprParser
 				// <Multiplication> ::= <Exponentiation>
 
 				if (MultiplicationMultiChilds)
-					PushFunc(KnownMathFunctionType.Mult);
+					PushFunc(KnownFuncType.Mult);
 				break;
 
 			case ProductionIndex.Multiplication_Multliteral3:
@@ -411,10 +411,10 @@ public class MathExprParser
 
 				if (MultiplicationMultiChilds)
 				{
-					PushFunc(KnownMathFunctionType.Mult, 2);
+					PushFunc(KnownFuncType.Mult, 2);
 
-					if (KnownMathFunction.BinaryNamesFuncs[r[1].Data.ToString()] == KnownMathFunctionType.Div)
-						Nodes.Push(new FuncNode(KnownMathFunctionType.Exp, new MathFuncNode[] { Nodes.Pop(), new ValueNode(-1) }));
+					if (KnownFunc.BinaryNamesFuncs[r[1].Data.ToString()] == KnownFuncType.Div)
+						Nodes.Push(new FuncNode(KnownFuncType.Exp, new MathFuncNode[] { Nodes.Pop(), new ValueNode(-1) }));
 				}
 				else
 					PushBinaryFunction(r[1].Data.ToString());
@@ -509,20 +509,20 @@ public class MathExprParser
 			case ProductionIndex.Value_Pipe_Pipe:
 
 				// <Value> ::= '|' <Expression> '|'
-				Nodes.Push(new FuncNode(KnownMathFunctionType.Abs, new MathFuncNode[] { Nodes.Pop() }));
+				Nodes.Push(new FuncNode(KnownFuncType.Abs, new MathFuncNode[] { Nodes.Pop() }));
 				break;
 
 			case ProductionIndex.Value_Lparan_Rparan_Apost:
 
 				// <Value> ::= '(' <Expression> ')' ''
-				Nodes.Push(new FuncNode(KnownMathFunctionType.Diff, new MathFuncNode[] { Nodes.Pop(), null }));
+				Nodes.Push(new FuncNode(KnownFuncType.Diff, new MathFuncNode[] { Nodes.Pop(), null }));
 				break;
 
 			case ProductionIndex.Value_Pipe_Pipe_Apost:
 
 				// <Value> ::= '|' <Expression> '|' ''
-				Nodes.Push(new FuncNode(KnownMathFunctionType.Diff, new MathFuncNode[] {
-						new FuncNode(KnownMathFunctionType.Abs, new MathFuncNode[] { Nodes.Pop() }), null }));
+				Nodes.Push(new FuncNode(KnownFuncType.Diff, new MathFuncNode[] {
+						new FuncNode(KnownFuncType.Abs, new MathFuncNode[] { Nodes.Pop() }), null }));
 				break;
 
 			/*case ProductionIndex.Value_Id_Apost:
@@ -535,13 +535,13 @@ public class MathExprParser
 		}  //switch
 	}
 
-	protected void PushFunc(KnownMathFunctionType funcType, int argCount = 1)
+	protected void PushFunc(KnownFuncType funcType, int argCount = 1)
 	{
 		ArgsCount.Add(argCount);
 		ArgsFuncTypes.Add(funcType);
 	}
 
-	protected void PushOrRemoveFunc(KnownMathFunctionType funcType)
+	protected void PushOrRemoveFunc(KnownFuncType funcType)
 	{
 		if (ArgsCount[ArgsCount.Count - 1] == 1 && ArgsFuncTypes[ArgsFuncTypes.Count - 1] == funcType)
 		{
@@ -549,7 +549,7 @@ public class MathExprParser
 			ArgsFuncTypes.RemoveAt(ArgsFuncTypes.Count - 1);
 		}
 		else
-			PushFunction(KnownMathFunction.BinaryFuncsNames[funcType]);
+			PushFunction(KnownFunc.BinaryFuncsNames[funcType]);
 	}
 
 	protected void PushBinaryFunction(string mathFunction)

@@ -198,8 +198,8 @@ namespace MathFunctions
 			switch (node.Type)
 			{
 				case MathNodeType.Value:
-					IlInstructions.Add(new OpCodeArg(OpCodes.Ldc_R8, 
-						abs ? Math.Abs(node.Value.ToDouble()) : node.Value.ToDouble()));
+					IlInstructions.Add(new OpCodeArg(OpCodes.Ldc_R8,
+						abs ? Math.Abs(((ValueNode)node).Value.ToDouble()) : ((ValueNode)node).Value.ToDouble()));
 					break;
 
 				case MathNodeType.Constant:
@@ -230,19 +230,19 @@ namespace MathFunctions
 		{
 			switch (funcNode.FunctionType)
 			{
-				case KnownMathFunctionType.Add:
+				case KnownFuncType.Add:
 					return EmitAddFunc(funcNode);
-				case KnownMathFunctionType.Sub:
+				case KnownFuncType.Sub:
 					throw new NotSupportedException("replace substraction with negation and addition");
-				case KnownMathFunctionType.Mult:
+				case KnownFuncType.Mult:
 					return EmitMultFunc(funcNode);
-				case KnownMathFunctionType.Div:
+				case KnownFuncType.Div:
 					throw new NotSupportedException("replace devision with inversation and multiplication");
-				case KnownMathFunctionType.Neg:
+				case KnownFuncType.Neg:
 					return EmitNegFunc(funcNode, abs);
-				case KnownMathFunctionType.Exp:
+				case KnownFuncType.Exp:
 					return EmitExpFunc(funcNode, abs);
-				case KnownMathFunctionType.Diff:
+				case KnownFuncType.Diff:
 					return EmitDiffFunc(funcNode);
 			}
 
@@ -293,7 +293,7 @@ namespace MathFunctions
 			firstItem = funcNode.Childs.FirstOrDefault(node =>
 			{
 				var func = node as FuncNode;
-				return !(func != null && FuncNodes[func].Count == 1 && func.FunctionType == KnownMathFunctionType.Exp && func.Childs[1].LessThenZero());
+				return !(func != null && FuncNodes[func].Count == 1 && func.FunctionType == KnownFuncType.Exp && func.Childs[1].LessThenZero());
 			});
 
 
@@ -307,7 +307,7 @@ namespace MathFunctions
 
 				var func = funcNode.Childs[i] as FuncNode;
 
-				if (func != null && FuncNodes[func].Count == 1 && func.FunctionType == KnownMathFunctionType.Exp && func.Childs[1].LessThenZero())
+				if (func != null && FuncNodes[func].Count == 1 && func.FunctionType == KnownFuncType.Exp && func.Childs[1].LessThenZero())
 				{
 					EmitNode(funcNode.Childs[i], true);
 					IlInstructions.Add(new OpCodeArg(OpCodes.Div));
@@ -337,9 +337,9 @@ namespace MathFunctions
 
 		private bool EmitExpFunc(FuncNode funcNode, bool abs)
 		{
-			if (funcNode.Childs[1].IsValue && funcNode.Childs[1].Value.IsInteger)
+			if (funcNode.Childs[1].IsValue && ((ValueNode)funcNode.Childs[1]).Value.IsInteger)
 			{
-				int powerValue = (int)funcNode.Childs[1].Value.Numerator;
+				int powerValue = (int)((ValueNode)funcNode.Childs[1]).Value.Numerator;
 				int power = Math.Abs(powerValue);
 				if (abs)
 					powerValue = power;
@@ -411,13 +411,34 @@ namespace MathFunctions
 			}
 			else
 			{
-				EmitNode(funcNode.Childs[0]);
-				if (abs)
-					EmitNode(funcNode.Childs[1].Abs());
+				var child1 = funcNode.Childs[1];
+				if ((child1.Type == MathNodeType.Value && ((ValueNode)child1).Value.Abs() == new Rational<long>(1, 2, false)) ||
+					(child1.Type == MathNodeType.Calculated && Math.Abs(((CalculatedNode)child1).Value) == 0.5))
+				{
+					if (!abs && ((child1.Type == MathNodeType.Value && ((ValueNode)child1).Value < 0) ||
+							(child1.Type == MathNodeType.Calculated && ((CalculatedNode)child1).Value < 0)))
+					{
+						IlInstructions.Add(new OpCodeArg(OpCodes.Ldc_R8, 1.0));
+						EmitNode(funcNode.Childs[0]);
+						IlInstructions.Add(new OpCodeArg(OpCodes.Call, MathFuncAssembly.TypesReferences[KnownFuncType.Sqrt]));
+						IlInstructions.Add(new OpCodeArg(OpCodes.Div));
+					}
+					else
+					{
+						EmitNode(funcNode.Childs[0]);
+						IlInstructions.Add(new OpCodeArg(OpCodes.Call, MathFuncAssembly.TypesReferences[KnownFuncType.Sqrt]));
+					}
+				}
 				else
-					EmitNode(funcNode.Childs[1]);
-				
-				IlInstructions.Add(new OpCodeArg(OpCodes.Call, MathFuncAssembly.TypesReferences[(KnownMathFunctionType)funcNode.FunctionType]));
+				{
+					EmitNode(funcNode.Childs[0]);
+					if (abs)
+						EmitNode(funcNode.Childs[1].Abs());
+					else
+						EmitNode(funcNode.Childs[1]);
+
+					IlInstructions.Add(new OpCodeArg(OpCodes.Call, MathFuncAssembly.TypesReferences[(KnownFuncType)funcNode.FunctionType]));
+				}
 			}
 
 			return true;
@@ -455,7 +476,7 @@ namespace MathFunctions
 		private bool EmitKnownFunc(FuncNode funcNode)
 		{
 			MethodReference value;
-			if (funcNode.FunctionType != null && MathFuncAssembly.TypesReferences.TryGetValue((KnownMathFunctionType)funcNode.FunctionType, out value))
+			if (funcNode.FunctionType != null && MathFuncAssembly.TypesReferences.TryGetValue((KnownFuncType)funcNode.FunctionType, out value))
 			{
 				foreach (var child in funcNode.Childs)
 					EmitNode(child);

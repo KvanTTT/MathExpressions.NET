@@ -28,15 +28,13 @@ namespace MathFunctions
 			private set;
 		}
 
-		public readonly bool CalculateConstants;
-
 		public MathFuncNode Root
 		{
 			get;
 			protected set;
 		}
 
-		public MathFunc(string str, string v = null, bool calculateConstants = false, bool simplify = false)
+		public MathFunc(string str, string v = null, bool simplify = false, bool calculateConstants = false)
 		{
 			if (!Helper.Parser.Parse(str))
 				throw new Exception("Impossible to parse input string");
@@ -56,10 +54,10 @@ namespace MathFunctions
 			FindParamsAndUnknownFuncs(Root);
 
 			Root.Sort();
-			Root = Simplify(Root);
-			CalculateConstants = calculateConstants;
-			if (calculateConstants || simplify)
+			if (simplify)
 				Root = Simplify(Root);
+			if (calculateConstants)
+				Root = RationalToDouble(Root);
 		}
 
 		public MathFunc(MathFuncNode root, 
@@ -72,7 +70,7 @@ namespace MathFunctions
 
 		public MathFunc(MathFuncNode left, MathFuncNode right, 
 			VarNode variable = null, IEnumerable<ConstNode> parameters = null,
-			bool calculateConstants = false, bool simplify = false)
+			bool simplify = true, bool calculateConstants = false)
 		{
 			LeftNode = left;
 			RightNode = right;
@@ -88,127 +86,131 @@ namespace MathFunctions
 			FindParamsAndUnknownFuncs(Root);
 
 			Root.Sort();
-			CalculateConstants = calculateConstants;
-			if (calculateConstants || simplify)
+			if (simplify)
 				Root = Simplify(Root);
+			if (calculateConstants)
+				Root = RationalToDouble(Root);
 		}
 
-		public MathFuncNode Calculate(KnownMathFunctionType? funcType, IList<ValueNode> args)
+		public MathFuncNode Calculate(KnownFuncType? funcType, IList<ValueNode> args)
 		{
 			Rational<long> result;
 			double temp = 0.0;
 
 			switch (funcType)
 			{
-				case KnownMathFunctionType.Add:
+				case KnownFuncType.Add:
 					result = args[0].Value;
 					for (int i = 1; i < args.Count; i++)
 						result += args[i].Value;
 					return new ValueNode(result);
 
-				case KnownMathFunctionType.Sub:
+				case KnownFuncType.Sub:
 					result = args[0].Value;
 					for (int i = 1; i < args.Count; i++)
 						result -= args[i].Value;
 					return new ValueNode(result);
 
-				case KnownMathFunctionType.Mult:
+				case KnownFuncType.Mult:
 					result = args[0].Value;
 					for (int i = 1; i < args.Count; i++)
 						result *= args[i].Value;
 					return new ValueNode(result);
 
-				case KnownMathFunctionType.Div:
+				case KnownFuncType.Div:
 					result = args[0].Value;
 					for (int i = 1; i < args.Count; i++)
 						result /= args[i].Value;
 					return new ValueNode(result);
 
-				case KnownMathFunctionType.Exp:
-					temp = Math.Pow(args[0].Value.ToDouble(), args[1].Value.ToDouble());
+				case KnownFuncType.Exp:
+					if (args[1].Value.ToDouble() == 0.5)
+						temp = Math.Sqrt(args[0].Value.ToDouble());
+					else
+						temp = Math.Pow(args[0].Value.ToDouble(), args[1].Value.ToDouble());
 					break;
 				
-				case KnownMathFunctionType.Neg:
+				case KnownFuncType.Neg:
 					return new ValueNode(-args[0].Value);
 
-				case KnownMathFunctionType.Sqrt:
+				case KnownFuncType.Sqrt:
 					temp = Math.Sqrt(args[0].Value.ToDouble());
 					break;
 
-				case KnownMathFunctionType.Sin:
+				case KnownFuncType.Sin:
 					temp = Math.Sin(args[0].Value.ToDouble());
 					break;
 
-				case KnownMathFunctionType.Cos:
+				case KnownFuncType.Cos:
 					temp = Math.Cos(args[0].Value.ToDouble());
 					break;
 
-				case KnownMathFunctionType.Tan:
+				case KnownFuncType.Tan:
 					temp = Math.Tan(args[0].Value.ToDouble());
 					break;
 
-				case KnownMathFunctionType.Cot:
+				case KnownFuncType.Cot:
 					temp = 1 / Math.Tan(args[0].Value.ToDouble());
 					break;
 
-				case KnownMathFunctionType.Arcsin:
+				case KnownFuncType.Arcsin:
 					temp = Math.Asin(args[0].Value.ToDouble());
 					break;
 
-				case KnownMathFunctionType.Arccos:
+				case KnownFuncType.Arccos:
 					temp = Math.Acos(args[0].Value.ToDouble());
 					break;
 
-				case KnownMathFunctionType.Arctan:
+				case KnownFuncType.Arctan:
 					temp = Math.Atan(args[0].Value.ToDouble());
 					break;
 
-				case KnownMathFunctionType.Arccot:
+				case KnownFuncType.Arccot:
 					temp = Math.PI / 2 - Math.Atan(args[0].Value.ToDouble());
 					break;
 
-				case KnownMathFunctionType.Sinh:
+				case KnownFuncType.Sinh:
 					temp = Math.Sinh(args[0].Value.ToDouble());
 					break;
 
-				case KnownMathFunctionType.Cosh:
+				case KnownFuncType.Cosh:
 					temp = Math.Cosh(args[0].Value.ToDouble());
 					break;
 
-				case KnownMathFunctionType.Arcsinh:
+				case KnownFuncType.Arcsinh:
 					temp = Math.Log(args[0].Value.ToDouble() + Math.Sqrt(args[0].Value.ToDouble() * args[0].Value.ToDouble() + 1));
 					break;
 
-				case KnownMathFunctionType.Arcosh:
+				case KnownFuncType.Arcosh:
 					temp = Math.Log(args[0].Value.ToDouble() + Math.Sqrt(args[0].Value.ToDouble() * args[0].Value.ToDouble() - 1));
 					break;
 
-				case KnownMathFunctionType.Ln:
+				case KnownFuncType.Ln:
 					temp = Math.Log(args[0].Value.ToDouble());
 					break;
 
-				case KnownMathFunctionType.Log10:
+				case KnownFuncType.Log10:
 					temp = Math.Log10(args[0].Value.ToDouble());
 					break;
 
-				case KnownMathFunctionType.Log:
+				case KnownFuncType.Log:
 					temp = Math.Log(args[0].Value.ToDouble(), args[1].Value.ToDouble());
 					break;
 
-				case KnownMathFunctionType.Abs:
+				case KnownFuncType.Abs:
 					temp = args[0].Value.Abs().ToDouble();
 					break;
 
-				case KnownMathFunctionType.Sgn:
+				case KnownFuncType.Sgn:
 					return new ValueNode(new Rational<long>((long)Math.Sign(args[0].Value.ToDouble()), 1, false));
 
-				case KnownMathFunctionType.Trunc:
+				case KnownFuncType.Trunc:
 					return new ValueNode(new Rational<long>((long)Math.Truncate(args[0].Value.ToDouble()), 1, false));
 
-				case KnownMathFunctionType.Round:
+				case KnownFuncType.Round:
 					return new ValueNode(new Rational<long>((long)Math.Round(args[0].Value.ToDouble()), 1, false));
 
-				case KnownMathFunctionType.Diff:
+				case KnownFuncType.Diff:
 					return new ValueNode(0);
 
 				default:
@@ -217,8 +219,6 @@ namespace MathFunctions
 
 			if (Rational<long>.FromDecimal((decimal)temp, out result, 12, false, 2, 8))
 				return new ValueNode(result);
-			else if (CalculateConstants)
-				return new ValueNode(Rational<long>.Approximate((decimal)temp));
 			else
 				return null;
 		}

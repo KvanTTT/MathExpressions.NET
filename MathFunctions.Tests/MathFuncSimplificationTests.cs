@@ -67,7 +67,7 @@ namespace MathFunctions.Tests
 		[Test]
 		public void PowerInPowerSimplicateTest()
 		{
-			var f = new MathFunc("1 / x ^ 2");
+			var f = new MathFunc("1 / x ^ 2").Simplify();
 			Assert.IsTrue(f == "x ^ -2");
 		}
 	}

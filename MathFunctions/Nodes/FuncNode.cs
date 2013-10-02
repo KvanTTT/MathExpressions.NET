@@ -7,7 +7,7 @@ namespace MathFunctions
 {
 	public class FuncNode : MathFuncNode
 	{
-		public readonly KnownMathFunctionType? FunctionType;
+		public readonly KnownFuncType? FunctionType;
 
 		public bool IsKnown
 		{
@@ -24,33 +24,33 @@ namespace MathFunctions
 			get { return false; }
 		}
 
-		public FuncNode(KnownMathFunctionType type)
+		public FuncNode(KnownFuncType type)
 			: this(type, new List<MathFuncNode>())
 		{
 		}
 
-		public FuncNode(KnownMathFunctionType type, MathFuncNode arg)
+		public FuncNode(KnownFuncType type, MathFuncNode arg)
 			: this(type, new List<MathFuncNode>() { arg })
 		{
 		}
 
-		public FuncNode(KnownMathFunctionType type, MathFuncNode arg1, MathFuncNode arg2)
+		public FuncNode(KnownFuncType type, MathFuncNode arg1, MathFuncNode arg2)
 			: this(type, new List<MathFuncNode>() { arg1, arg2 })
 		{
 		}
 
-		public FuncNode(KnownMathFunctionType type, MathFuncNode arg1, MathFuncNode arg2, MathFuncNode arg3)
+		public FuncNode(KnownFuncType type, MathFuncNode arg1, MathFuncNode arg2, MathFuncNode arg3)
 			: this(type, new List<MathFuncNode>() { arg1, arg2, arg3 })
 		{
 		}
 
-		public FuncNode(KnownMathFunctionType type, IList<MathFuncNode> args)
+		public FuncNode(KnownFuncType type, IList<MathFuncNode> args)
 		{
 			FunctionType = type;
 			string name;
-			if (KnownMathFunction.UnaryFuncsNames.TryGetValue(type, out name))
+			if (KnownFunc.UnaryFuncsNames.TryGetValue(type, out name))
 				Name = name;
-			else if (KnownMathFunction.BinaryFuncsNames.TryGetValue(type, out name))
+			else if (KnownFunc.BinaryFuncsNames.TryGetValue(type, out name))
 				Name = name;
 			else
 				Name = FunctionType.ToString();
@@ -68,24 +68,24 @@ namespace MathFunctions
 			var lowercasename = name.ToLower();
 			if (args.Count >= 2)
 			{
-				KnownMathFunctionType functionType;
-				if (KnownMathFunction.BinaryNamesFuncs.TryGetValue(lowercasename, out functionType))
+				KnownFuncType functionType;
+				if (KnownFunc.BinaryNamesFuncs.TryGetValue(lowercasename, out functionType))
 					FunctionType = functionType;
 			}
 			else if (args.Count == 1)
 			{
-				KnownMathFunctionType functionType;
-				if (KnownMathFunction.UnaryNamesFuncs.TryGetValue(lowercasename, out functionType))
+				KnownFuncType functionType;
+				if (KnownFunc.UnaryNamesFuncs.TryGetValue(lowercasename, out functionType))
 					FunctionType = functionType;
-				else if (KnownMathFunction.BinaryNamesFuncs.TryGetValue(lowercasename, out functionType))
+				else if (KnownFunc.BinaryNamesFuncs.TryGetValue(lowercasename, out functionType))
 					FunctionType = functionType;
 			}
 			Name = lowercasename;
 			foreach (var arg in args)
 				Childs.Add(arg);
-			if (FunctionType == KnownMathFunctionType.Sqrt)
+			if (FunctionType == KnownFuncType.Sqrt)
 			{
-				FunctionType = KnownMathFunctionType.Exp;
+				FunctionType = KnownFuncType.Exp;
 				Childs.Add(new ValueNode(new Rational<long>(1, 2)));
 			}
 		}
@@ -99,7 +99,7 @@ namespace MathFunctions
 				switch (node.Childs[i].Type)
 				{
 					case MathNodeType.Value:
-						Childs.Add(new ValueNode(node.Childs[i].Value));
+						Childs.Add(new ValueNode(((ValueNode)node.Childs[i]).Value));
 						break;
 					case MathNodeType.Constant:
 					case MathNodeType.Variable:
@@ -121,38 +121,31 @@ namespace MathFunctions
 			return ToString(null);
 		}
 
-		public override string ToString(MathFuncNode parent)
+		public override string ToString(FuncNode parent)
 		{
 			if (IsKnown)
 			{
-				var funcNodeParent = parent as FuncNode;
-				var funcType = (KnownMathFunctionType)FunctionType;
-				switch ((KnownMathFunctionType)FunctionType)
+				var funcType = (KnownFuncType)FunctionType;
+				switch ((KnownFuncType)FunctionType)
 				{
-					case KnownMathFunctionType.Add:
-					case KnownMathFunctionType.Sub:
-						return ToString(parent, funcType, new KnownMathFunctionType[] {
-							KnownMathFunctionType.Add, KnownMathFunctionType.Sub });
+					case KnownFuncType.Add:
+					case KnownFuncType.Sub:
+						return ToString(parent, funcType, KnownFunc.AddKnownFuncs);
 
-					case KnownMathFunctionType.Mult:
-					case KnownMathFunctionType.Div:
-						return ToString(parent, funcType, new KnownMathFunctionType[] { 
-							KnownMathFunctionType.Add, KnownMathFunctionType.Sub,
-							KnownMathFunctionType.Mult, KnownMathFunctionType.Div });
+					case KnownFuncType.Mult:
+					case KnownFuncType.Div:
+						return ToString(parent, funcType, KnownFunc.MultKnownFuncs);
 
-					case KnownMathFunctionType.Exp:
-						return ToString(parent, funcType, new KnownMathFunctionType[] { 
-							KnownMathFunctionType.Add, KnownMathFunctionType.Sub,
-							KnownMathFunctionType.Mult, KnownMathFunctionType.Div,
-							KnownMathFunctionType.Exp });
+					case KnownFuncType.Exp:
+						return ToString(parent, funcType, KnownFunc.ExpKnownFuncs);
 
-					case KnownMathFunctionType.Neg:
+					case KnownFuncType.Neg:
 						return Childs[0].Type != MathNodeType.Function ? "-" + Childs[0].ToString(this) : "-(" + Childs[0].ToString(this) + ")";
 
-					case KnownMathFunctionType.Diff:
+					case KnownFuncType.Diff:
 						return "(" + Childs[0].ToString(this) + ")'";
 
-					case KnownMathFunctionType.Abs:
+					case KnownFuncType.Abs:
 						return string.Format("|{0}|", Childs[0].ToString(this));
 				}
 			}
@@ -165,9 +158,9 @@ namespace MathFunctions
 			return builder.ToString();
 		}
 
-		protected string ToString(MathFuncNode parent,
-			KnownMathFunctionType funcType,
-			IList<KnownMathFunctionType> types)
+		protected string ToString(FuncNode parent,
+			KnownFuncType funcType,
+			IList<KnownFuncType> types)
 		{
 			var builder = new StringBuilder();
 
@@ -179,7 +172,7 @@ namespace MathFunctions
 
 			var funcNodeParent = parent as FuncNode;
 			if (funcNodeParent != null && funcNodeParent.IsKnown)
-				if (types.Contains((KnownMathFunctionType)funcNodeParent.FunctionType))
+				if (types.Contains((KnownFuncType)funcNodeParent.FunctionType))
 				{
 					AppendMathFunctionNode(builder, funcType);
 					return builder.ToString();
@@ -191,11 +184,11 @@ namespace MathFunctions
 			return builder.ToString();
 		}
 
-		private void AppendMathFunctionNode(StringBuilder builder, KnownMathFunctionType funcType)
+		private void AppendMathFunctionNode(StringBuilder builder, KnownFuncType funcType)
 		{
 			builder.Append(Childs[0].ToString(this) + " ");
 			for (int i = 1; i < Childs.Count; i++)
-				builder.AppendFormat("{0} {1} ", KnownMathFunction.BinaryFuncsNames[funcType], Childs[i].ToString(this));
+				builder.AppendFormat("{0} {1} ", KnownFunc.BinaryFuncsNames[funcType], Childs[i].ToString(this));
 			builder.Remove(builder.Length - 1, 1);
 		}
 

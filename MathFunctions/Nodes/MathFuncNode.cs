@@ -29,18 +29,6 @@ namespace MathFunctions
 			protected set;
 		}
 
-		public virtual Rational<long> Value
-		{
-			get
-			{
-				throw new NotSupportedException();
-			}
-			set
-			{
-				throw new NotSupportedException();
-			}
-		}
-
 		public bool IsValue
 		{
 			get
@@ -55,12 +43,12 @@ namespace MathFunctions
 							break;
 						}
 					}
-					else if (child.Type != MathNodeType.Value)
+					else if (child.Type != MathNodeType.Value && child.Type != MathNodeType.Calculated)
 					{
 						allChildsAreValues = false;
 						break;
 					}
-				return allChildsAreValues && Type == MathNodeType.Value;
+				return allChildsAreValues && (Type == MathNodeType.Value || Type == MathNodeType.Calculated);
 			}
 		}
 
@@ -81,7 +69,7 @@ namespace MathFunctions
 		{
 		}
 
-		public virtual string ToString(MathFuncNode parent)
+		public virtual string ToString(FuncNode parent)
 		{
 			return Name;
 		}
@@ -229,8 +217,8 @@ namespace MathFunctions
 			var funcNode = this as FuncNode;
 			if (funcNode != null)
 			{
-				if (funcNode.FunctionType == KnownMathFunctionType.Add ||
-					funcNode.FunctionType == KnownMathFunctionType.Mult)
+				if (funcNode.FunctionType == KnownFuncType.Add ||
+					funcNode.FunctionType == KnownFuncType.Mult)
 					Childs.Sort();
 			}
 		}
@@ -256,12 +244,12 @@ namespace MathFunctions
 			switch (Type)
 			{
 				case MathNodeType.Value:
-					return Value < 0;
+					return ((ValueNode)this).Value < 0;
 				case MathNodeType.Variable:
 				case MathNodeType.Constant:
 					return false;
 				case MathNodeType.Function:
-					return ((FuncNode)this).FunctionType == KnownMathFunctionType.Neg;
+					return ((FuncNode)this).FunctionType == KnownFuncType.Neg;
 				default:
 					return false;
 			}
@@ -272,12 +260,12 @@ namespace MathFunctions
 			switch (Type)
 			{
 				case MathNodeType.Value:
-					return new ValueNode(Value.Abs());
+					return new ValueNode(((ValueNode)this).Value.Abs());
 				case MathNodeType.Variable:
 				case MathNodeType.Constant:
 					return this;
 				case MathNodeType.Function:
-					if (((FuncNode)this).FunctionType == KnownMathFunctionType.Neg)
+					if (((FuncNode)this).FunctionType == KnownFuncType.Neg)
 						return this.Childs[0];
 					else
 						return this;

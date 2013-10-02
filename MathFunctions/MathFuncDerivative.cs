@@ -38,7 +38,7 @@ namespace MathFunctions
 		{
 			for (int i = 0; i < root.Childs.Count; i++)
 				if (root.Childs[i].Type == MathNodeType.Function)
-					if (((FuncNode)root.Childs[i]).FunctionType == KnownMathFunctionType.Diff)
+					if (((FuncNode)root.Childs[i]).FunctionType == KnownFuncType.Diff)
 						root.Childs[i] = GetDerivative(root.Childs[i].Childs[0]);
 					else
 						GetDerivatives(root.Childs[i]);
@@ -49,15 +49,15 @@ namespace MathFunctions
 			MathFunc value;
 			if (funcNode.IsKnown)
 			{
-				if (funcNode.FunctionType == KnownMathFunctionType.Add ||
-					funcNode.FunctionType == KnownMathFunctionType.Sub)
+				if (funcNode.FunctionType == KnownFuncType.Add ||
+					funcNode.FunctionType == KnownFuncType.Sub)
 				{
 					var newChilds = new List<MathFuncNode>(funcNode.Childs.Count);
 					for (int i = 0; i < funcNode.Childs.Count; i++)
 						newChilds.Add(GetDerivative(funcNode.Childs[i]));
-					return new FuncNode(KnownMathFunctionType.Add, newChilds);
+					return new FuncNode(KnownFuncType.Add, newChilds);
 				}
-				else if (funcNode.FunctionType == KnownMathFunctionType.Mult)
+				else if (funcNode.FunctionType == KnownFuncType.Mult)
 				{
 					var newChilds = new List<MathFuncNode>(funcNode.Childs.Count);
 					for (int i = 0; i < funcNode.Childs.Count; i++)
@@ -70,18 +70,18 @@ namespace MathFunctions
 							else
 								addNode.Add((MathFuncNode)funcNode.Childs[j].Clone());
 						}
-						newChilds.Add(new FuncNode(KnownMathFunctionType.Mult, addNode));
+						newChilds.Add(new FuncNode(KnownFuncType.Mult, addNode));
 					}
-					return new FuncNode(KnownMathFunctionType.Add, newChilds);
+					return new FuncNode(KnownFuncType.Add, newChilds);
 				}
-				else if (funcNode.FunctionType == KnownMathFunctionType.Exp)
+				else if (funcNode.FunctionType == KnownFuncType.Exp)
 				{
 					var valueNode = funcNode.Childs[1] as ValueNode;
 					if (valueNode != null)
 					{
-						return new FuncNode(KnownMathFunctionType.Mult,
+						return new FuncNode(KnownFuncType.Mult,
 								new ValueNode(valueNode.Value),
-								new FuncNode(KnownMathFunctionType.Exp,
+								new FuncNode(KnownFuncType.Exp,
 									(MathFuncNode)funcNode.Childs[0].Clone(),
 									new ValueNode(valueNode.Value - 1)),
 								GetDerivative(funcNode.Childs[0]));
@@ -89,25 +89,25 @@ namespace MathFunctions
 
 					var constNode = funcNode.Childs[1] as ConstNode;
 					if (constNode != null)
-						return new FuncNode(KnownMathFunctionType.Mult,
+						return new FuncNode(KnownFuncType.Mult,
 								new ConstNode(constNode.Name),
-								new FuncNode(KnownMathFunctionType.Exp,
+								new FuncNode(KnownFuncType.Exp,
 									(MathFuncNode)funcNode.Childs[0].Clone(),
-									new FuncNode(KnownMathFunctionType.Add, new ConstNode(constNode.Name), new ValueNode(-1))
+									new FuncNode(KnownFuncType.Add, new ConstNode(constNode.Name), new ValueNode(-1))
 								),
 								GetDerivative(funcNode.Childs[0])
 							);
 				}
-				else if (funcNode.FunctionType == KnownMathFunctionType.Diff)
+				else if (funcNode.FunctionType == KnownFuncType.Diff)
 				{
 					if (funcNode.Childs[0].Type == MathNodeType.Function && ((FuncNode)funcNode.Childs[0]).IsKnown)
 						return GetDerivative(GetDerivative(funcNode.Childs[0]));
 					else
-						return new FuncNode(KnownMathFunctionType.Mult, funcNode, GetDerivative(funcNode.Childs[0]));
+						return new FuncNode(KnownFuncType.Mult, funcNode, GetDerivative(funcNode.Childs[0]));
 				}
-				else if (funcNode.FunctionType == KnownMathFunctionType.Neg)
+				else if (funcNode.FunctionType == KnownFuncType.Neg)
 				{
-					return new FuncNode(KnownMathFunctionType.Neg, GetDerivative(funcNode.Childs[0]));
+					return new FuncNode(KnownFuncType.Neg, GetDerivative(funcNode.Childs[0]));
 				}
 			}
 
@@ -120,8 +120,8 @@ namespace MathFunctions
 			}
 			else
 			{
-				return new FuncNode(KnownMathFunctionType.Mult,
-					new FuncNode(KnownMathFunctionType.Diff, (MathFuncNode)funcNode.Clone()),
+				return new FuncNode(KnownFuncType.Mult,
+					new FuncNode(KnownFuncType.Diff, (MathFuncNode)funcNode.Clone()),
 					GetDerivative(funcNode.Childs[0]));
 			}
 		}
@@ -164,7 +164,7 @@ namespace MathFunctions
 				default:
 				case MathNodeType.Function:
 					result = ((FuncNode)node).FunctionType != null ?
-						new FuncNode((KnownMathFunctionType)((FuncNode)node).FunctionType) :
+						new FuncNode((KnownFuncType)((FuncNode)node).FunctionType) :
 						new FuncNode(node.Name);
 					break;
 			}

@@ -11,7 +11,7 @@ namespace MathFunctions
 	{
 		private Rational<long> _value;
 
-		public override Rational<long> Value
+		public Rational<long> Value
 		{
 			get
 			{
@@ -32,6 +32,7 @@ namespace MathFunctions
 		public ValueNode(int value)
 		{
 			Value = new Rational<long>(value, 1);
+			Name = Value.ToString();
 		}
 
 		public ValueNode(Rational<long> value)
@@ -63,9 +64,10 @@ namespace MathFunctions
 					return false;
 			}
 
-			if (obj is double)
+			if (obj is double || obj is decimal)
 			{
-				if ((double)obj == Value.ToDouble(CultureInfo.InvariantCulture))
+				Rational<long> r;
+				if (Rational<long>.FromDecimal((decimal)obj, out r) && r == Value)
 					return true;
 				else
 					return false;
@@ -105,6 +107,20 @@ namespace MathFunctions
 		public override int GetHashCode()
 		{
 			return Value.GetHashCode();
+		}
+
+		public override string ToString(FuncNode parent)
+		{
+			if (Value.Denominator == 1 || !parent.IsKnown)
+				return Name;
+
+			if (parent.FunctionType == KnownFuncType.Mult || parent.FunctionType == KnownFuncType.Div ||
+				parent.FunctionType == KnownFuncType.Exp || parent.FunctionType == KnownFuncType.Neg)
+			{
+				return '(' + Name + ')';
+			}
+			else
+				return Name;
 		}
 	}
 }

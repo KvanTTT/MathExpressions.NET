@@ -5,7 +5,7 @@ using System.Text;
 
 namespace MathFunctions
 {
-	public enum KnownMathFunctionType
+	public enum KnownFuncType
 	{
 		Add,
 		Sub,

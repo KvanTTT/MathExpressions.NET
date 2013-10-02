@@ -33,7 +33,7 @@ namespace MathFunctions.Tests
 		[Test]
 		public void IsValueTest2()
 		{
-			Assert.IsTrue(new MathFunc("3 + f(5 + 7 ^ 0.342345 - sqrt(2)) * 3 * 1").IsValue);
+			Assert.IsTrue(new MathFunc("3 + sin(5 + 7 ^ 0.342345 - sqrt(2)) * 3 * 1").IsValue);
 		}
 
 		[Test]

@@ -116,7 +116,7 @@ namespace MathFunctions.GUI
 				compileFunc.Compile(Assembly, "Func");
 
 				var sb = new StringBuilder();
-				compileFunc.Instructions.ToList().ForEach(instr => sb.AppendLine(instr.ToString()));
+				compileFunc.Instructions.ToList().ForEach(instr => sb.AppendLine(instr.ToString().Replace("IL_0000: ", "")));
 				tbIlCode.Text = sb.ToString();
 			}
 			catch (Exception ex)
@@ -148,7 +148,7 @@ namespace MathFunctions.GUI
 					compileDerivativeFunc.DerivativeDelta = double.Parse(tbDerivativeDelta.Text);
 					compileDerivativeFunc.Compile(Assembly, "FuncDer");
 					var sb = new StringBuilder();
-					compileDerivativeFunc.Instructions.ToList().ForEach(instr => sb.AppendLine(instr.ToString()));
+					compileDerivativeFunc.Instructions.ToList().ForEach(instr => sb.AppendLine(instr.ToString().Replace("IL_0000: ", "")));
 
 					tbDerivativeIlCode.Text = sb.ToString();
 				}

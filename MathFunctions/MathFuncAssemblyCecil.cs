@@ -21,7 +21,7 @@ namespace MathFunctions
 			private set;
 		}
 
-		public Dictionary<KnownMathFunctionType, MethodReference> TypesReferences;
+		public Dictionary<KnownFuncType, MethodReference> TypesReferences;
 
 		public MethodReference InvokeFuncRef
 		{
@@ -67,8 +67,8 @@ namespace MathFunctions
 
 		private void ImportMath(AssemblyDefinition assembly)
 		{
-			TypesReferences = new Dictionary<KnownMathFunctionType, MethodReference>();
-			foreach (var typeMethod in KnownMathFunction.TypesMethods)
+			TypesReferences = new Dictionary<KnownFuncType, MethodReference>();
+			foreach (var typeMethod in KnownFunc.TypesMethods)
 				TypesReferences.Add(typeMethod.Key, assembly.MainModule.Import(typeMethod.Value));
 		}
 	}

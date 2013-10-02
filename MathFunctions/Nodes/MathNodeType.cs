@@ -7,6 +7,7 @@ namespace MathFunctions
 {
 	public enum MathNodeType
 	{
+		Calculated,
 		Value,
 		Constant,
 		Variable,
