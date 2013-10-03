@@ -1,6 +1,6 @@
 ﻿
-Microsoft Visual Studio Solution File, Format Version 11.00
-# Visual Studio 2010
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 2012
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MathFunctions", "MathFunctions\MathFunctions.csproj", "{AE661528-AFC9-4CCA-9ABD-C173E9779085}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MathFunctions.GUI", "MathFunctions.GUI\MathFunctions.GUI.csproj", "{2C0616FA-AAC1-4F22-9655-731F308FE4F2}"
@@ -8,13 +8,16 @@ EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Dependencies", "Dependencies", "{59BB7BFA-F088-41EB-AA54-0549D5DB1A2E}"
 	ProjectSection(SolutionItems) = preProject
 		Dependencies\GOLD Engine.dll = Dependencies\GOLD Engine.dll
+		Dependencies\MathNet.Numerics.dll = Dependencies\MathNet.Numerics.dll
+		Dependencies\MathNet.Numerics.IO.dll = Dependencies\MathNet.Numerics.IO.dll
 		Dependencies\Mono.Cecil.dll = Dependencies\Mono.Cecil.dll
 		Dependencies\nunit.framework.dll = Dependencies\nunit.framework.dll
+		Dependencies\RestSharp.dll = Dependencies\RestSharp.dll
+		Dependencies\WolframAlpha.NET.dll = Dependencies\WolframAlpha.NET.dll
+		Dependencies\ZedGraph.dll = Dependencies\ZedGraph.dll
 	EndProjectSection
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MathFunctions.Tests", "MathFunctions.Tests\MathFunctions.Tests.csproj", "{BF78CC00-AB67-4D51-8B47-5A6DA94984AC}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MathFuncPerformanceTests", "MathFuncPerformanceTests\MathFuncPerformanceTests.csproj", "{D6F6E2D2-E023-4CE9-82EC-821C48B9BF31}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MathFunctions.Benchmarks.GUI", "MathFunctions.Benchmarks.GUI\MathFunctions.Benchmarks.GUI.csproj", "{E48B7E84-C183-423B-8E83-5BBF3CB5DE0B}"
 EndProject
@@ -58,16 +61,6 @@ Global
 		{BF78CC00-AB67-4D51-8B47-5A6DA94984AC}.Release|Mixed Platforms.ActiveCfg = Release|Any CPU
 		{BF78CC00-AB67-4D51-8B47-5A6DA94984AC}.Release|Mixed Platforms.Build.0 = Release|Any CPU
 		{BF78CC00-AB67-4D51-8B47-5A6DA94984AC}.Release|x86.ActiveCfg = Release|Any CPU
-		{D6F6E2D2-E023-4CE9-82EC-821C48B9BF31}.Debug|Any CPU.ActiveCfg = Debug|x86
-		{D6F6E2D2-E023-4CE9-82EC-821C48B9BF31}.Debug|Mixed Platforms.ActiveCfg = Debug|x86
-		{D6F6E2D2-E023-4CE9-82EC-821C48B9BF31}.Debug|Mixed Platforms.Build.0 = Debug|x86
-		{D6F6E2D2-E023-4CE9-82EC-821C48B9BF31}.Debug|x86.ActiveCfg = Debug|x86
-		{D6F6E2D2-E023-4CE9-82EC-821C48B9BF31}.Debug|x86.Build.0 = Debug|x86
-		{D6F6E2D2-E023-4CE9-82EC-821C48B9BF31}.Release|Any CPU.ActiveCfg = Release|x86
-		{D6F6E2D2-E023-4CE9-82EC-821C48B9BF31}.Release|Mixed Platforms.ActiveCfg = Release|x86
-		{D6F6E2D2-E023-4CE9-82EC-821C48B9BF31}.Release|Mixed Platforms.Build.0 = Release|x86
-		{D6F6E2D2-E023-4CE9-82EC-821C48B9BF31}.Release|x86.ActiveCfg = Release|x86
-		{D6F6E2D2-E023-4CE9-82EC-821C48B9BF31}.Release|x86.Build.0 = Release|x86
 		{E48B7E84-C183-423B-8E83-5BBF3CB5DE0B}.Debug|Any CPU.ActiveCfg = Debug|x86
 		{E48B7E84-C183-423B-8E83-5BBF3CB5DE0B}.Debug|Mixed Platforms.ActiveCfg = Debug|x86
 		{E48B7E84-C183-423B-8E83-5BBF3CB5DE0B}.Debug|Mixed Platforms.Build.0 = Debug|x86

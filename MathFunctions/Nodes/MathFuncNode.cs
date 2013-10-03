@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 using System.Text;
 
@@ -33,22 +34,26 @@ namespace MathFunctions
 		{
 			get
 			{
-				bool allChildsAreValues = true;
+				return Type == MathNodeType.Value || Type == MathNodeType.Calculated;
+			}
+		}
+
+		public bool IsCalculated
+		{
+			get
+			{
 				foreach (var child in Childs)
 					if (child.Type == MathNodeType.Function)
 					{
-						if (!((FuncNode)child).IsValue)
-						{
-							allChildsAreValues = false;
-							break;
-						}
+						FuncNode funcNode = (FuncNode)child;
+						if (!funcNode.IsKnown || !funcNode.IsCalculated)
+							return false;
 					}
 					else if (child.Type != MathNodeType.Value && child.Type != MathNodeType.Calculated)
 					{
-						allChildsAreValues = false;
-						break;
+						return false;
 					}
-				return allChildsAreValues && (Type == MathNodeType.Value || Type == MathNodeType.Calculated);
+				return true;
 			}
 		}
 
@@ -126,36 +131,24 @@ namespace MathFunctions
 					switch (other.Type)
 					{
 						case MathNodeType.Function:
-							bool isValue = IsValue;
-							bool isOtherValue = other.IsValue;
-							if ((isValue && isOtherValue) ||
-								(!isValue && !isOtherValue))
+							if (Name != other.Name)
+								result = Name.CompareTo(other.Name);
+							else if (Childs.Count != other.Childs.Count)
+								result = -Childs.Count.CompareTo(other.Childs.Count);
+							else
 							{
-								if (Name != other.Name)
-									result = Name.CompareTo(other.Name);
-								else if (Childs.Count != other.Childs.Count)
-									result = -Childs.Count.CompareTo(other.Childs.Count);
-								else
+								for (int i = 0; i < Childs.Count; i++)
 								{
-									for (int i = 0; i < Childs.Count; i++)
-									{
-										var c = Childs[i].CompareTo(other.Childs[i]);
-										if (c != 0)
-											result = c;
-									}
-									result = 0;
+									result = Childs[i].CompareTo(other.Childs[i]);
+									if (result != 0)
+										break;
 								}
 							}
-							else if (isValue)
-								result = 1;
-							else
-								result = -1;
 							break;
 						case MathNodeType.Variable:
 						case MathNodeType.Constant:
-							result = IsValue ? 1 : -1;
-							break;
 						case MathNodeType.Value:
+						case MathNodeType.Calculated:
 							result = -1;
 							break;
 					}
@@ -164,13 +157,14 @@ namespace MathFunctions
 					switch (other.Type)
 					{
 						case MathNodeType.Function:
-							result = other.IsValue ? -1 : 1;
+							result = 1;
 							break;
 						case MathNodeType.Variable:
 							result = Name.CompareTo(other.Name);
 							break;
 						case MathNodeType.Constant:
 						case MathNodeType.Value:
+						case MathNodeType.Calculated:
 							result = -1;
 							break;
 					}
@@ -179,8 +173,6 @@ namespace MathFunctions
 					switch (other.Type)
 					{
 						case MathNodeType.Function:
-							result = other.IsValue ? -1 : 1;
-							break;
 						case MathNodeType.Variable:
 							result = 1;
 							break;
@@ -188,6 +180,7 @@ namespace MathFunctions
 							result = Name.CompareTo(other.Name);
 							break;
 						case MathNodeType.Value:
+						case MathNodeType.Calculated:
 							result = -1;
 							break;
 					}
@@ -203,23 +196,39 @@ namespace MathFunctions
 						case MathNodeType.Value:
 							result = ((ValueNode)this).Value.CompareTo(((ValueNode)other).Value);
 							break;
+						case MathNodeType.Calculated:
+							result = ((ValueNode)this).Value.ToDouble(CultureInfo.InvariantCulture).CompareTo(((CalculatedNode)other).Value);
+							break;
+					}
+					break;
+				case MathNodeType.Calculated:
+					switch (other.Type)
+					{
+						case MathNodeType.Function:
+						case MathNodeType.Variable:
+						case MathNodeType.Constant:
+							result = 1;
+							break;
+						case MathNodeType.Value:
+							result = ((CalculatedNode)this).Value.CompareTo(((ValueNode)other).Value.ToDouble(CultureInfo.InvariantCulture));
+							break;
+						case MathNodeType.Calculated:
+							result = ((CalculatedNode)this).Value.CompareTo(((CalculatedNode)other).Value);
+							break;
 					}
 					break;
 			}
-			return -result;
+			return result;
 		}
 
 		public void Sort()
 		{
-			foreach (var child in Childs)
-				child.Sort();
-
 			var funcNode = this as FuncNode;
 			if (funcNode != null)
 			{
-				if (funcNode.FunctionType == KnownFuncType.Add ||
-					funcNode.FunctionType == KnownFuncType.Mult)
-					Childs.Sort();
+				foreach (var child in Childs)
+					child.Sort();
+				Childs.Sort();
 			}
 		}
 

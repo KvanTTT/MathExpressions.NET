@@ -34,7 +34,7 @@ namespace MathFunctions
 			protected set;
 		}
 
-		public MathFunc(string str, string v = null, bool simplify = false, bool calculateConstants = false)
+		public MathFunc(string str, string v = null, bool simplify = true, bool calculateConstants = false)
 		{
 			if (!Helper.Parser.Parse(str))
 				throw new Exception("Impossible to parse input string");
@@ -306,6 +306,14 @@ namespace MathFunctions
 			get
 			{
 				return Root.IsValue;
+			}
+		}
+
+		public bool IsCalculated
+		{
+			get
+			{
+				return Root.IsCalculated;
 			}
 		}
 

@@ -58,7 +58,7 @@ namespace MathFunctions
 
 			if (obj is string)
 			{
-				if (obj == Value.ToString())
+				if ((string)obj == Value.ToString())
 					return true;
 				else
 					return false;

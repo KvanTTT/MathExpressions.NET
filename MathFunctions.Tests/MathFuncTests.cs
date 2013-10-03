@@ -33,20 +33,20 @@ namespace MathFunctions.Tests
 		[Test]
 		public void IsValueTest2()
 		{
-			Assert.IsTrue(new MathFunc("3 + sin(5 + 7 ^ 0.342345 - sqrt(2)) * 3 * 1").IsValue);
+			Assert.IsTrue(new MathFunc("3 + sin(5 + 7 ^ 0.342345 - sqrt(2)) * 3 * 1").IsCalculated);
 		}
 
 		[Test]
 		public void IsNotValueTest2()
 		{
-			Assert.IsFalse(new MathFunc("3 + f(5 + 7 ^ 0.342345 - sqrt(2) + x) * 3 * 1").IsValue);
+			Assert.IsFalse(new MathFunc("3 + f(5 + 7 ^ 0.342345 - sqrt(2) + x) * 3 * 1").IsCalculated);
 		}
 
 		[Test]
 		public void SortTest()
 		{
 			var f = new MathFunc("sqrt(2) + x^2 + 1");
-			Assert.IsTrue(f.ToString() == "x^2 + sqrt(2) + 1");
+			Assert.IsTrue(f == "x^2 + sqrt(2) + 1");
 		}
 
 		[Test]

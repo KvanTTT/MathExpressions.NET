@@ -92,30 +92,29 @@ namespace MathFunctions.Tests
 		[Test]
 		public void Derivative1()
 		{
-			var derivative = new MathFunc("x ^ 3 + sin(3 * ln(x * 1)) + x ^ ln(2 * sin(3 * ln(x))) - 2 * x ^ 3").GetDerivative();
-			Assert.IsTrue(derivative.Equals("(ln(2 * sin(3 * ln(x))) * x ^ -1 + 3 * ln(x) * cos(3 * ln(x)) * x ^ -1 * sin(3 * ln(x)) ^ -1) * x ^ ln(2 * sin(3 * ln(x))) + 3 * cos(3 * ln(x)) * x ^ -1 + -(3 * x ^ 2)"));
+			string expression = "x ^ 3 + sin(3 * ln(x * 1)) + x ^ ln(2 * sin(3 * ln(x))) - 2 * x ^ 3";
+			Assert.IsTrue(WolframAlphaUtils.CheckDerivative(expression, new MathFunc(expression).GetDerivative().ToString()));
 		}
 
 		[Test]
 		public void Derivative2()
 		{
-			Assert.IsTrue(new MathFunc("x / sin(x) / cos(x) + ln(1 / sin(x))")
-				.GetDerivative().Equals("x * cos(x) ^ -2 + cos(x) ^ -1 * sin(x) ^ -1 + -(cos(x) * sin(x) ^ -1) + -(x * sin(x) ^ -2)"));
+			string expression = "x / sin(x) / cos(x) + ln(1 / sin(x))";
+			Assert.IsTrue(WolframAlphaUtils.CheckDerivative(expression, new MathFunc(expression).GetDerivative().ToString()));
 		}
 
 		[Test]
 		public void Derivative3()
 		{
-			Assert.IsTrue(new MathFunc("ln(sin(x ^ x))")
-				.GetDerivative().Equals("cos(x ^ x) * (1 + ln(x)) * sin(x ^ x) ^ -1 * x ^ x"));
+			string expression = "ln(sin(x ^ x))";
+			Assert.IsTrue(WolframAlphaUtils.CheckDerivative(expression, new MathFunc(expression).GetDerivative().ToString()));
 		}
 
-		/*[Test]
-		public void DerivativeTest()
+		[Test]
+		public void Derivative4()
 		{
-			var f = new MathFunction("(2 * x ^ 2 - 1) / (2 * x ^ 2 + 1)");
-			var derivative = f.GetDerivative();
-			Assert.IsTrue(derivative == "8 * x / (2 * x ^ 2 + 1) ^ 2");
-		}*/
+			string expression = "(2 * x ^ 2 - 1) / (2 * x ^ 2 + 1)";
+			Assert.IsTrue(WolframAlphaUtils.CheckDerivative(expression, new MathFunc(expression).GetDerivative().ToString()));
+		}
 	}
 }
