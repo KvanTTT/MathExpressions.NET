@@ -265,7 +265,7 @@ public class MathExprParser
 
 			case ProductionIndex.Statement:
 				// <Statement> ::= <Expression>
-				Funcs.Push(new MathFunc(Nodes.Pop()));
+				Funcs.Push(new MathFunc(Nodes.Pop(), null, Parameters.Select(p => p.Value)));
 				break;
 
 			case ProductionIndex.Expression:

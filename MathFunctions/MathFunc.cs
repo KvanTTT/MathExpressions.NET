@@ -280,6 +280,8 @@ namespace MathFunctions
 			for (int i = 0; i < node.Childs.Count; i++)
 				if (node.Childs[i] == null || node.Childs[i].Name == Variable.Name)
 					node.Childs[i] = Variable;
+				else if (node.Childs[i].Type == MathNodeType.Variable)
+					node.Childs[i] = new ConstNode(node.Childs[i].Name);
 				else
 					ConstToVar(node.Childs[i]);
 		}

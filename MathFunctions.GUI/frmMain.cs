@@ -130,7 +130,7 @@ namespace MathFunctions.GUI
 				MathFunc derivativeFunc = null;
 				try
 				{
-					derivativeFunc = new MathFunc(tbInput.Text).GetDerivative();
+					derivativeFunc = new MathFunc(tbInput.Text, tbVar.Text).GetDerivative();
 					tbDerivative.Text = derivativeFunc.ToString();
 				}
 				catch (Exception ex)
@@ -167,6 +167,11 @@ namespace MathFunctions.GUI
 				if (Assembly != null)
 					Assembly.Finalize(Path.GetDirectoryName(saveFileDialog1.FileName), Path.GetFileName(saveFileDialog1.FileName));
 			}
+		}
+
+		private void tbResultExpression_Click(object sender, EventArgs e)
+		{
+			(sender as TextBox).SelectAll();
 		}
 	}
 }

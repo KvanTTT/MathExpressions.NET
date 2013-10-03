@@ -12,7 +12,7 @@ namespace MathFunctions
 		{
 			var result = Simplify(GetDerivative(Root));
 			result.Sort();
-			return new MathFunc(result);
+			return new MathFunc(result, Variable, Parameters.Select(p => p.Value));
 		}
 
 		#region Helpers

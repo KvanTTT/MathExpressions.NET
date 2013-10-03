@@ -197,6 +197,10 @@ namespace MathFunctions
 		{
 			switch (node.Type)
 			{
+				case MathNodeType.Calculated:
+					IlInstructions.Add(new OpCodeArg(OpCodes.Ldc_R8,
+						abs ? Math.Abs(((CalculatedNode)node).Value) : ((CalculatedNode)node).Value));
+					break;
 				case MathNodeType.Value:
 					IlInstructions.Add(new OpCodeArg(OpCodes.Ldc_R8,
 						abs ? Math.Abs(((ValueNode)node).Value.ToDouble()) : ((ValueNode)node).Value.ToDouble()));
@@ -237,7 +241,7 @@ namespace MathFunctions
 				case KnownFuncType.Mult:
 					return EmitMultFunc(funcNode);
 				case KnownFuncType.Div:
-					throw new NotSupportedException("replace devision with inversation and multiplication");
+					throw new NotSupportedException("replace division with inversation and multiplication");
 				case KnownFuncType.Neg:
 					return EmitNegFunc(funcNode, abs);
 				case KnownFuncType.Exp:
