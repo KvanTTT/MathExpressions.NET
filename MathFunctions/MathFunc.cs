@@ -80,8 +80,7 @@ namespace MathFunctions
 			if (Variable == null)
 				ConstToVars();
 			if (parameters != null)
-				Parameters = parameters.Except(parameters.Where(p => p.Name == Variable.Name))
-					.ToDictionary(node => node.Name);
+				Parameters = parameters.Except(parameters.Where(p => p.Name == Variable.Name)).ToDictionary(node => node.Name);
 
 			FindParamsAndUnknownFuncs(Root);
 
@@ -133,88 +132,88 @@ namespace MathFunctions
 				case KnownFuncType.Neg:
 					return new ValueNode(-args[0].Value);
 
-				case KnownFuncType.Sqrt:
-					temp = Math.Sqrt(args[0].Value.ToDouble());
-					break;
-
-				case KnownFuncType.Sin:
-					temp = Math.Sin(args[0].Value.ToDouble());
-					break;
-
-				case KnownFuncType.Cos:
-					temp = Math.Cos(args[0].Value.ToDouble());
-					break;
-
-				case KnownFuncType.Tan:
-					temp = Math.Tan(args[0].Value.ToDouble());
-					break;
-
-				case KnownFuncType.Cot:
-					temp = 1 / Math.Tan(args[0].Value.ToDouble());
-					break;
-
-				case KnownFuncType.Arcsin:
-					temp = Math.Asin(args[0].Value.ToDouble());
-					break;
-
-				case KnownFuncType.Arccos:
-					temp = Math.Acos(args[0].Value.ToDouble());
-					break;
-
-				case KnownFuncType.Arctan:
-					temp = Math.Atan(args[0].Value.ToDouble());
-					break;
-
-				case KnownFuncType.Arccot:
-					temp = Math.PI / 2 - Math.Atan(args[0].Value.ToDouble());
-					break;
-
-				case KnownFuncType.Sinh:
-					temp = Math.Sinh(args[0].Value.ToDouble());
-					break;
-
-				case KnownFuncType.Cosh:
-					temp = Math.Cosh(args[0].Value.ToDouble());
-					break;
-
-				case KnownFuncType.Arcsinh:
-					temp = Math.Log(args[0].Value.ToDouble() + Math.Sqrt(args[0].Value.ToDouble() * args[0].Value.ToDouble() + 1));
-					break;
-
-				case KnownFuncType.Arcosh:
-					temp = Math.Log(args[0].Value.ToDouble() + Math.Sqrt(args[0].Value.ToDouble() * args[0].Value.ToDouble() - 1));
-					break;
-
-				case KnownFuncType.Ln:
-					temp = Math.Log(args[0].Value.ToDouble());
-					break;
-
-				case KnownFuncType.Log10:
-					temp = Math.Log10(args[0].Value.ToDouble());
-					break;
-
-				case KnownFuncType.Log:
-					temp = Math.Log(args[0].Value.ToDouble(), args[1].Value.ToDouble());
-					break;
-
-				case KnownFuncType.Abs:
-					temp = args[0].Value.Abs().ToDouble();
-					break;
-
 				case KnownFuncType.Sgn:
-					return new ValueNode(new Rational<long>((long)Math.Sign(args[0].Value.ToDouble()), 1, false));
+					return new ValueNode(new Rational<long>((long)Math.Sign(args[0].DoubleValue), 1, false));
 
 				case KnownFuncType.Trunc:
-					return new ValueNode(new Rational<long>((long)Math.Truncate(args[0].Value.ToDouble()), 1, false));
+					return new ValueNode(new Rational<long>((long)Math.Truncate(args[0].DoubleValue), 1, false));
 
 				case KnownFuncType.Round:
-					return new ValueNode(new Rational<long>((long)Math.Round(args[0].Value.ToDouble()), 1, false));
+					return new ValueNode(new Rational<long>((long)Math.Round(args[0].DoubleValue), 1, false));
 
 				case KnownFuncType.Diff:
 					return new ValueNode(0);
 
 				default:
 					return null;
+
+				case KnownFuncType.Sqrt:
+					temp = Math.Sqrt(args[0].DoubleValue);
+					break;
+
+				case KnownFuncType.Sin:
+					temp = Math.Sin(args[0].DoubleValue);
+					break;
+
+				case KnownFuncType.Cos:
+					temp = Math.Cos(args[0].DoubleValue);
+					break;
+
+				case KnownFuncType.Tan:
+					temp = Math.Tan(args[0].DoubleValue);
+					break;
+
+				case KnownFuncType.Cot:
+					temp = 1 / Math.Tan(args[0].DoubleValue);
+					break;
+
+				case KnownFuncType.Arcsin:
+					temp = Math.Asin(args[0].DoubleValue);
+					break;
+
+				case KnownFuncType.Arccos:
+					temp = Math.Acos(args[0].DoubleValue);
+					break;
+
+				case KnownFuncType.Arctan:
+					temp = Math.Atan(args[0].DoubleValue);
+					break;
+
+				case KnownFuncType.Arccot:
+					temp = Math.PI / 2 - Math.Atan(args[0].DoubleValue);
+					break;
+
+				case KnownFuncType.Sinh:
+					temp = Math.Sinh(args[0].DoubleValue);
+					break;
+
+				case KnownFuncType.Cosh:
+					temp = Math.Cosh(args[0].DoubleValue);
+					break;
+
+				case KnownFuncType.Arcsinh:
+					temp = Math.Log(args[0].DoubleValue + Math.Sqrt(args[0].DoubleValue * args[0].DoubleValue + 1));
+					break;
+
+				case KnownFuncType.Arcosh:
+					temp = Math.Log(args[0].DoubleValue + Math.Sqrt(args[0].DoubleValue * args[0].DoubleValue - 1));
+					break;
+
+				case KnownFuncType.Ln:
+					temp = Math.Log(args[0].DoubleValue);
+					break;
+
+				case KnownFuncType.Log10:
+					temp = Math.Log10(args[0].DoubleValue);
+					break;
+
+				case KnownFuncType.Log:
+					temp = Math.Log(args[0].DoubleValue, args[1].DoubleValue);
+					break;
+
+				case KnownFuncType.Abs:
+					temp = Math.Abs(args[0].DoubleValue);
+					break;
 			}
 
 			if (Rational<long>.FromDecimal((decimal)temp, out result, 12, false, 2, 8))

@@ -13,7 +13,7 @@ namespace MathFunctions.Tests
 		MathExprParser Parser;
 
 		[SetUp]
-		public void InitParser()
+		public void Init()
 		{
 			Parser = new MathExprParser();
 		}
@@ -31,13 +31,13 @@ namespace MathFunctions.Tests
 		}
 
 		[Test]
-		public void IsValueTest2()
+		public void IsCalculatedTest()
 		{
 			Assert.IsTrue(new MathFunc("3 + sin(5 + 7 ^ 0.342345 - sqrt(2)) * 3 * 1").IsCalculated);
 		}
 
 		[Test]
-		public void IsNotValueTest2()
+		public void IsNotCalculatedTest()
 		{
 			Assert.IsFalse(new MathFunc("3 + f(5 + 7 ^ 0.342345 - sqrt(2) + x) * 3 * 1").IsCalculated);
 		}

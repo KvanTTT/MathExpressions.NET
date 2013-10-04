@@ -14,6 +14,12 @@ namespace MathFunctions
 			return new MathFunc(result, Variable, Parameters.Select(p => p.Value));
 		}
 
+		public MathFunc RationalToDouble()
+		{
+			var result = RationalToDouble(Root);
+			return new MathFunc(result, Variable, Parameters.Select(p => p.Value));
+		}
+
 		#region Helpers
 
 		private MathFuncNode Simplify(MathFuncNode node)
@@ -72,8 +78,11 @@ namespace MathFunctions
 
 						return ExpValue(funcNode);
 
+					/*case KnownFuncType.Diff:
+						return Simplify(GetDerivative(funcNode.Childs[0]));*/
+
 					default:
-						if (funcNode.Childs.Any(child => child.IsValue))
+						if (funcNode.Childs.Any(child => child.Type == MathNodeType.Value))
 							return Calculate(funcNode.FunctionType, funcNode.Childs.Select(child => (ValueNode)child).ToList()) ?? funcNode;
 						break;
 				}

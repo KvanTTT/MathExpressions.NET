@@ -60,6 +60,7 @@ namespace MathFunctions
 		private const string ClassName = "MathFunc";
 
 		public double DerivativeDelta = 0.000001;
+		public bool Static = true;
 
 		public MathFuncAssemblyCecil MathFuncAssembly
 		{
@@ -82,8 +83,8 @@ namespace MathFunctions
 			MathFuncAssembly = mathFuncAssembly;
 
 			var globalBody = new MethodDefinition(funcName,
-				MethodAttributes.Public | MethodAttributes.Static | MethodAttributes.HideBySig, mathFuncAssembly.DoubleType);
-
+				MethodAttributes.Public | MethodAttributes.HideBySig | (Static ? MethodAttributes.Static : 0), mathFuncAssembly.DoubleType);
+			
 			var globalIlProcessor = globalBody.Body.GetILProcessor();
 
 			AddFuncArgs(mathFuncAssembly.Assembly, globalIlProcessor);
@@ -99,7 +100,7 @@ namespace MathFunctions
 				globalBody.Body.Variables.Add(new VariableDefinition(mathFuncAssembly.DoubleType));
 
 			foreach (var instr in IlInstructions)
-				EmitInstruction(globalIlProcessor, instr);
+				EmitInstruction(globalIlProcessor, instr, Static);
 
 			Instructions = globalBody.Body.Instructions;
 
@@ -193,17 +194,17 @@ namespace MathFunctions
 
 		#region Emit AST Nodes
 
-		private void EmitNode(MathFuncNode node, bool abs = false)
+		private void EmitNode(MathFuncNode node, bool negExpAbs = false)
 		{
 			switch (node.Type)
 			{
 				case MathNodeType.Calculated:
 					IlInstructions.Add(new OpCodeArg(OpCodes.Ldc_R8,
-						abs ? Math.Abs(((CalculatedNode)node).Value) : ((CalculatedNode)node).Value));
+						negExpAbs ? Math.Abs(((CalculatedNode)node).Value) : ((CalculatedNode)node).Value));
 					break;
 				case MathNodeType.Value:
 					IlInstructions.Add(new OpCodeArg(OpCodes.Ldc_R8,
-						abs ? Math.Abs(((ValueNode)node).Value.ToDouble()) : ((ValueNode)node).Value.ToDouble()));
+						negExpAbs ? Math.Abs(((ValueNode)node).Value.ToDouble()) : ((ValueNode)node).Value.ToDouble()));
 					break;
 
 				case MathNodeType.Constant:
@@ -216,7 +217,7 @@ namespace MathFunctions
 					var func = FuncNodes[funcNode];
 					if (!func.Calculated)
 					{
-						EmitFunc(funcNode, abs);
+						EmitFunc(funcNode, negExpAbs);
 						func.Calculated = true;
 						// if (FuncNodes[funcNode].Count > 1) TODO: this optimization disallowed due to derivatives.
 						{
@@ -230,22 +231,22 @@ namespace MathFunctions
 			}
 		}
 
-		private bool EmitFunc(FuncNode funcNode, bool abs = false)
+		private bool EmitFunc(FuncNode funcNode, bool negExpAbs = false)
 		{
 			switch (funcNode.FunctionType)
 			{
 				case KnownFuncType.Add:
 					return EmitAddFunc(funcNode);
 				case KnownFuncType.Sub:
-					throw new NotSupportedException("replace substraction with negation and addition");
+					return EmitSubFunc(funcNode);
 				case KnownFuncType.Mult:
 					return EmitMultFunc(funcNode);
 				case KnownFuncType.Div:
-					throw new NotSupportedException("replace division with inversation and multiplication");
+					return EmitDivFunc(funcNode);
 				case KnownFuncType.Neg:
-					return EmitNegFunc(funcNode, abs);
+					return EmitNegFunc(funcNode, negExpAbs);
 				case KnownFuncType.Exp:
-					return EmitExpFunc(funcNode, abs);
+					return EmitExpFunc(funcNode, negExpAbs);
 				case KnownFuncType.Diff:
 					return EmitDiffFunc(funcNode);
 			}
@@ -290,6 +291,17 @@ namespace MathFunctions
 			return true;
 		}
 
+		private bool EmitSubFunc(FuncNode funcNode)
+		{
+			for (int i = 0; i < funcNode.Childs.Count; i++)
+			{
+				EmitNode(funcNode.Childs[i]);
+				IlInstructions.Add(new OpCodeArg(OpCodes.Sub));
+			}
+
+			return true;
+		}
+
 		private bool EmitMultFunc(FuncNode funcNode)
 		{
 			MathFuncNode firstItem = null;
@@ -329,23 +341,34 @@ namespace MathFunctions
 			return true;
 		}
 
-		private bool EmitNegFunc(FuncNode funcNode, bool abs)
+		private bool EmitDivFunc(FuncNode funcNode)
+		{
+			for (int i = 0; i < funcNode.Childs.Count; i++)
+			{
+				EmitNode(funcNode.Childs[i]);
+				IlInstructions.Add(new OpCodeArg(OpCodes.Div));
+			}
+
+			return true;
+		}
+
+		private bool EmitNegFunc(FuncNode funcNode, bool negExpAbs)
 		{
 			EmitNode(funcNode.Childs[0]);
 
-			if (!abs)
+			if (!negExpAbs)
 				IlInstructions.Add(new OpCodeArg(OpCodes.Neg));
 
 			return true;
 		}
 
-		private bool EmitExpFunc(FuncNode funcNode, bool abs)
+		private bool EmitExpFunc(FuncNode funcNode, bool negExpAbs)
 		{
 			if (funcNode.Childs[1].IsValue && ((ValueNode)funcNode.Childs[1]).Value.IsInteger)
 			{
 				int powerValue = (int)((ValueNode)funcNode.Childs[1]).Value.Numerator;
 				int power = Math.Abs(powerValue);
-				if (abs)
+				if (negExpAbs)
 					powerValue = power;
 
 				if (powerValue < 0)
@@ -419,7 +442,7 @@ namespace MathFunctions
 				if ((child1.Type == MathNodeType.Value && ((ValueNode)child1).Value.Abs() == new Rational<long>(1, 2, false)) ||
 					(child1.Type == MathNodeType.Calculated && Math.Abs(((CalculatedNode)child1).Value) == 0.5))
 				{
-					if (!abs && ((child1.Type == MathNodeType.Value && ((ValueNode)child1).Value < 0) ||
+					if (!negExpAbs && ((child1.Type == MathNodeType.Value && ((ValueNode)child1).Value < 0) ||
 							(child1.Type == MathNodeType.Calculated && ((CalculatedNode)child1).Value < 0)))
 					{
 						IlInstructions.Add(new OpCodeArg(OpCodes.Ldc_R8, 1.0));
@@ -436,7 +459,7 @@ namespace MathFunctions
 				else
 				{
 					EmitNode(funcNode.Childs[0]);
-					if (abs)
+					if (negExpAbs)
 						EmitNode(funcNode.Childs[1].Abs());
 					else
 						EmitNode(funcNode.Childs[1]);
@@ -661,14 +684,14 @@ namespace MathFunctions
 
 		#region Emitting to Mono.Cecil
 		
-		private static void EmitInstruction(ILProcessor ilProcessor, OpCodeArg instr)
+		private static void EmitInstruction(ILProcessor ilProcessor, OpCodeArg instr, bool staticFunc)
 		{
 			if (instr.Arg == null)
 				ilProcessor.Emit(instr.OpCode);
 			else if (instr.Arg is int)
 			{
 				if (instr.OpCode == OpCodes.Ldarg)
-					EmitArgLoad(ilProcessor, (int)instr.Arg);
+					EmitArgLoad(ilProcessor, (int)instr.Arg + (staticFunc ? 0 : 1));
 				else if (instr.OpCode == OpCodes.Ldloc)
 					EmitLocalLoad(ilProcessor, (int)instr.Arg);
 				else if (instr.OpCode == OpCodes.Stloc)

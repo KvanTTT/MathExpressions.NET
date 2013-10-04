@@ -31,6 +31,8 @@
 			System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(frmMain));
 			this.splitContainer3 = new System.Windows.Forms.SplitContainer();
 			this.splitContainer2 = new System.Windows.Forms.SplitContainer();
+			this.tbDerivativeOpt = new System.Windows.Forms.TextBox();
+			this.tbSimplifiedOpt = new System.Windows.Forms.TextBox();
 			this.btnSave = new System.Windows.Forms.Button();
 			this.tbVar = new System.Windows.Forms.TextBox();
 			this.label5 = new System.Windows.Forms.Label();
@@ -45,6 +47,7 @@
 			this.label3 = new System.Windows.Forms.Label();
 			this.tbInput = new System.Windows.Forms.TextBox();
 			this.splitContainer4 = new System.Windows.Forms.SplitContainer();
+			this.label6 = new System.Windows.Forms.Label();
 			this.tbDerivativeDelta = new System.Windows.Forms.TextBox();
 			this.label4 = new System.Windows.Forms.Label();
 			this.tabControl1 = new System.Windows.Forms.TabControl();
@@ -56,9 +59,6 @@
 			this.clnPos = new System.Windows.Forms.DataGridViewTextBoxColumn();
 			this.clnDescription = new System.Windows.Forms.DataGridViewTextBoxColumn();
 			this.saveFileDialog1 = new System.Windows.Forms.SaveFileDialog();
-			this.tbSimplifiedOpt = new System.Windows.Forms.TextBox();
-			this.tbDerivativeOpt = new System.Windows.Forms.TextBox();
-			this.label6 = new System.Windows.Forms.Label();
 			((System.ComponentModel.ISupportInitialize)(this.splitContainer3)).BeginInit();
 			this.splitContainer3.Panel1.SuspendLayout();
 			this.splitContainer3.Panel2.SuspendLayout();
@@ -125,6 +125,28 @@
 			this.splitContainer2.Size = new System.Drawing.Size(949, 537);
 			this.splitContainer2.SplitterDistance = 599;
 			this.splitContainer2.TabIndex = 11;
+			// 
+			// tbDerivativeOpt
+			// 
+			this.tbDerivativeOpt.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+			this.tbDerivativeOpt.Location = new System.Drawing.Point(118, 495);
+			this.tbDerivativeOpt.Name = "tbDerivativeOpt";
+			this.tbDerivativeOpt.ReadOnly = true;
+			this.tbDerivativeOpt.Size = new System.Drawing.Size(455, 20);
+			this.tbDerivativeOpt.TabIndex = 31;
+			this.tbDerivativeOpt.Click += new System.EventHandler(this.tbResultExpression_Click);
+			// 
+			// tbSimplifiedOpt
+			// 
+			this.tbSimplifiedOpt.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+			this.tbSimplifiedOpt.Location = new System.Drawing.Point(118, 443);
+			this.tbSimplifiedOpt.Name = "tbSimplifiedOpt";
+			this.tbSimplifiedOpt.ReadOnly = true;
+			this.tbSimplifiedOpt.Size = new System.Drawing.Size(455, 20);
+			this.tbSimplifiedOpt.TabIndex = 30;
+			this.tbSimplifiedOpt.Click += new System.EventHandler(this.tbResultExpression_Click);
 			// 
 			// btnSave
 			// 
@@ -294,6 +316,15 @@
 			this.splitContainer4.SplitterDistance = 46;
 			this.splitContainer4.TabIndex = 12;
 			// 
+			// label6
+			// 
+			this.label6.AutoSize = true;
+			this.label6.Location = new System.Drawing.Point(147, 15);
+			this.label6.Name = "label6";
+			this.label6.Size = new System.Drawing.Size(81, 13);
+			this.label6.TabIndex = 13;
+			this.label6.Text = "Derivative delta";
+			// 
 			// tbDerivativeDelta
 			// 
 			this.tbDerivativeDelta.Location = new System.Drawing.Point(234, 11);
@@ -329,7 +360,7 @@
 			this.tabPage1.Location = new System.Drawing.Point(4, 22);
 			this.tabPage1.Name = "tabPage1";
 			this.tabPage1.Padding = new System.Windows.Forms.Padding(3);
-			this.tabPage1.Size = new System.Drawing.Size(338, 421);
+			this.tabPage1.Size = new System.Drawing.Size(338, 461);
 			this.tabPage1.TabIndex = 0;
 			this.tabPage1.Text = "Simplification";
 			this.tabPage1.UseVisualStyleBackColor = true;
@@ -342,7 +373,7 @@
 			this.tbIlCode.Name = "tbIlCode";
 			this.tbIlCode.ReadOnly = true;
 			this.tbIlCode.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
-			this.tbIlCode.Size = new System.Drawing.Size(332, 415);
+			this.tbIlCode.Size = new System.Drawing.Size(332, 455);
 			this.tbIlCode.TabIndex = 2;
 			// 
 			// tabPage2
@@ -401,37 +432,6 @@
 			this.saveFileDialog1.DefaultExt = "dll";
 			this.saveFileDialog1.FileName = "MathFuncLib";
 			this.saveFileDialog1.Filter = "Assemblies (*.dll)|*.dll";
-			// 
-			// tbSimplifiedOpt
-			// 
-			this.tbSimplifiedOpt.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-			this.tbSimplifiedOpt.Location = new System.Drawing.Point(118, 443);
-			this.tbSimplifiedOpt.Name = "tbSimplifiedOpt";
-			this.tbSimplifiedOpt.ReadOnly = true;
-			this.tbSimplifiedOpt.Size = new System.Drawing.Size(455, 20);
-			this.tbSimplifiedOpt.TabIndex = 30;
-			this.tbSimplifiedOpt.Click += new System.EventHandler(this.tbResultExpression_Click);
-			// 
-			// tbDerivativeOpt
-			// 
-			this.tbDerivativeOpt.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-			this.tbDerivativeOpt.Location = new System.Drawing.Point(118, 495);
-			this.tbDerivativeOpt.Name = "tbDerivativeOpt";
-			this.tbDerivativeOpt.ReadOnly = true;
-			this.tbDerivativeOpt.Size = new System.Drawing.Size(455, 20);
-			this.tbDerivativeOpt.TabIndex = 31;
-			this.tbDerivativeOpt.Click += new System.EventHandler(this.tbResultExpression_Click);
-			// 
-			// label6
-			// 
-			this.label6.AutoSize = true;
-			this.label6.Location = new System.Drawing.Point(147, 15);
-			this.label6.Name = "label6";
-			this.label6.Size = new System.Drawing.Size(81, 13);
-			this.label6.TabIndex = 13;
-			this.label6.Text = "Derivative delta";
 			// 
 			// frmMain
 			// 

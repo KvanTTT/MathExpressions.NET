@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using Mono.Cecil;
 using System.IO;
+using Mono.Cecil.Cil;
 
 namespace MathFunctions
 {
@@ -35,13 +36,28 @@ namespace MathFunctions
 			private set;
 		}
 
-		public readonly string NamespaceName;
-		public readonly string ClassName;
+		public string NamespaceName = "MathFuncLib";
+		public string ClassName = "MathFunc";
+		public string FuncName = "Func";
+		public string FuncDerivativeName = "FuncDerivative";
 
 		public MathFuncAssemblyCecil(string namespaceName = "MathFuncLib", string className = "MathFunc")
 		{
 			NamespaceName = namespaceName;
 			ClassName = className;
+		}
+
+		public void CompileFuncAndDerivative(string expression, string variable, string path = "", string fileName = "")
+		{
+			var func = new MathFunc(expression, variable, true, true);
+			var funcDer = func.GetDerivative().RationalToDouble();
+
+			Init();
+
+			func.Compile(this, FuncName);
+			funcDer.Compile(this, FuncDerivativeName);
+
+			Finalize(path, fileName);
 		}
 
 		public void Init()
@@ -54,12 +70,19 @@ namespace MathFunctions
 			DoubleType = Assembly.MainModule.TypeSystem.Double;
 
 			Class = new TypeDefinition(NamespaceName, ClassName,
-				TypeAttributes.Public | TypeAttributes.BeforeFieldInit |
-				TypeAttributes.Sealed |TypeAttributes.AnsiClass | TypeAttributes.Abstract,
+				TypeAttributes.Public | TypeAttributes.BeforeFieldInit | TypeAttributes.Serializable |
+				TypeAttributes.AnsiClass /*| TypeAttributes.Sealed /*| TypeAttributes.Abstract*/,
 				Assembly.MainModule.TypeSystem.Object);
+
+			var methodAttributes = MethodAttributes.Public | MethodAttributes.HideBySig | MethodAttributes.SpecialName | MethodAttributes.RTSpecialName;
+			var method = new MethodDefinition(".ctor", methodAttributes, Assembly.MainModule.TypeSystem.Void);
+			method.Body.Instructions.Add(Instruction.Create(OpCodes.Ldarg_0));
+			method.Body.Instructions.Add(Instruction.Create(OpCodes.Call, Assembly.MainModule.Import(typeof(object).GetConstructor(new Type[0]))));
+			method.Body.Instructions.Add(Instruction.Create(OpCodes.Ret));
+			Class.Methods.Add(method);
 		}
 
-		public void Finalize(string path, string fileName = "")
+		public void Finalize(string path = "", string fileName = "")
 		{
 			Assembly.MainModule.Types.Add(Class);
 			Assembly.Write(Path.Combine(path, string.IsNullOrEmpty(fileName) ? NamespaceName + ".dll" : fileName));

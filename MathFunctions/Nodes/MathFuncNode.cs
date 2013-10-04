@@ -38,6 +38,14 @@ namespace MathFunctions
 			}
 		}
 
+		public virtual double DoubleValue
+		{
+			get
+			{
+				throw new Exception();
+			}
+		}
+
 		public bool IsCalculated
 		{
 			get
@@ -228,7 +236,8 @@ namespace MathFunctions
 			{
 				foreach (var child in Childs)
 					child.Sort();
-				Childs.Sort();
+				if (funcNode.FunctionType == KnownFuncType.Add || funcNode.FunctionType == KnownFuncType.Mult)
+					Childs.Sort();
 			}
 		}
 

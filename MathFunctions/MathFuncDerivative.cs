@@ -100,10 +100,15 @@ namespace MathFunctions
 				}
 				else if (funcNode.FunctionType == KnownFuncType.Diff)
 				{
-					if (funcNode.Childs[0].Type == MathNodeType.Function && ((FuncNode)funcNode.Childs[0]).IsKnown)
-						return GetDerivative(GetDerivative(funcNode.Childs[0]));
+					if (funcNode.Childs[0].Type == MathNodeType.Function)
+					{
+						if (((FuncNode)funcNode.Childs[0]).IsKnown)
+							return GetDerivative(GetDerivative(funcNode.Childs[0]));
+						else
+							return new FuncNode(KnownFuncType.Mult, new FuncNode(KnownFuncType.Diff, funcNode), GetDerivative(funcNode.Childs[0]));
+					}
 					else
-						return new FuncNode(KnownFuncType.Mult, funcNode, GetDerivative(funcNode.Childs[0]));
+						return new ValueNode(0);
 				}
 				else if (funcNode.FunctionType == KnownFuncType.Neg)
 				{
