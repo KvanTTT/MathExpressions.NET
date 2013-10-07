@@ -21,13 +21,14 @@ namespace MathFunctions.Tests
 		{
 			WolframAlpha wolfram = new WolframAlpha(ConfigurationManager.AppSettings["WolframAlphaAppId"]);
 
-			string query = expression1.Replace(" ", "") + "===" + expression2.Replace(" ", "");
+			string query = "(" + expression1.Replace(" ", "") + ")-(" + expression2.Replace(" ", "") + ")";
 			QueryResult result = wolfram.Query(query);
 			result.RecalculateResults();
 
 			try
 			{
-				return Convert.ToBoolean(result.GetPrimaryPod().SubPods[0].Plaintext);
+				double d;
+				return double.TryParse(result.GetPrimaryPod().SubPods[0].Plaintext, out d) && d == 0.0;
 			}
 			catch
 			{
@@ -43,15 +44,17 @@ namespace MathFunctions.Tests
 
 				QueryResult result = wolfram.Query("diff(" + expression + ")");
 				string answer = result.Pods[0].SubPods[0].Plaintext;
-				string answerDer = answer.Remove(0, answer.IndexOf(" = ") + 3).Trim();
+				string answerDer = answer.Remove(0, answer.IndexOf(" = ") + 3).Trim().Replace(" ", "");
 
 				result = wolfram.Query(derivative);
 				var pod = result.GetPrimaryPod();
-				if (pod == null)
-					result.Pods.Where(p => p.ID == "AlternateForm").FirstOrDefault();
-				var formattedDer = pod.SubPods[0].Plaintext;
 
-				return answerDer == formattedDer;
+				if (answerDer == pod.SubPods[0].Plaintext.Replace(" ", ""))
+					return true;
+
+				pod = result.Pods.Where(p => p.ID == "AlternateForm").FirstOrDefault();
+
+				return answerDer == pod.SubPods[0].Plaintext.Replace(" ", "");
 			}
 			catch
 			{

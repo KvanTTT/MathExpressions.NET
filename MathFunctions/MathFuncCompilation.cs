@@ -267,8 +267,10 @@ namespace MathFunctions
 				return !(func != null && FuncNodes[func].Count == 1 && func.LessThenZero());
 			});
 
-			if (firstItem != null)
-				EmitNode(firstItem);
+			if (firstItem == null)
+				firstItem = funcNode.Childs[0];
+
+			EmitNode(firstItem);
 
 			for (int i = 0; i < funcNode.Childs.Count; i++)
 			{
@@ -312,9 +314,10 @@ namespace MathFunctions
 				return !(func != null && FuncNodes[func].Count == 1 && func.FunctionType == KnownFuncType.Exp && func.Childs[1].LessThenZero());
 			});
 
+			if (firstItem == null)
+				firstItem = funcNode.Childs[0];
 
-			if (firstItem != null)
-				EmitNode(firstItem);
+			EmitNode(firstItem);
 
 			for (int i = 0; i < funcNode.Childs.Count; i++)
 			{
@@ -364,9 +367,10 @@ namespace MathFunctions
 
 		private bool EmitExpFunc(FuncNode funcNode, bool negExpAbs)
 		{
-			if (funcNode.Childs[1].IsValue && ((ValueNode)funcNode.Childs[1]).Value.IsInteger)
+			if ((funcNode.Childs[1].Type == MathNodeType.Value && ((ValueNode)funcNode.Childs[1]).Value.IsInteger) ||
+				(funcNode.Childs[1].Type == MathNodeType.Calculated && ((CalculatedNode)funcNode.Childs[1]).Value % 1 == 0))
 			{
-				int powerValue = (int)((ValueNode)funcNode.Childs[1]).Value.Numerator;
+				int powerValue = (int)funcNode.Childs[1].DoubleValue;
 				int power = Math.Abs(powerValue);
 				if (negExpAbs)
 					powerValue = power;

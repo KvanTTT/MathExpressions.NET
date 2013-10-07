@@ -23,6 +23,8 @@ namespace MathFunctions
 		{
 			switch (node.Type)
 			{
+				case MathNodeType.Calculated:
+					return new CalculatedNode(0.0);
 				case MathNodeType.Value:
 				case MathNodeType.Constant:
 					return new ValueNode(0);
@@ -76,14 +78,18 @@ namespace MathFunctions
 				}
 				else if (funcNode.FunctionType == KnownFuncType.Exp)
 				{
-					var valueNode = funcNode.Childs[1] as ValueNode;
-					if (valueNode != null)
+					if (funcNode.Childs[1].IsValueOrCalculated)
 					{
+						var node1 = funcNode.Childs[1].Type == MathNodeType.Value ? (MathFuncNode)
+							new ValueNode((ValueNode)funcNode.Childs[1]) :
+							new CalculatedNode((CalculatedNode)funcNode.Childs[1]);
+						var node2 = funcNode.Childs[1].Type == MathNodeType.Value ? (MathFuncNode)
+							new ValueNode(((ValueNode)funcNode.Childs[1]).Value - 1) :
+							new CalculatedNode(((CalculatedNode)funcNode.Childs[1]).Value - 1);
+
 						return new FuncNode(KnownFuncType.Mult,
-								new ValueNode(valueNode.Value),
-								new FuncNode(KnownFuncType.Exp,
-									(MathFuncNode)funcNode.Childs[0].Clone(),
-									new ValueNode(valueNode.Value - 1)),
+								node1,
+								new FuncNode(KnownFuncType.Exp, (MathFuncNode)funcNode.Childs[0].Clone(), node2),
 								GetDerivative(funcNode.Childs[0]));
 					}
 
@@ -159,6 +165,9 @@ namespace MathFunctions
 			MathFuncNode result;
 			switch (node.Type)
 			{
+				case MathNodeType.Calculated:
+					result = new CalculatedNode(((CalculatedNode)node).Value);
+					break;
 				case MathNodeType.Value:
 					result = new ValueNode((ValueNode)node);
 					break;
@@ -177,6 +186,9 @@ namespace MathFunctions
 			for (int i = 0; i < node.Childs.Count; i++)
 				switch (node.Childs[i].Type)
 				{
+					case MathNodeType.Calculated:
+						result.Childs.Add(new CalculatedNode((CalculatedNode)node.Childs[i]));
+						break;
 					case MathNodeType.Value:
 						result.Childs.Add(new ValueNode((ValueNode)node.Childs[i]));
 						break;

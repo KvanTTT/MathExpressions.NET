@@ -23,6 +23,14 @@ namespace MathFunctions
 			}
 		}
 
+		public override double DoubleValue
+		{
+			get
+			{
+				return Value.ToDouble(null);
+			}
+		}
+
 		public ValueNode(ValueNode node)
 		{
 			Value = node.Value;

@@ -19,45 +19,20 @@ namespace MathFunctions.Tests
 		}
 
 		[Test]
-		public double TestFunc(double x)
+		public void TestFunc(double x)
 		{
-			return Math.Pow((2 * -x + 1), (2 * x + 1)) * Math.Sin((2 * x + 1) * (2 * x + 1) * (2 * x + 1));
+			//return Math.Pow((2 * -x + 1), (2 * x + 1)) * Math.Sin((2 * x + 1) * (2 * x + 1) * (2 * x + 1));
 		}
 
 		[Test]
-		public void FindIdenticalFuncsTest()
+		public void CompileFuncTest1()
 		{
-			double x = 3;
-			double func, funcDer;
-			CompileAndCalculate("Sin(x) + x ^ (Ln(5 * x) - 10 / x)", "x", x, out func, out funcDer);
-			double expected = Math.Sin(x) + Math.Pow(x, Math.Log(5 * x) - 10 / x);
-			Assert.AreEqual(expected, func);
-		}
-
-		private bool CompileAndCalculate(string expression, string variable, double x,
-			out double funcResult, out double funcDerivativeResult)
-		{
-			funcResult = double.NaN;
-			funcDerivativeResult = double.NaN;
-			string tempDllName = "MathFuncLib.dll";
-			try
+			var expectedFunc = new Func<double, double>(x => Math.Sin(x) + Math.Pow(x, Math.Log(5 * x) - 10 / x));
+			using (var mathAssembly = new MathAssembly("Sin(x) + x ^ (Ln(5 * x) - 10 / x)", "x"))
 			{
-				var mathAssembly = new MathFuncAssemblyCecil();
-				mathAssembly.CompileFuncAndDerivative(expression, variable, "", tempDllName);
-				var domain = AppDomain.CreateDomain("MathFuncDomain");
-				var pathToDll = tempDllName;
-				var mathFuncObj = domain.CreateInstanceFromAndUnwrap(pathToDll, mathAssembly.NamespaceName + "." + mathAssembly.ClassName);
-				var mathFuncObjType = mathFuncObj.GetType();
-				funcResult = (double)mathFuncObjType.GetMethod(mathAssembly.FuncName).Invoke(mathFuncObj, new object[] { x });
-				funcDerivativeResult = (double)mathFuncObjType.GetMethod(mathAssembly.FuncDerivativeName).Invoke(mathFuncObj, new object[] { x });
-				AppDomain.Unload(domain);
-				File.Delete(tempDllName);
+				for (int i = 1; i < 10; i++)
+					Assert.AreEqual(expectedFunc(i), mathAssembly.SimpleFunc(i));
 			}
-			catch
-			{
-				return false;
-			}
-			return true;
 		}
 	}
 }

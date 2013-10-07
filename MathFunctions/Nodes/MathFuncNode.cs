@@ -30,7 +30,7 @@ namespace MathFunctions
 			protected set;
 		}
 
-		public bool IsValue
+		public bool IsValueOrCalculated
 		{
 			get
 			{
@@ -245,6 +245,8 @@ namespace MathFunctions
 		{
 			switch (Type)
 			{
+				case MathNodeType.Calculated:
+					return new CalculatedNode(((CalculatedNode)this).Value);
 				case MathNodeType.Value:
 					return new ValueNode((ValueNode)this);
 				case MathNodeType.Variable:
@@ -261,6 +263,8 @@ namespace MathFunctions
 		{
 			switch (Type)
 			{
+				case MathNodeType.Calculated:
+					return ((CalculatedNode)this).Value < 0;
 				case MathNodeType.Value:
 					return ((ValueNode)this).Value < 0;
 				case MathNodeType.Variable:
@@ -277,6 +281,8 @@ namespace MathFunctions
 		{
 			switch (Type)
 			{
+				case MathNodeType.Calculated:
+					return new CalculatedNode(Math.Abs(((CalculatedNode)this).Value));
 				case MathNodeType.Value:
 					return new ValueNode(((ValueNode)this).Value.Abs());
 				case MathNodeType.Variable:

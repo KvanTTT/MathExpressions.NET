@@ -34,7 +34,7 @@ namespace MathFunctions
 			protected set;
 		}
 
-		public MathFunc(string str, string v = null, bool simplify = true, bool calculateConstants = false)
+		public MathFunc(string str, string v = null, bool simplify = true, bool precompile = false)
 		{
 			if (!Helper.Parser.Parse(str))
 				throw new Exception("Impossible to parse input string");
@@ -56,7 +56,7 @@ namespace MathFunctions
 			Root.Sort();
 			if (simplify)
 				Root = Simplify(Root);
-			if (calculateConstants)
+			if (precompile)
 				Root = RationalToDouble(Root);
 		}
 
@@ -68,7 +68,7 @@ namespace MathFunctions
 		{
 		}
 
-		public MathFunc(MathFuncNode left, MathFuncNode right, 
+		public MathFunc(MathFuncNode left, MathFuncNode right,
 			VarNode variable = null, IEnumerable<ConstNode> parameters = null,
 			bool simplify = true, bool calculateConstants = false)
 		{
@@ -91,7 +91,7 @@ namespace MathFunctions
 				Root = RationalToDouble(Root);
 		}
 
-		public MathFuncNode Calculate(KnownFuncType? funcType, IList<ValueNode> args)
+		public ValueNode SimplifyValues(KnownFuncType? funcType, IList<ValueNode> args)
 		{
 			Rational<long> result;
 			double temp = 0.0;
@@ -143,9 +143,6 @@ namespace MathFunctions
 
 				case KnownFuncType.Diff:
 					return new ValueNode(0);
-
-				default:
-					return null;
 
 				case KnownFuncType.Sqrt:
 					temp = Math.Sqrt(args[0].DoubleValue);
@@ -214,6 +211,9 @@ namespace MathFunctions
 				case KnownFuncType.Abs:
 					temp = Math.Abs(args[0].DoubleValue);
 					break;
+
+				default:
+					return null;
 			}
 
 			if (Rational<long>.FromDecimal((decimal)temp, out result, 12, false, 2, 8))
@@ -306,7 +306,7 @@ namespace MathFunctions
 		{
 			get
 			{
-				return Root.IsValue;
+				return Root.IsValueOrCalculated;
 			}
 		}
 

@@ -261,7 +261,6 @@
 			this.tbSimplification.ReadOnly = true;
 			this.tbSimplification.Size = new System.Drawing.Size(455, 20);
 			this.tbSimplification.TabIndex = 20;
-			this.tbSimplification.Click += new System.EventHandler(this.tbResultExpression_Click);
 			// 
 			// tbDerivative
 			// 
@@ -272,7 +271,6 @@
 			this.tbDerivative.ReadOnly = true;
 			this.tbDerivative.Size = new System.Drawing.Size(456, 20);
 			this.tbDerivative.TabIndex = 19;
-			this.tbDerivative.Click += new System.EventHandler(this.tbResultExpression_Click);
 			// 
 			// label3
 			// 

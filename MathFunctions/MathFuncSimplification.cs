@@ -14,12 +14,6 @@ namespace MathFunctions
 			return new MathFunc(result, Variable, Parameters.Select(p => p.Value));
 		}
 
-		public MathFunc RationalToDouble()
-		{
-			var result = RationalToDouble(Root);
-			return new MathFunc(result, Variable, Parameters.Select(p => p.Value));
-		}
-
 		#region Helpers
 
 		private MathFuncNode Simplify(MathFuncNode node)
@@ -82,8 +76,9 @@ namespace MathFunctions
 						return Simplify(GetDerivative(funcNode.Childs[0]));*/
 
 					default:
-						if (funcNode.Childs.Any(child => child.Type == MathNodeType.Value))
-							return Calculate(funcNode.FunctionType, funcNode.Childs.Select(child => (ValueNode)child).ToList()) ?? funcNode;
+						if (funcNode.Childs.All(child => child.Type == MathNodeType.Value))
+							return (MathFuncNode)SimplifyValues(funcNode.FunctionType, funcNode.Childs.Select(child => (ValueNode)child).ToList())
+								?? (MathFuncNode)funcNode;
 						break;
 				}
 
@@ -91,14 +86,6 @@ namespace MathFunctions
 			}
 
 			return node;
-		}
-
-		private MathFuncNode RationalToDouble(MathFuncNode node)
-		{
-			if (node.Type == MathNodeType.Value)
-				return new CalculatedNode(((ValueNode)node).Value);
-			else
-				return node;
 		}
 
 		#region Addition
@@ -182,9 +169,9 @@ namespace MathFunctions
 			MathFuncNode valueNode1 = null;
 			if (node11.Type == MathNodeType.Function &&
 				(node11 as FuncNode).FunctionType == KnownFuncType.Mult)
-					valueNode1 = node11.Childs.Where(child => child.IsValue).FirstOrDefault();
+					valueNode1 = node11.Childs.Where(child => child.IsValueOrCalculated).FirstOrDefault();
 			if (valueNode1 == null)
-				valueNode1 = node11.IsValue ? node11 : new ValueNode(new Rational<long>(1, 1));
+				valueNode1 = node11.IsValueOrCalculated ? node11 : new ValueNode(new Rational<long>(1, 1));
 			var value1 = ((ValueNode)valueNode1).Value;
 			if (node1neg)
 				value1 *= -1;
@@ -192,23 +179,23 @@ namespace MathFunctions
 			MathFuncNode valueNode2 = null;
 			if (node21.Type == MathNodeType.Function &&
 				(node21 as FuncNode).FunctionType == KnownFuncType.Mult)
-				valueNode2 = node21.Childs.Where(child => child.IsValue).FirstOrDefault();
+				valueNode2 = node21.Childs.Where(child => child.IsValueOrCalculated).FirstOrDefault();
 			if (valueNode2 == null)
-				valueNode2 = node21.IsValue ? node21 : new ValueNode(new Rational<long>(1, 1));
+				valueNode2 = node21.IsValueOrCalculated ? node21 : new ValueNode(new Rational<long>(1, 1));
 			var value2 = ((ValueNode)valueNode2).Value;
 			if (node2neg)
 				value2 *= -1;
 
 			var notValueNodes1 = node11.Type == MathNodeType.Function &&
 				(node11 as FuncNode).FunctionType == KnownFuncType.Mult ?
-				node11.Childs.Where(child => !child.IsValue).ToList() :
-				node11.IsValue ?
+				node11.Childs.Where(child => !child.IsValueOrCalculated).ToList() :
+				node11.IsValueOrCalculated ?
 				new List<MathFuncNode>() { } :
 				new List<MathFuncNode>() { node11 };
 			var notValueNodes2 = node21.Type == MathNodeType.Function &&
 				(node21 as FuncNode).FunctionType == KnownFuncType.Mult ?
-				node21.Childs.Where(child => !child.IsValue).ToList() :
-				node21.IsValue ?
+				node21.Childs.Where(child => !child.IsValueOrCalculated).ToList() :
+				node21.IsValueOrCalculated ?
 				new List<MathFuncNode>() { } :
 				new List<MathFuncNode>() { node21 };
 
@@ -442,7 +429,8 @@ namespace MathFunctions
 				else if (aValue.Value == 1)
 					return new ValueNode(1);
 				else if (bValue != null)
-					return Calculate(KnownFuncType.Exp, new List<ValueNode>() { aValue, bValue }) ?? funcNode;
+					return (MathFuncNode)SimplifyValues(KnownFuncType.Exp, new List<ValueNode>() { aValue, bValue }) 
+						?? (MathFuncNode)funcNode;
 			}
 
 			return funcNode;

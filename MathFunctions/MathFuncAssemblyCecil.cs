@@ -50,7 +50,7 @@ namespace MathFunctions
 		public void CompileFuncAndDerivative(string expression, string variable, string path = "", string fileName = "")
 		{
 			var func = new MathFunc(expression, variable, true, true);
-			var funcDer = func.GetDerivative().RationalToDouble();
+			var funcDer = new MathFunc(expression, variable, true, false).GetDerivative().GetPrecompilied();
 
 			Init();
 

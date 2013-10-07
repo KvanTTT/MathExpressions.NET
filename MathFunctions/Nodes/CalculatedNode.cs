@@ -22,6 +22,14 @@ namespace MathFunctions
 			}
 		}
 
+		public override double DoubleValue
+		{
+			get
+			{
+				return Value;
+			}
+		}
+
 		public override MathNodeType Type
 		{
 			get { return MathNodeType.Calculated; }
@@ -30,6 +38,12 @@ namespace MathFunctions
 		public override bool IsTerminal
 		{
 			get { return true; }
+		}
+
+		public CalculatedNode(CalculatedNode node)
+		{
+			_value = node.Value;
+			Name = _value.ToString(CultureInfo.InvariantCulture);
 		}
 
 		public CalculatedNode(double value)
