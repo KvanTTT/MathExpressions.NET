@@ -57,7 +57,7 @@ namespace MathFunctions
 			if (simplify)
 				Root = Simplify(Root);
 			if (precompile)
-				Root = RationalToDouble(Root);
+				Root = Precompile(null, Root);
 		}
 
 		public MathFunc(MathFuncNode root, 
@@ -88,7 +88,7 @@ namespace MathFunctions
 			if (simplify)
 				Root = Simplify(Root);
 			if (calculateConstants)
-				Root = RationalToDouble(Root);
+				Root = Precompile(null, Root);
 		}
 
 		public ValueNode SimplifyValues(KnownFuncType? funcType, IList<ValueNode> args)
@@ -321,6 +321,11 @@ namespace MathFunctions
 		public override string ToString()
 		{
 			return Root.ToString();
+		}
+
+		public string ToShortString()
+		{
+			return Root.ToString().Replace(" ", "");
 		}
 
 		public override bool Equals(object obj)

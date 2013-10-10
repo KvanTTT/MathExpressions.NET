@@ -67,28 +67,47 @@ namespace MathFunctions.Tests
 		public void Derivative1()
 		{
 			string expression = "x ^ 3 + sin(3 * ln(x * 1)) + x ^ ln(2 * sin(3 * ln(x))) - 2 * x ^ 3";
-			Assert.IsTrue(WolframAlphaUtils.CheckDerivative(expression, new MathFunc(expression).GetDerivative().ToString()));
+			Assert.IsTrue(WolframAlphaUtils.CheckDerivative(expression, GetDerivativeExpression(expression)));
 		}
 
 		[Test]
 		public void Derivative2()
 		{
 			string expression = "x / sin(x) / cos(x) + ln(1 / sin(x))";
-			Assert.IsTrue(WolframAlphaUtils.CheckDerivative(expression, new MathFunc(expression).GetDerivative().ToString()));
+			Assert.IsTrue(WolframAlphaUtils.CheckDerivative(expression, GetDerivativeExpression(expression)));
 		}
 
 		[Test]
 		public void Derivative3()
 		{
 			string expression = "ln(sin(x ^ x))";
-			Assert.IsTrue(WolframAlphaUtils.CheckDerivative(expression, new MathFunc(expression).GetDerivative().ToString()));
+			Assert.IsTrue(WolframAlphaUtils.CheckDerivative(expression, GetDerivativeExpression(expression)));
 		}
 
 		[Test]
 		public void Derivative4()
 		{
 			string expression = "(2 * x ^ 2 - 1) / (2 * x ^ 2 + 1)";
-			Assert.IsTrue(WolframAlphaUtils.CheckDerivative(expression, new MathFunc(expression).GetDerivative().ToString()));
+			Assert.IsTrue(WolframAlphaUtils.CheckDerivative(expression, GetDerivativeExpression(expression)));
+		}
+
+		[Test]
+		public void Derivative5()
+		{
+			string expression = "tan(1 / x) / 3 ^ sin(x)";
+			Assert.IsTrue(WolframAlphaUtils.CheckDerivative(expression, GetDerivativeExpression(expression)));
+		}
+
+		[Test]
+		public void Derivative6()
+		{
+			string expression = "arctan(sqrt(x)) * ln(x)";
+			Assert.IsTrue(WolframAlphaUtils.CheckDerivative(expression, GetDerivativeExpression(expression)));
+		}
+
+		private string GetDerivativeExpression(string expression)
+		{
+			return new MathFunc(expression).GetDerivative().GetPrecompilied().ToString();
 		}
 	}
 }

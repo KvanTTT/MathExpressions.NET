@@ -295,7 +295,8 @@ namespace MathFunctions
 
 		private bool EmitSubFunc(FuncNode funcNode)
 		{
-			for (int i = 0; i < funcNode.Childs.Count; i++)
+			EmitNode(funcNode.Childs[0]);
+			for (int i = 1; i < funcNode.Childs.Count; i++)
 			{
 				EmitNode(funcNode.Childs[i]);
 				IlInstructions.Add(new OpCodeArg(OpCodes.Sub));
@@ -346,7 +347,8 @@ namespace MathFunctions
 
 		private bool EmitDivFunc(FuncNode funcNode)
 		{
-			for (int i = 0; i < funcNode.Childs.Count; i++)
+			EmitNode(funcNode.Childs[0]);
+			for (int i = 1; i < funcNode.Childs.Count; i++)
 			{
 				EmitNode(funcNode.Childs[i]);
 				IlInstructions.Add(new OpCodeArg(OpCodes.Div));

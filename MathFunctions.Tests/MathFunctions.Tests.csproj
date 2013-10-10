@@ -50,7 +50,7 @@
   <ItemGroup>
     <Compile Include="MathFuncDerivativeTest.cs" />
     <Compile Include="MathFuncCompilationTests.cs" />
-    <Compile Include="MathFuncSample.cs" />
+    <Compile Include="MathFuncPrecompileTests.cs" />
     <Compile Include="MathFuncSimplificationTests.cs" />
     <Compile Include="MathFuncTests.cs" />
     <Compile Include="MiscTests.cs" />

@@ -98,6 +98,7 @@ namespace MathFunctions.GUI
 			{
 				simplifiedFunc = new MathFunc(tbInput.Text, tbVar.Text).Simplify();
 				tbSimplification.Text = simplifiedFunc.ToString();
+				tbSimplifiedOpt.Text = simplifiedFunc.GetPrecompilied().ToString();
 			}
 			catch (Exception ex)
 			{
@@ -132,6 +133,7 @@ namespace MathFunctions.GUI
 				{
 					derivativeFunc = new MathFunc(tbInput.Text, tbVar.Text).GetDerivative();
 					tbDerivative.Text = derivativeFunc.ToString();
+					tbDerivativeOpt.Text = derivativeFunc.GetPrecompilied().ToString();
 				}
 				catch (Exception ex)
 				{
@@ -146,7 +148,7 @@ namespace MathFunctions.GUI
 				{
 					var compileDerivativeFunc = new MathFunc(tbDerivative.Text, tbVar.Text, true, true);
 					compileDerivativeFunc.DerivativeDelta = double.Parse(tbDerivativeDelta.Text);
-					compileDerivativeFunc.Compile(Assembly, "FuncDer");
+					compileDerivativeFunc.Compile(Assembly, "FuncDerivative");
 					var sb = new StringBuilder();
 					compileDerivativeFunc.Instructions.ToList().ForEach(instr => sb.AppendLine(instr.ToString().Replace("IL_0000: ", "")));
 
@@ -167,11 +169,6 @@ namespace MathFunctions.GUI
 				if (Assembly != null)
 					Assembly.Finalize(Path.GetDirectoryName(saveFileDialog1.FileName), Path.GetFileName(saveFileDialog1.FileName));
 			}
-		}
-
-		private void tbResultExpression_Click(object sender, EventArgs e)
-		{
-			(sender as TextBox).SelectAll();
 		}
 	}
 }

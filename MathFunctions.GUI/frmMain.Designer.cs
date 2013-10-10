@@ -59,6 +59,8 @@
 			this.clnPos = new System.Windows.Forms.DataGridViewTextBoxColumn();
 			this.clnDescription = new System.Windows.Forms.DataGridViewTextBoxColumn();
 			this.saveFileDialog1 = new System.Windows.Forms.SaveFileDialog();
+			this.label7 = new System.Windows.Forms.Label();
+			this.label8 = new System.Windows.Forms.Label();
 			((System.ComponentModel.ISupportInitialize)(this.splitContainer3)).BeginInit();
 			this.splitContainer3.Panel1.SuspendLayout();
 			this.splitContainer3.Panel2.SuspendLayout();
@@ -103,6 +105,8 @@
 			// 
 			// splitContainer2.Panel1
 			// 
+			this.splitContainer2.Panel1.Controls.Add(this.label8);
+			this.splitContainer2.Panel1.Controls.Add(this.label7);
 			this.splitContainer2.Panel1.Controls.Add(this.tbDerivativeOpt);
 			this.splitContainer2.Panel1.Controls.Add(this.tbSimplifiedOpt);
 			this.splitContainer2.Panel1.Controls.Add(this.btnSave);
@@ -130,23 +134,21 @@
 			// 
 			this.tbDerivativeOpt.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-			this.tbDerivativeOpt.Location = new System.Drawing.Point(118, 495);
+			this.tbDerivativeOpt.Location = new System.Drawing.Point(130, 495);
 			this.tbDerivativeOpt.Name = "tbDerivativeOpt";
 			this.tbDerivativeOpt.ReadOnly = true;
-			this.tbDerivativeOpt.Size = new System.Drawing.Size(455, 20);
+			this.tbDerivativeOpt.Size = new System.Drawing.Size(443, 20);
 			this.tbDerivativeOpt.TabIndex = 31;
-			this.tbDerivativeOpt.Click += new System.EventHandler(this.tbResultExpression_Click);
 			// 
 			// tbSimplifiedOpt
 			// 
 			this.tbSimplifiedOpt.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-			this.tbSimplifiedOpt.Location = new System.Drawing.Point(118, 443);
+			this.tbSimplifiedOpt.Location = new System.Drawing.Point(130, 443);
 			this.tbSimplifiedOpt.Name = "tbSimplifiedOpt";
 			this.tbSimplifiedOpt.ReadOnly = true;
-			this.tbSimplifiedOpt.Size = new System.Drawing.Size(455, 20);
+			this.tbSimplifiedOpt.Size = new System.Drawing.Size(443, 20);
 			this.tbSimplifiedOpt.TabIndex = 30;
-			this.tbSimplifiedOpt.Click += new System.EventHandler(this.tbResultExpression_Click);
 			// 
 			// btnSave
 			// 
@@ -183,9 +185,9 @@
 			// btnCalculate
 			// 
 			this.btnCalculate.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-			this.btnCalculate.Location = new System.Drawing.Point(383, 385);
+			this.btnCalculate.Location = new System.Drawing.Point(373, 386);
 			this.btnCalculate.Name = "btnCalculate";
-			this.btnCalculate.Size = new System.Drawing.Size(77, 26);
+			this.btnCalculate.Size = new System.Drawing.Size(87, 26);
 			this.btnCalculate.TabIndex = 26;
 			this.btnCalculate.Text = "Calculate";
 			this.btnCalculate.UseVisualStyleBackColor = true;
@@ -197,7 +199,7 @@
 			this.cbRealTimeUpdate.AutoSize = true;
 			this.cbRealTimeUpdate.Checked = true;
 			this.cbRealTimeUpdate.CheckState = System.Windows.Forms.CheckState.Checked;
-			this.cbRealTimeUpdate.Location = new System.Drawing.Point(118, 391);
+			this.cbRealTimeUpdate.Location = new System.Drawing.Point(130, 392);
 			this.cbRealTimeUpdate.Name = "cbRealTimeUpdate";
 			this.cbRealTimeUpdate.Size = new System.Drawing.Size(112, 17);
 			this.cbRealTimeUpdate.TabIndex = 25;
@@ -226,7 +228,7 @@
 			this.tbDerivatives.Multiline = true;
 			this.tbDerivatives.Name = "tbDerivatives";
 			this.tbDerivatives.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
-			this.tbDerivatives.Size = new System.Drawing.Size(562, 332);
+			this.tbDerivatives.Size = new System.Drawing.Size(562, 327);
 			this.tbDerivatives.TabIndex = 23;
 			this.tbDerivatives.Text = resources.GetString("tbDerivatives.Text");
 			// 
@@ -256,20 +258,20 @@
 			// 
 			this.tbSimplification.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-			this.tbSimplification.Location = new System.Drawing.Point(118, 417);
+			this.tbSimplification.Location = new System.Drawing.Point(130, 417);
 			this.tbSimplification.Name = "tbSimplification";
 			this.tbSimplification.ReadOnly = true;
-			this.tbSimplification.Size = new System.Drawing.Size(455, 20);
+			this.tbSimplification.Size = new System.Drawing.Size(443, 20);
 			this.tbSimplification.TabIndex = 20;
 			// 
 			// tbDerivative
 			// 
 			this.tbDerivative.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-			this.tbDerivative.Location = new System.Drawing.Point(118, 469);
+			this.tbDerivative.Location = new System.Drawing.Point(130, 469);
 			this.tbDerivative.Name = "tbDerivative";
 			this.tbDerivative.ReadOnly = true;
-			this.tbDerivative.Size = new System.Drawing.Size(456, 20);
+			this.tbDerivative.Size = new System.Drawing.Size(444, 20);
 			this.tbDerivative.TabIndex = 19;
 			// 
 			// label3
@@ -287,9 +289,9 @@
 			// 
 			this.tbInput.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-			this.tbInput.Location = new System.Drawing.Point(118, 359);
+			this.tbInput.Location = new System.Drawing.Point(130, 359);
 			this.tbInput.Name = "tbInput";
-			this.tbInput.Size = new System.Drawing.Size(342, 20);
+			this.tbInput.Size = new System.Drawing.Size(330, 20);
 			this.tbInput.TabIndex = 17;
 			this.tbInput.Text = "2 + 2 * 2";
 			this.tbInput.TextChanged += new System.EventHandler(this.tbInput_TextChanged);
@@ -330,6 +332,7 @@
 			this.tbDerivativeDelta.Size = new System.Drawing.Size(100, 20);
 			this.tbDerivativeDelta.TabIndex = 12;
 			this.tbDerivativeDelta.Text = "0.000001";
+			this.tbDerivativeDelta.TextChanged += new System.EventHandler(this.tbInput_TextChanged);
 			// 
 			// label4
 			// 
@@ -431,6 +434,28 @@
 			this.saveFileDialog1.FileName = "MathFuncLib";
 			this.saveFileDialog1.Filter = "Assemblies (*.dll)|*.dll";
 			// 
+			// label7
+			// 
+			this.label7.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
+			this.label7.AutoSize = true;
+			this.label7.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
+			this.label7.Location = new System.Drawing.Point(15, 444);
+			this.label7.Name = "label7";
+			this.label7.Size = new System.Drawing.Size(106, 16);
+			this.label7.TabIndex = 32;
+			this.label7.Text = "Simpl. Precomp.";
+			// 
+			// label8
+			// 
+			this.label8.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
+			this.label8.AutoSize = true;
+			this.label8.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
+			this.label8.Location = new System.Drawing.Point(15, 496);
+			this.label8.Name = "label8";
+			this.label8.Size = new System.Drawing.Size(104, 16);
+			this.label8.TabIndex = 33;
+			this.label8.Text = "Deriv. Precomp.";
+			// 
 			// frmMain
 			// 
 			this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -497,6 +522,8 @@
 		private System.Windows.Forms.TextBox tbDerivativeOpt;
 		private System.Windows.Forms.TextBox tbSimplifiedOpt;
 		private System.Windows.Forms.Label label6;
+		private System.Windows.Forms.Label label8;
+		private System.Windows.Forms.Label label7;
 
 
 

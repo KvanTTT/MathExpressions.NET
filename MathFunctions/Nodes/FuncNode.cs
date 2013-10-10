@@ -149,7 +149,7 @@ namespace MathFunctions
 						return string.Format("|{0}|", Childs[0].ToString(this));
 				}
 			}
-			var builder = new StringBuilder(Name + "(");
+			var builder = new StringBuilder((FunctionType == KnownFuncType.Sqrt ? "√" : Name) + "(");
 			foreach (var arg in Childs)
 				builder.AppendFormat("{0}, ", arg.ToString(this));
 			if (Childs.Count != 0)
