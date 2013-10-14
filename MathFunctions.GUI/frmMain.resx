@@ -120,27 +120,25 @@
   <data name="tbDerivatives.Text" xml:space="preserve">
     <value>(f(x) / g(x))' = (f(x)' * g(x) + f(x) * g(x)') / g(x)^2;
 (f(x) ^ g(x))' = f(x) ^ g(x) * (f(x)' * g(x) / f(x) + g(x)' * ln(f(x)));
-
 neg(f(x))' = neg(f(x)');
-
 sin(f(x))' = cos(f(x)) * f(x)';
 cos(f(x))' = -sin(f(x)) * f(x)';
 tan(f(x))' = f(x)' / cos(f(x)) ^ 2;
 cot(f(x))' = -f(x)' / sin(f(x)) ^ 2;
-
-arcsin(f(x))' = f(x)' / sqrt(1 - f(x) ^ 2);
-arccos(f(x))' = -f(x)' / sqrt(1 - f(x) ^ 2);
-arctan(f(x))' = f(x)' / (1 + f(x) ^ 2);
-arccot(f(x))' = -f(x)' / (1 + f(x) ^ 2);
-
+asin(f(x))' = f(x)' / sqrt(1 - f(x) ^ 2);
+acos(f(x))' = -f(x)' / sqrt(1 - f(x) ^ 2);
+atan(f(x))' = f(x)' / (1 + f(x) ^ 2);
+acot(f(x))' = -f(x)' / (1 + f(x) ^ 2);
 sinh(f(x))' = f(x)' * cosh(x);
 cosh(f(x))' = f(x)' * sinh(x);
-arcsinh(f(x))' = f(x)' / sqrt(f(x) ^ 2 + 1);
-arcosh(f(x))' = f(x)' / sqrt(f(x) ^ 2 - 1);
-
+asinh(f(x))' = f(x)' / sqrt(f(x) ^ 2 + 1);
+acosh(f(x))' = f(x)' / sqrt(f(x) ^ 2 - 1);
 ln(f(x))' = f(x)' / f(x);
-log(f(x), g(x))' = g'(x)/(g(x)*ln(f(x))) - (f'(x)*ln(g(x)))/(f(x)*ln(f(x))^2);
-</value>
+log(f(x), g(x))' = (ln(f(x)) * g(x)' / g(x) - f(x)' * ln(g(x)) / f(x)) / ln(f(x)) ^ 2;
+abs(f(x))' = 1;
+sgn(f(x))' = 0;
+trunc(f(x))' = 0;
+round(f(x))' = 0;</value>
   </data>
   <metadata name="clnPos.UserAddedColumn" type="System.Boolean, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
     <value>True</value>
@@ -152,6 +150,6 @@ log(f(x), g(x))' = g'(x)/(g(x)*ln(f(x))) - (f'(x)*ln(g(x)))/(f(x)*ln(f(x))^2);
     <value>17, 17</value>
   </metadata>
   <metadata name="$this.TrayHeight" type="System.Int32, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
-    <value>124</value>
+    <value>132</value>
   </metadata>
 </root>

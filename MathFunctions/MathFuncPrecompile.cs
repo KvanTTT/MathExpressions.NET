@@ -14,7 +14,25 @@ namespace MathFunctions
 			return new MathFunc(result, Variable, Parameters.Select(p => p.Value));
 		}
 
+		public bool ContainsNaN()
+		{
+			return ContainsNaNHelper(Root);
+		}
+
 		#region Helpers
+
+		private bool ContainsNaNHelper(MathFuncNode node)
+		{
+			for (int i = 0; i < node.Childs.Count; i++)
+				if (ContainsNaNHelper(node.Childs[i]))
+					return true;
+
+			CalculatedNode calcNode = node as CalculatedNode;
+			if (calcNode != null && double.IsNaN(calcNode.DoubleValue))
+				return true;
+			else
+				return false;
+		}
 
 		private MathFuncNode Precompile(MathFuncNode parent, MathFuncNode node)
 		{

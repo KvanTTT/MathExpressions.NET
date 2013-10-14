@@ -140,6 +140,8 @@ namespace MathFunctions
 				node.ArgNumber = UnknownFuncs[node.Name].ArgNumber;
 			else if (node.Type == MathNodeType.Constant)
 				node.ArgNumber = Parameters[node.Name].ArgNumber;
+			else if (node.Type == MathNodeType.Variable)
+				node.ArgNumber = Variable.ArgNumber;
 		}
 
 		#region Init Locals
@@ -515,6 +517,55 @@ namespace MathFunctions
 					EmitNode(child);
 
 				IlInstructions.Add(new OpCodeArg(OpCodes.Call, value));
+
+				return true;
+			}
+			else if (funcNode.FunctionType == KnownFuncType.Cot)
+			{
+				IlInstructions.Add(new OpCodeArg(OpCodes.Ldc_R8, 1.0));
+				EmitNode(funcNode.Childs[0]);
+				IlInstructions.Add(new OpCodeArg(OpCodes.Call, KnownFunc.TypesMethods[KnownFuncType.Tan]));
+				IlInstructions.Add(new OpCodeArg(OpCodes.Div));
+
+				return true;
+			}
+			else if (funcNode.FunctionType == KnownFuncType.Arccot)
+			{
+				IlInstructions.Add(new OpCodeArg(OpCodes.Ldc_R8, 1.0));
+				EmitNode(funcNode.Childs[0]);
+				IlInstructions.Add(new OpCodeArg(OpCodes.Div));
+				IlInstructions.Add(new OpCodeArg(OpCodes.Call, KnownFunc.TypesMethods[KnownFuncType.Arctan]));
+
+				return true;
+			}
+			else if (funcNode.FunctionType == KnownFuncType.Arcsinh)
+			{
+				EmitNode(funcNode.Childs[0]);
+				EmitNode(funcNode.Childs[0]);
+				EmitNode(funcNode.Childs[0]);
+				IlInstructions.Add(new OpCodeArg(OpCodes.Mul));
+				IlInstructions.Add(new OpCodeArg(OpCodes.Ldc_R8, 1.0));
+				IlInstructions.Add(new OpCodeArg(OpCodes.Add));
+				IlInstructions.Add(new OpCodeArg(OpCodes.Call, KnownFunc.TypesMethods[KnownFuncType.Sqrt]));
+				IlInstructions.Add(new OpCodeArg(OpCodes.Add));
+				IlInstructions.Add(new OpCodeArg(OpCodes.Call, KnownFunc.TypesMethods[KnownFuncType.Log]));
+
+				return true;
+			}
+			else if (funcNode.FunctionType == KnownFuncType.Arcosh)
+			{
+				EmitNode(funcNode.Childs[0]);
+				EmitNode(funcNode.Childs[0]);
+				IlInstructions.Add(new OpCodeArg(OpCodes.Ldc_R8, 1.0));
+				IlInstructions.Add(new OpCodeArg(OpCodes.Add));
+				IlInstructions.Add(new OpCodeArg(OpCodes.Call, KnownFunc.TypesMethods[KnownFuncType.Sqrt]));
+				EmitNode(funcNode.Childs[0]);
+				IlInstructions.Add(new OpCodeArg(OpCodes.Ldc_R8, 1.0));
+				IlInstructions.Add(new OpCodeArg(OpCodes.Sub));
+				IlInstructions.Add(new OpCodeArg(OpCodes.Call, KnownFunc.TypesMethods[KnownFuncType.Sqrt]));
+				IlInstructions.Add(new OpCodeArg(OpCodes.Mul));
+				IlInstructions.Add(new OpCodeArg(OpCodes.Add));
+				IlInstructions.Add(new OpCodeArg(OpCodes.Call, KnownFunc.TypesMethods[KnownFuncType.Log]));
 
 				return true;
 			}

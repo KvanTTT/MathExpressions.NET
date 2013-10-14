@@ -41,16 +41,20 @@ namespace MathFunctions
 			derivatives.AppendLine("cos(f(x))' = -sin(f(x)) * f(x)';");
 			derivatives.AppendLine("tan(f(x))' = f(x)' / cos(f(x)) ^ 2;");
 			derivatives.AppendLine("cot(f(x))' = -f(x)' / sin(f(x)) ^ 2;");
-			derivatives.AppendLine("arcsin(f(x))' = f(x)' / sqrt(1 - f(x) ^ 2);");
-			derivatives.AppendLine("arccos(f(x))' = -f(x)' / sqrt(1 - f(x) ^ 2);");
-			derivatives.AppendLine("arctan(f(x))' = f(x)' / (1 + f(x) ^ 2);");
-			derivatives.AppendLine("arccot(f(x))' = -f(x)' / (1 + f(x) ^ 2);");
+			derivatives.AppendLine("asin(f(x))' = f(x)' / sqrt(1 - f(x) ^ 2);");
+			derivatives.AppendLine("acos(f(x))' = -f(x)' / sqrt(1 - f(x) ^ 2);");
+			derivatives.AppendLine("atan(f(x))' = f(x)' / (1 + f(x) ^ 2);");
+			derivatives.AppendLine("acot(f(x))' = -f(x)' / (1 + f(x) ^ 2);");
 			derivatives.AppendLine("sinh(f(x))' = f(x)' * cosh(x);");
 			derivatives.AppendLine("cosh(f(x))' = f(x)' * sinh(x);");
-			derivatives.AppendLine("arcsinh(f(x))' = f(x)' / sqrt(f(x) ^ 2 + 1);");
-			derivatives.AppendLine("arcosh(f(x))' = f(x)' / sqrt(f(x) ^ 2 - 1);");
+			derivatives.AppendLine("asinh(f(x))' = f(x)' / sqrt(f(x) ^ 2 + 1);");
+			derivatives.AppendLine("acosh(f(x))' = f(x)' / sqrt(f(x) ^ 2 - 1);");
 			derivatives.AppendLine("ln(f(x))' = f(x)' / f(x);");
 			derivatives.AppendLine("log(f(x), g(x))' = (ln(f(x)) * g(x)' / g(x) - f(x)' * ln(g(x)) / f(x)) / ln(f(x)) ^ 2;");
+			derivatives.AppendLine("abs(f(x))' = 1;");
+			derivatives.AppendLine("sgn(f(x))' = 0;");
+			derivatives.AppendLine("trunc(f(x))' = 0;");
+			derivatives.AppendLine("round(f(x))' = 0;");
 			InitDerivatives(derivatives.ToString());
 		}
 

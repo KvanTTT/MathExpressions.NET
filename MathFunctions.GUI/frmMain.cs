@@ -57,14 +57,14 @@ namespace MathFunctions.GUI
 
 		private void btnRebuildDerivatives_Click(object sender, EventArgs e)
 		{
-			try
+			//try
 			{
 				Helper.InitDerivatives(tbDerivatives.Text);
 				btnCalculate_Click(sender, e);
 				Settings.Default.Derivatives = tbDerivatives.Text;
 				Settings.Default.Save();
 			}
-			catch (Exception ex)
+			/*catch (Exception ex)
 			{
 				var parserErrors = Helper.Parser.Errors;
 				if (parserErrors.Count != 0)
@@ -72,7 +72,7 @@ namespace MathFunctions.GUI
 						Helper.Parser.Errors.First().Message, Helper.Parser.Errors.First().Position));
 				else
 					MessageBox.Show("Derivatives: " + ex.Message);
-			}
+			}*/
 		}
 
 		private void cbRealTimeUpdate_CheckedChanged(object sender, EventArgs e)
@@ -106,7 +106,9 @@ namespace MathFunctions.GUI
 				foreach (var error in Helper.Parser.Errors)
 					dgvErrors.Rows.Add(error.Position == null ? string.Empty : error.Position.Column.ToString(), error.Message);
 				tbSimplification.Text = null;
+				tbSimplifiedOpt.Text = null;
 				tbDerivative.Text = null;
+				tbDerivativeOpt.Text = null;
 				tbIlCode.Text = null;
 				tbDerivativeIlCode.Text = null;
 			}
@@ -141,6 +143,7 @@ namespace MathFunctions.GUI
 					foreach (var error in Helper.Parser.Errors)
 						dgvErrors.Rows.Add(error.Position == null ? string.Empty : error.Position.Column.ToString(), error.Message);
 					tbDerivative.Text = null;
+					tbDerivativeOpt.Text = null;
 					tbDerivativeIlCode.Text = null;
 				}
 
@@ -169,6 +172,13 @@ namespace MathFunctions.GUI
 				if (Assembly != null)
 					Assembly.Finalize(Path.GetDirectoryName(saveFileDialog1.FileName), Path.GetFileName(saveFileDialog1.FileName));
 			}
+		}
+
+		private void btnGenerateFunc_Click(object sender, EventArgs e)
+		{
+			MathFuncGenerator generator = new MathFuncGenerator();
+			var func = generator.Generate(tbVar.Text, new string[] { "a", "b" }, null);
+			tbInput.Text = func.ToString().Replace("√", "sqrt");
 		}
 	}
 }

@@ -21,16 +21,16 @@ namespace MathFunctions
 			{ "tan", KnownFuncType.Tan},
 			{ "cot", KnownFuncType.Cot},
 
-			{ "arcsin", KnownFuncType.Arcsin},
-			{ "arccos", KnownFuncType.Arccos},
-			{ "arctan", KnownFuncType.Arctan},
-			{ "arccot", KnownFuncType.Arccot},
+			{ "asin", KnownFuncType.Arcsin},
+			{ "acos", KnownFuncType.Arccos},
+			{ "atan", KnownFuncType.Arctan},
+			{ "acot", KnownFuncType.Arccot},
 
 			{ "sinh", KnownFuncType.Sinh},
 			{ "cosh", KnownFuncType.Cosh},
 
-			{ "arcsinh", KnownFuncType.Arcsinh},
-			{ "arcosh", KnownFuncType.Arcosh},
+			{ "asinh", KnownFuncType.Arcsinh},
+			{ "acosh", KnownFuncType.Arcosh},
 
 			{ "ln", KnownFuncType.Ln},
 			{ "log10", KnownFuncType.Log10},
@@ -58,14 +58,22 @@ namespace MathFunctions
 			{ "diff", KnownFuncType.Diff}
 		};
 
+		public static List<KnownFuncType> SpecFuncs = new List<KnownFuncType>()
+		{
+			KnownFuncType.Abs, KnownFuncType.Sgn, KnownFuncType.Trunc, KnownFuncType.Round, KnownFuncType.Diff
+		};
+
 		public static KnownFuncType[] AddKnownFuncs = new KnownFuncType[] {
-			KnownFuncType.Add, KnownFuncType.Sub };
+			KnownFuncType.Add, KnownFuncType.Sub 
+		};
 
 		public static KnownFuncType[] MultKnownFuncs = new KnownFuncType[] {
-			KnownFuncType.Add, KnownFuncType.Sub, KnownFuncType.Mult, KnownFuncType.Div };
+			KnownFuncType.Add, KnownFuncType.Sub, KnownFuncType.Mult, KnownFuncType.Div
+		};
 
 		public static KnownFuncType[] ExpKnownFuncs = new KnownFuncType[] {
-			KnownFuncType.Add, KnownFuncType.Sub, KnownFuncType.Mult, KnownFuncType.Div, KnownFuncType.Exp };
+			KnownFuncType.Add, KnownFuncType.Sub, KnownFuncType.Mult, KnownFuncType.Div, KnownFuncType.Exp
+		};
 
 		public static Dictionary<KnownFuncType, string> UnaryFuncsNames = new Dictionary<KnownFuncType, string>();
 
@@ -93,32 +101,42 @@ namespace MathFunctions
 					BinaryFuncsNames.Add(binaryNameFunc.Value, binaryNameFunc.Key);
 				}
 
-			
+			Type mathType = typeof(Math);
+			Type[] unaryFuncArgTypes = new Type[] { typeof(double) };
+			Type[] binaryFuncArgTypes = new Type[] { typeof(double), typeof(double) };
+
 			TypesMethods = new Dictionary<KnownFuncType, MethodInfo>()
 			{
-				{ KnownFuncType.Sin, typeof(Math).GetMethod("Sin", new Type[] { typeof(double) }) },
-				{ KnownFuncType.Cos, typeof(Math).GetMethod("Cos", new Type[] { typeof(double) }) },
-				{ KnownFuncType.Tan, typeof(Math).GetMethod("Tan", new Type[] { typeof(double) }) },
+				{ KnownFuncType.Sin, mathType.GetMethod("Sin", unaryFuncArgTypes) },
+				{ KnownFuncType.Cos, mathType.GetMethod("Cos", unaryFuncArgTypes) },
+				{ KnownFuncType.Tan, mathType.GetMethod("Tan", unaryFuncArgTypes) },
 
-				{ KnownFuncType.Arcsin, typeof(Math).GetMethod("Asin", new Type[] { typeof(double) }) },
-				{ KnownFuncType.Arccos, typeof(Math).GetMethod("Acos", new Type[] { typeof(double) }) },
-				{ KnownFuncType.Arctan, typeof(Math).GetMethod("Atan", new Type[] { typeof(double) }) },
+				{ KnownFuncType.Arcsin, mathType.GetMethod("Asin", unaryFuncArgTypes) },
+				{ KnownFuncType.Arccos, mathType.GetMethod("Acos", unaryFuncArgTypes) },
+				{ KnownFuncType.Arctan, mathType.GetMethod("Atan", unaryFuncArgTypes) },
 
-				{ KnownFuncType.Sinh, typeof(Math).GetMethod("Sinh", new Type[] { typeof(double) }) },
-				{ KnownFuncType.Cosh, typeof(Math).GetMethod("Cosh", new Type[] { typeof(double) }) },
+				{ KnownFuncType.Sinh, mathType.GetMethod("Sinh", unaryFuncArgTypes) },
+				{ KnownFuncType.Cosh, mathType.GetMethod("Cosh", unaryFuncArgTypes) },
 
-				{ KnownFuncType.Ln, typeof(Math).GetMethod("Log", new Type[] { typeof(double) }) },
-				{ KnownFuncType.Log10, typeof(Math).GetMethod("Log10", new Type[] { typeof(double) }) },
+				{ KnownFuncType.Ln, mathType.GetMethod("Log", unaryFuncArgTypes) },
+				{ KnownFuncType.Log10, mathType.GetMethod("Log10", unaryFuncArgTypes) },
 
-				{ KnownFuncType.Abs, typeof(Math).GetMethod("Abs", new Type[] { typeof(double) }) },
-				{ KnownFuncType.Sgn, typeof(Math).GetMethod("Sign", new Type[] { typeof(double) }) },
-				{ KnownFuncType.Trunc, typeof(Math).GetMethod("Truncate", new Type[] { typeof(double) }) },
-				{ KnownFuncType.Round, typeof(Math).GetMethod("Round", new Type[] { typeof(double) }) },
+				{ KnownFuncType.Abs, mathType.GetMethod("Abs", unaryFuncArgTypes) },
+				{ KnownFuncType.Sgn, mathType.GetMethod("Sign", unaryFuncArgTypes) },
+				{ KnownFuncType.Trunc, mathType.GetMethod("Truncate", unaryFuncArgTypes) },
+				{ KnownFuncType.Round, mathType.GetMethod("Round", unaryFuncArgTypes) },
 
-				{ KnownFuncType.Exp, typeof(Math).GetMethod("Pow", new Type[] { typeof(double), typeof(double) }) },
-				{ KnownFuncType.Sqrt, typeof(Math).GetMethod("Sqrt", new Type[] { typeof(double) }) },
-				{ KnownFuncType.Log, typeof(Math).GetMethod("Log", new Type[] { typeof(double), typeof(double) }) },
+				{ KnownFuncType.Exp, mathType.GetMethod("Pow", binaryFuncArgTypes) },
+				{ KnownFuncType.Sqrt, mathType.GetMethod("Sqrt", unaryFuncArgTypes) },
+				{ KnownFuncType.Log, mathType.GetMethod("Log", binaryFuncArgTypes) },
 			};
+
+			foreach (KnownFuncType knownFuncType in Enum.GetValues(typeof(KnownFuncType)))
+				if (!MultKnownFuncs.Contains(knownFuncType) && knownFuncType != KnownFuncType.Neg && !TypesMethods.ContainsKey(knownFuncType))
+				{
+					//throw new Exception("Not all Known func defined");
+				}
+					
 		}
 	}
 }

@@ -31,6 +31,9 @@
 			System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(frmMain));
 			this.splitContainer3 = new System.Windows.Forms.SplitContainer();
 			this.splitContainer2 = new System.Windows.Forms.SplitContainer();
+			this.btnGenerateFunc = new System.Windows.Forms.Button();
+			this.label8 = new System.Windows.Forms.Label();
+			this.label7 = new System.Windows.Forms.Label();
 			this.tbDerivativeOpt = new System.Windows.Forms.TextBox();
 			this.tbSimplifiedOpt = new System.Windows.Forms.TextBox();
 			this.btnSave = new System.Windows.Forms.Button();
@@ -59,8 +62,6 @@
 			this.clnPos = new System.Windows.Forms.DataGridViewTextBoxColumn();
 			this.clnDescription = new System.Windows.Forms.DataGridViewTextBoxColumn();
 			this.saveFileDialog1 = new System.Windows.Forms.SaveFileDialog();
-			this.label7 = new System.Windows.Forms.Label();
-			this.label8 = new System.Windows.Forms.Label();
 			((System.ComponentModel.ISupportInitialize)(this.splitContainer3)).BeginInit();
 			this.splitContainer3.Panel1.SuspendLayout();
 			this.splitContainer3.Panel2.SuspendLayout();
@@ -93,7 +94,7 @@
 			// splitContainer3.Panel2
 			// 
 			this.splitContainer3.Panel2.Controls.Add(this.dgvErrors);
-			this.splitContainer3.Size = new System.Drawing.Size(949, 668);
+			this.splitContainer3.Size = new System.Drawing.Size(952, 669);
 			this.splitContainer3.SplitterDistance = 537;
 			this.splitContainer3.TabIndex = 13;
 			// 
@@ -105,6 +106,7 @@
 			// 
 			// splitContainer2.Panel1
 			// 
+			this.splitContainer2.Panel1.Controls.Add(this.btnGenerateFunc);
 			this.splitContainer2.Panel1.Controls.Add(this.label8);
 			this.splitContainer2.Panel1.Controls.Add(this.label7);
 			this.splitContainer2.Panel1.Controls.Add(this.tbDerivativeOpt);
@@ -126,9 +128,42 @@
 			// splitContainer2.Panel2
 			// 
 			this.splitContainer2.Panel2.Controls.Add(this.splitContainer4);
-			this.splitContainer2.Size = new System.Drawing.Size(949, 537);
-			this.splitContainer2.SplitterDistance = 599;
+			this.splitContainer2.Size = new System.Drawing.Size(952, 537);
+			this.splitContainer2.SplitterDistance = 600;
 			this.splitContainer2.TabIndex = 11;
+			// 
+			// btnGenerateFunc
+			// 
+			this.btnGenerateFunc.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
+			this.btnGenerateFunc.Location = new System.Drawing.Point(487, 355);
+			this.btnGenerateFunc.Name = "btnGenerateFunc";
+			this.btnGenerateFunc.Size = new System.Drawing.Size(87, 26);
+			this.btnGenerateFunc.TabIndex = 34;
+			this.btnGenerateFunc.Text = "Generate";
+			this.btnGenerateFunc.UseVisualStyleBackColor = true;
+			this.btnGenerateFunc.Click += new System.EventHandler(this.btnGenerateFunc_Click);
+			// 
+			// label8
+			// 
+			this.label8.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
+			this.label8.AutoSize = true;
+			this.label8.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
+			this.label8.Location = new System.Drawing.Point(15, 496);
+			this.label8.Name = "label8";
+			this.label8.Size = new System.Drawing.Size(104, 16);
+			this.label8.TabIndex = 33;
+			this.label8.Text = "Deriv. Precomp.";
+			// 
+			// label7
+			// 
+			this.label7.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
+			this.label7.AutoSize = true;
+			this.label7.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
+			this.label7.Location = new System.Drawing.Point(15, 444);
+			this.label7.Name = "label7";
+			this.label7.Size = new System.Drawing.Size(106, 16);
+			this.label7.TabIndex = 32;
+			this.label7.Text = "Simpl. Precomp.";
 			// 
 			// tbDerivativeOpt
 			// 
@@ -137,7 +172,7 @@
 			this.tbDerivativeOpt.Location = new System.Drawing.Point(130, 495);
 			this.tbDerivativeOpt.Name = "tbDerivativeOpt";
 			this.tbDerivativeOpt.ReadOnly = true;
-			this.tbDerivativeOpt.Size = new System.Drawing.Size(443, 20);
+			this.tbDerivativeOpt.Size = new System.Drawing.Size(444, 20);
 			this.tbDerivativeOpt.TabIndex = 31;
 			// 
 			// tbSimplifiedOpt
@@ -147,13 +182,13 @@
 			this.tbSimplifiedOpt.Location = new System.Drawing.Point(130, 443);
 			this.tbSimplifiedOpt.Name = "tbSimplifiedOpt";
 			this.tbSimplifiedOpt.ReadOnly = true;
-			this.tbSimplifiedOpt.Size = new System.Drawing.Size(443, 20);
+			this.tbSimplifiedOpt.Size = new System.Drawing.Size(444, 20);
 			this.tbSimplifiedOpt.TabIndex = 30;
 			// 
 			// btnSave
 			// 
 			this.btnSave.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-			this.btnSave.Location = new System.Drawing.Point(487, 385);
+			this.btnSave.Location = new System.Drawing.Point(488, 385);
 			this.btnSave.Name = "btnSave";
 			this.btnSave.Size = new System.Drawing.Size(86, 26);
 			this.btnSave.TabIndex = 29;
@@ -164,7 +199,7 @@
 			// tbVar
 			// 
 			this.tbVar.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-			this.tbVar.Location = new System.Drawing.Point(294, 388);
+			this.tbVar.Location = new System.Drawing.Point(295, 388);
 			this.tbVar.Name = "tbVar";
 			this.tbVar.Size = new System.Drawing.Size(51, 20);
 			this.tbVar.TabIndex = 28;
@@ -176,7 +211,7 @@
 			this.label5.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
 			this.label5.AutoSize = true;
 			this.label5.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
-			this.label5.Location = new System.Drawing.Point(265, 392);
+			this.label5.Location = new System.Drawing.Point(266, 392);
 			this.label5.Name = "label5";
 			this.label5.Size = new System.Drawing.Size(23, 13);
 			this.label5.TabIndex = 27;
@@ -185,7 +220,7 @@
 			// btnCalculate
 			// 
 			this.btnCalculate.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-			this.btnCalculate.Location = new System.Drawing.Point(373, 386);
+			this.btnCalculate.Location = new System.Drawing.Point(374, 386);
 			this.btnCalculate.Name = "btnCalculate";
 			this.btnCalculate.Size = new System.Drawing.Size(87, 26);
 			this.btnCalculate.TabIndex = 26;
@@ -209,8 +244,8 @@
 			// 
 			// btnRebuildDerivatives
 			// 
-			this.btnRebuildDerivatives.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-			this.btnRebuildDerivatives.Location = new System.Drawing.Point(487, 355);
+			this.btnRebuildDerivatives.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
+			this.btnRebuildDerivatives.Location = new System.Drawing.Point(130, 327);
 			this.btnRebuildDerivatives.Name = "btnRebuildDerivatives";
 			this.btnRebuildDerivatives.Size = new System.Drawing.Size(87, 26);
 			this.btnRebuildDerivatives.TabIndex = 24;
@@ -228,7 +263,7 @@
 			this.tbDerivatives.Multiline = true;
 			this.tbDerivatives.Name = "tbDerivatives";
 			this.tbDerivatives.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
-			this.tbDerivatives.Size = new System.Drawing.Size(562, 327);
+			this.tbDerivatives.Size = new System.Drawing.Size(563, 309);
 			this.tbDerivatives.TabIndex = 23;
 			this.tbDerivatives.Text = resources.GetString("tbDerivatives.Text");
 			// 
@@ -261,7 +296,7 @@
 			this.tbSimplification.Location = new System.Drawing.Point(130, 417);
 			this.tbSimplification.Name = "tbSimplification";
 			this.tbSimplification.ReadOnly = true;
-			this.tbSimplification.Size = new System.Drawing.Size(443, 20);
+			this.tbSimplification.Size = new System.Drawing.Size(444, 20);
 			this.tbSimplification.TabIndex = 20;
 			// 
 			// tbDerivative
@@ -271,7 +306,7 @@
 			this.tbDerivative.Location = new System.Drawing.Point(130, 469);
 			this.tbDerivative.Name = "tbDerivative";
 			this.tbDerivative.ReadOnly = true;
-			this.tbDerivative.Size = new System.Drawing.Size(444, 20);
+			this.tbDerivative.Size = new System.Drawing.Size(445, 20);
 			this.tbDerivative.TabIndex = 19;
 			// 
 			// label3
@@ -291,7 +326,7 @@
             | System.Windows.Forms.AnchorStyles.Right)));
 			this.tbInput.Location = new System.Drawing.Point(130, 359);
 			this.tbInput.Name = "tbInput";
-			this.tbInput.Size = new System.Drawing.Size(330, 20);
+			this.tbInput.Size = new System.Drawing.Size(331, 20);
 			this.tbInput.TabIndex = 17;
 			this.tbInput.Text = "2 + 2 * 2";
 			this.tbInput.TextChanged += new System.EventHandler(this.tbInput_TextChanged);
@@ -312,7 +347,7 @@
 			// splitContainer4.Panel2
 			// 
 			this.splitContainer4.Panel2.Controls.Add(this.tabControl1);
-			this.splitContainer4.Size = new System.Drawing.Size(346, 537);
+			this.splitContainer4.Size = new System.Drawing.Size(348, 537);
 			this.splitContainer4.SplitterDistance = 46;
 			this.splitContainer4.TabIndex = 12;
 			// 
@@ -352,7 +387,7 @@
 			this.tabControl1.Location = new System.Drawing.Point(0, 0);
 			this.tabControl1.Name = "tabControl1";
 			this.tabControl1.SelectedIndex = 0;
-			this.tabControl1.Size = new System.Drawing.Size(346, 487);
+			this.tabControl1.Size = new System.Drawing.Size(348, 487);
 			this.tabControl1.TabIndex = 2;
 			// 
 			// tabPage1
@@ -361,7 +396,7 @@
 			this.tabPage1.Location = new System.Drawing.Point(4, 22);
 			this.tabPage1.Name = "tabPage1";
 			this.tabPage1.Padding = new System.Windows.Forms.Padding(3);
-			this.tabPage1.Size = new System.Drawing.Size(338, 461);
+			this.tabPage1.Size = new System.Drawing.Size(340, 461);
 			this.tabPage1.TabIndex = 0;
 			this.tabPage1.Text = "Simplification";
 			this.tabPage1.UseVisualStyleBackColor = true;
@@ -374,7 +409,7 @@
 			this.tbIlCode.Name = "tbIlCode";
 			this.tbIlCode.ReadOnly = true;
 			this.tbIlCode.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
-			this.tbIlCode.Size = new System.Drawing.Size(332, 455);
+			this.tbIlCode.Size = new System.Drawing.Size(334, 455);
 			this.tbIlCode.TabIndex = 2;
 			// 
 			// tabPage2
@@ -410,7 +445,7 @@
 			this.dgvErrors.Name = "dgvErrors";
 			this.dgvErrors.ReadOnly = true;
 			this.dgvErrors.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
-			this.dgvErrors.Size = new System.Drawing.Size(949, 127);
+			this.dgvErrors.Size = new System.Drawing.Size(952, 128);
 			this.dgvErrors.TabIndex = 13;
 			this.dgvErrors.CellDoubleClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.dgvErrors_CellDoubleClick);
 			// 
@@ -434,33 +469,11 @@
 			this.saveFileDialog1.FileName = "MathFuncLib";
 			this.saveFileDialog1.Filter = "Assemblies (*.dll)|*.dll";
 			// 
-			// label7
-			// 
-			this.label7.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-			this.label7.AutoSize = true;
-			this.label7.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
-			this.label7.Location = new System.Drawing.Point(15, 444);
-			this.label7.Name = "label7";
-			this.label7.Size = new System.Drawing.Size(106, 16);
-			this.label7.TabIndex = 32;
-			this.label7.Text = "Simpl. Precomp.";
-			// 
-			// label8
-			// 
-			this.label8.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-			this.label8.AutoSize = true;
-			this.label8.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
-			this.label8.Location = new System.Drawing.Point(15, 496);
-			this.label8.Name = "label8";
-			this.label8.Size = new System.Drawing.Size(104, 16);
-			this.label8.TabIndex = 33;
-			this.label8.Text = "Deriv. Precomp.";
-			// 
 			// frmMain
 			// 
 			this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
 			this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-			this.ClientSize = new System.Drawing.Size(949, 668);
+			this.ClientSize = new System.Drawing.Size(952, 669);
 			this.Controls.Add(this.splitContainer3);
 			this.Name = "frmMain";
 			this.Text = "Math func simplification & derivatives";
@@ -524,6 +537,7 @@
 		private System.Windows.Forms.Label label6;
 		private System.Windows.Forms.Label label8;
 		private System.Windows.Forms.Label label7;
+		private System.Windows.Forms.Button btnGenerateFunc;
 
 
 

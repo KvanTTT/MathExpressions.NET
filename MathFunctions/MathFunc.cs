@@ -216,10 +216,16 @@ namespace MathFunctions
 					return null;
 			}
 
-			if (Rational<long>.FromDecimal((decimal)temp, out result, 12, false, 2, 8))
+			try
+			{
+				if (Rational<long>.FromDecimal((decimal)temp, out result, 12, false, 2, 8))
 				return new ValueNode(result);
-			else
-				return null;
+			}
+			catch
+			{
+			}
+			
+			return null;
 		}
 
 		public void Sort()
