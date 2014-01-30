@@ -169,20 +169,22 @@
 			// 
 			this.tbDerivativeOpt.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
+			this.tbDerivativeOpt.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
 			this.tbDerivativeOpt.Location = new System.Drawing.Point(130, 495);
 			this.tbDerivativeOpt.Name = "tbDerivativeOpt";
 			this.tbDerivativeOpt.ReadOnly = true;
-			this.tbDerivativeOpt.Size = new System.Drawing.Size(444, 20);
+			this.tbDerivativeOpt.Size = new System.Drawing.Size(444, 22);
 			this.tbDerivativeOpt.TabIndex = 31;
 			// 
 			// tbSimplifiedOpt
 			// 
 			this.tbSimplifiedOpt.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
+			this.tbSimplifiedOpt.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
 			this.tbSimplifiedOpt.Location = new System.Drawing.Point(130, 443);
 			this.tbSimplifiedOpt.Name = "tbSimplifiedOpt";
 			this.tbSimplifiedOpt.ReadOnly = true;
-			this.tbSimplifiedOpt.Size = new System.Drawing.Size(444, 20);
+			this.tbSimplifiedOpt.Size = new System.Drawing.Size(444, 22);
 			this.tbSimplifiedOpt.TabIndex = 30;
 			// 
 			// btnSave
@@ -199,9 +201,10 @@
 			// tbVar
 			// 
 			this.tbVar.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
+			this.tbVar.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
 			this.tbVar.Location = new System.Drawing.Point(295, 388);
 			this.tbVar.Name = "tbVar";
-			this.tbVar.Size = new System.Drawing.Size(51, 20);
+			this.tbVar.Size = new System.Drawing.Size(51, 22);
 			this.tbVar.TabIndex = 28;
 			this.tbVar.Text = "x";
 			this.tbVar.TextChanged += new System.EventHandler(this.tbInput_TextChanged);
@@ -293,20 +296,22 @@
 			// 
 			this.tbSimplification.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
+			this.tbSimplification.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
 			this.tbSimplification.Location = new System.Drawing.Point(130, 417);
 			this.tbSimplification.Name = "tbSimplification";
 			this.tbSimplification.ReadOnly = true;
-			this.tbSimplification.Size = new System.Drawing.Size(444, 20);
+			this.tbSimplification.Size = new System.Drawing.Size(444, 22);
 			this.tbSimplification.TabIndex = 20;
 			// 
 			// tbDerivative
 			// 
 			this.tbDerivative.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
+			this.tbDerivative.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
 			this.tbDerivative.Location = new System.Drawing.Point(130, 469);
 			this.tbDerivative.Name = "tbDerivative";
 			this.tbDerivative.ReadOnly = true;
-			this.tbDerivative.Size = new System.Drawing.Size(445, 20);
+			this.tbDerivative.Size = new System.Drawing.Size(445, 22);
 			this.tbDerivative.TabIndex = 19;
 			// 
 			// label3
@@ -324,9 +329,10 @@
 			// 
 			this.tbInput.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
+			this.tbInput.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
 			this.tbInput.Location = new System.Drawing.Point(130, 359);
 			this.tbInput.Name = "tbInput";
-			this.tbInput.Size = new System.Drawing.Size(331, 20);
+			this.tbInput.Size = new System.Drawing.Size(331, 22);
 			this.tbInput.TabIndex = 17;
 			this.tbInput.Text = "2 + 2 * 2";
 			this.tbInput.TextChanged += new System.EventHandler(this.tbInput_TextChanged);
@@ -362,9 +368,10 @@
 			// 
 			// tbDerivativeDelta
 			// 
-			this.tbDerivativeDelta.Location = new System.Drawing.Point(234, 11);
+			this.tbDerivativeDelta.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
+			this.tbDerivativeDelta.Location = new System.Drawing.Point(234, 13);
 			this.tbDerivativeDelta.Name = "tbDerivativeDelta";
-			this.tbDerivativeDelta.Size = new System.Drawing.Size(100, 20);
+			this.tbDerivativeDelta.Size = new System.Drawing.Size(100, 22);
 			this.tbDerivativeDelta.TabIndex = 12;
 			this.tbDerivativeDelta.Text = "0.000001";
 			this.tbDerivativeDelta.TextChanged += new System.EventHandler(this.tbInput_TextChanged);
@@ -411,6 +418,7 @@
 			this.tbIlCode.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
 			this.tbIlCode.Size = new System.Drawing.Size(334, 455);
 			this.tbIlCode.TabIndex = 2;
+			this.tbIlCode.KeyDown += new System.Windows.Forms.KeyEventHandler(this.tbIlCode_KeyDown);
 			// 
 			// tabPage2
 			// 
@@ -418,7 +426,7 @@
 			this.tabPage2.Location = new System.Drawing.Point(4, 22);
 			this.tabPage2.Name = "tabPage2";
 			this.tabPage2.Padding = new System.Windows.Forms.Padding(3);
-			this.tabPage2.Size = new System.Drawing.Size(338, 461);
+			this.tabPage2.Size = new System.Drawing.Size(340, 461);
 			this.tabPage2.TabIndex = 1;
 			this.tabPage2.Text = "Derivative";
 			this.tabPage2.UseVisualStyleBackColor = true;
@@ -431,8 +439,9 @@
 			this.tbDerivativeIlCode.Name = "tbDerivativeIlCode";
 			this.tbDerivativeIlCode.ReadOnly = true;
 			this.tbDerivativeIlCode.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
-			this.tbDerivativeIlCode.Size = new System.Drawing.Size(332, 455);
+			this.tbDerivativeIlCode.Size = new System.Drawing.Size(334, 455);
 			this.tbDerivativeIlCode.TabIndex = 3;
+			this.tbDerivativeIlCode.KeyDown += new System.Windows.Forms.KeyEventHandler(this.tbIlCode_KeyDown);
 			// 
 			// dgvErrors
 			// 

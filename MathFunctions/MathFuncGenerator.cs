@@ -61,7 +61,7 @@ namespace MathFunctions
 				r = ValueProb + ConstProb + VarProb;
 			if (curDepth == MaxDepth && r > ValueProb + ConstProb + VarProb)
 				r *= (ValueProb + ConstProb + VarProb);
-			double r1, r2;
+			double r1;
 
 			if (r < ValueProb)
 			{
