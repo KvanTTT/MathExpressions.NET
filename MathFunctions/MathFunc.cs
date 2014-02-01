@@ -218,7 +218,7 @@ namespace MathFunctions
 
 			try
 			{
-				if (Rational<long>.FromDecimal((decimal)temp, out result, 12, false, 2, 8))
+				if (Rational<long>.FromDecimal((decimal)temp, out result, 14, false, 4, 8))
 				return new ValueNode(result);
 			}
 			catch

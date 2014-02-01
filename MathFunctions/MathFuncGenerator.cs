@@ -28,6 +28,8 @@ namespace MathFunctions
 		public double UnaryFracProb = 0.3;
 		public double BinaryFracProb = 0.7;
 
+		//public double AdditionFuncProb
+
 		public int MaxSummandsCount = 5;
 		public int MaxFactorsCount = 4;
 
