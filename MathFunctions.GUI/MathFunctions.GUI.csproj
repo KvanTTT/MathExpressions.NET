@@ -33,6 +33,9 @@
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
+  <PropertyGroup>
+    <ApplicationIcon>icon_big.ico</ApplicationIcon>
+  </PropertyGroup>
   <ItemGroup>
     <Reference Include="GOLD Engine, Version=5.0.4337.25397, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\Dependencies\GOLD Engine.dll</HintPath>
@@ -89,6 +92,9 @@
       <Project>{AE661528-AFC9-4CCA-9ABD-C173E9779085}</Project>
       <Name>MathFunctions</Name>
     </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="icon_big.ico" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

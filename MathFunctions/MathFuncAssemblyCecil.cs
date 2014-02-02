@@ -52,7 +52,7 @@ namespace MathFunctions
 			var func = new MathFunc(expression, variable, true, true);
 			var funcDer = new MathFunc(expression, variable, true, false).GetDerivative().GetPrecompilied();
 
-			Init();
+			Init(fileName);
 
 			func.Compile(this, FuncName);
 			funcDer.Compile(this, FuncDerivativeName);
@@ -60,10 +60,10 @@ namespace MathFunctions
 			Finalize(path, fileName);
 		}
 
-		public void Init()
+		public void Init(string fileName)
 		{
-			var name = new AssemblyNameDefinition(NamespaceName, new Version(1, 0, 0, 0));
-			Assembly = AssemblyDefinition.CreateAssembly(name, NamespaceName + ".dll", ModuleKind.Dll);
+			var name = new AssemblyNameDefinition(fileName.Replace(".dll", ""), new Version(1, 0, 0, 0));
+			Assembly = AssemblyDefinition.CreateAssembly(name, fileName, ModuleKind.Dll);
 
 			ImportMath(Assembly);
 			InvokeFuncRef = Assembly.MainModule.Import(typeof(Func<double, double>).GetMethod("Invoke"));
@@ -71,8 +71,7 @@ namespace MathFunctions
 
 			Class = new TypeDefinition(NamespaceName, ClassName,
 				TypeAttributes.Public | TypeAttributes.BeforeFieldInit | TypeAttributes.Serializable |
-				TypeAttributes.AnsiClass /*| TypeAttributes.Sealed /*| TypeAttributes.Abstract*/,
-				Assembly.MainModule.TypeSystem.Object);
+				TypeAttributes.AnsiClass, Assembly.MainModule.TypeSystem.Object);
 
 			var methodAttributes = MethodAttributes.Public | MethodAttributes.HideBySig | MethodAttributes.SpecialName | MethodAttributes.RTSpecialName;
 			var method = new MethodDefinition(".ctor", methodAttributes, Assembly.MainModule.TypeSystem.Void);

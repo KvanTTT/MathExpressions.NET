@@ -101,7 +101,7 @@ namespace MathFunctions.Tests
 		[Test]
 		public void Derivative6()
 		{
-			string expression = "arctan(sqrt(x)) * ln(x)";
+			string expression = "atan(sqrt(x)) * ln(x)";
 			Assert.IsTrue(WolframAlphaUtils.CheckDerivative(expression, GetDerivativeExpression(expression)));
 		}
 

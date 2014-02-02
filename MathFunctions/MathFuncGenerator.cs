@@ -7,6 +7,8 @@ namespace MathFunctions
 {
 	public class MathFuncGenerator
 	{
+		private static KnownFuncType[] _unaryFuncs;
+		private static KnownFuncType[] _binaryFuncs;
 		private Random _rand = new Random();
 
 		public double ValueProb = 0.2;
@@ -25,13 +27,20 @@ namespace MathFunctions
 		public double UnknownFuncProb = 0.05;
 		public double KnownFuncProb = 0.95;
 
-		public double UnaryFracProb = 0.3;
-		public double BinaryFracProb = 0.7;
+		public double UnaryFuncProb = 0.6;
+		public double BinaryFuncProb = 0.4;
 
-		//public double AdditionFuncProb
+		public double AdditionFuncProb = 0.3;
+		public double MultiplicationFuncProb = 0.3;
 
 		public int MaxSummandsCount = 5;
 		public int MaxFactorsCount = 4;
+
+		static MathFuncGenerator()
+		{
+			_unaryFuncs = KnownFunc.UnaryFuncsNames.Keys.ToArray();
+			_binaryFuncs = KnownFunc.BinaryFuncsNames.Keys.Where(func => func != KnownFuncType.Add && func != KnownFuncType.Mult).ToArray();
+		}
 
 		public MathFunc Generate(string varName, string[] constNames, string[] unknownFuncNames)
 		{
@@ -63,7 +72,7 @@ namespace MathFunctions
 				r = ValueProb + ConstProb + VarProb;
 			if (curDepth == MaxDepth && r > ValueProb + ConstProb + VarProb)
 				r *= (ValueProb + ConstProb + VarProb);
-			double r1;
+			double r1, r2, r3;
 
 			if (r < ValueProb)
 			{
@@ -99,9 +108,19 @@ namespace MathFunctions
 					KnownFuncType randFuncType;
 					do
 					{
-						//r2 = _rand.NextDouble();
-						//if (r2 < UnaryFracProb)
-						randFuncType = (KnownFuncType)values.GetValue(_rand.Next(values.Length));
+						r2 = _rand.NextDouble();
+						if (r2 < AdditionFuncProb)
+							randFuncType = KnownFuncType.Add;
+						else if (r2 < AdditionFuncProb + MultiplicationFuncProb)
+							randFuncType = KnownFuncType.Mult;
+						else
+						{
+							r3 = _rand.NextDouble();
+							if (r3 < UnaryFuncProb)
+								randFuncType = _unaryFuncs[_rand.Next(_unaryFuncs.Length)];
+							else
+								randFuncType = _binaryFuncs[_rand.Next(_binaryFuncs.Length)];
+						}
 					}
 					while (KnownFunc.SpecFuncs.Contains(randFuncType));
 

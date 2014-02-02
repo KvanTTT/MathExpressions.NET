@@ -54,8 +54,8 @@ namespace MathFunctions
 			{ "^", KnownFuncType.Exp},
 			{ "exp", KnownFuncType.Exp},
 			
-			{ "log", KnownFuncType.Log},
-			{ "diff", KnownFuncType.Diff}
+			{ "log", KnownFuncType.Log },
+			{ "diff", KnownFuncType.Diff }
 		};
 
 		public static List<KnownFuncType> SpecFuncs = new List<KnownFuncType>()

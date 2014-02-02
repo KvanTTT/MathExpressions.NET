@@ -14,7 +14,6 @@ namespace MathFunctions.Tests
 		public static bool CheckDerivative(string expression, string derivative)
 		{
 			return CheckEquality("diff(" + expression + ")", derivative);
-			//return CheckDerivative2(expression, derivative);
 		}
 
 		public static bool CheckEquality(string expression1, string expression2)
