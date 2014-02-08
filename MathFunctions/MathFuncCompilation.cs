@@ -5,7 +5,7 @@ using System.Text;
 using Mono.Cecil;
 using Mono.Cecil.Cil;
 
-namespace MathFunctions
+namespace MathExpressions.NET
 {
 	public class CountNumber
 	{

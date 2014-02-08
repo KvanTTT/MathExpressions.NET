@@ -5,7 +5,7 @@ using System.Linq;
 using System.Reflection;
 using System.Text;
 
-namespace MathFunctions
+namespace MathExpressions.NET
 {
 	public class MathAssembly : IDisposable
 	{
@@ -54,7 +54,13 @@ namespace MathFunctions
 		{
 			if (_domain != null)
 				AppDomain.Unload(_domain);
-			File.Delete(_fileName);
+			if (File.Exists(_fileName))
+				File.Delete(_fileName);
+		}
+
+		~MathAssembly()
+		{
+			Dispose();
 		}
 
 		public static string GenerateRandomString(int length)

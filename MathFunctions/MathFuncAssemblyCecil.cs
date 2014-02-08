@@ -6,7 +6,7 @@ using Mono.Cecil;
 using System.IO;
 using Mono.Cecil.Cil;
 
-namespace MathFunctions
+namespace MathExpressions.NET
 {
 	public class MathFuncAssemblyCecil
 	{
@@ -60,7 +60,7 @@ namespace MathFunctions
 			Finalize(path, fileName);
 		}
 
-		public void Init(string fileName)
+		public void Init(string fileName = "MathFuncLib.dll")
 		{
 			var name = new AssemblyNameDefinition(fileName.Replace(".dll", ""), new Version(1, 0, 0, 0));
 			Assembly = AssemblyDefinition.CreateAssembly(name, fileName, ModuleKind.Dll);

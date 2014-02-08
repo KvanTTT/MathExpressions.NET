@@ -8,11 +8,11 @@ using System.Text;
 using System.Windows.Forms;
 using System.IO;
 using GOLD;
-using MathFunctions.GUI.Properties;
+using MathExpressions.NET.GUI.Properties;
 using System.Globalization;
 using System.Threading;
 
-namespace MathFunctions.GUI
+namespace MathExpressions.NET.GUI
 {
 	public partial class frmMain : Form
 	{

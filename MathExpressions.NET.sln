@@ -1,9 +1,9 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 2012
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MathFunctions", "MathFunctions\MathFunctions.csproj", "{AE661528-AFC9-4CCA-9ABD-C173E9779085}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MathExpressions.NET", "MathFunctions\MathExpressions.NET.csproj", "{AE661528-AFC9-4CCA-9ABD-C173E9779085}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MathFunctions.GUI", "MathFunctions.GUI\MathFunctions.GUI.csproj", "{2C0616FA-AAC1-4F22-9655-731F308FE4F2}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MathExpressions.NET.GUI", "MathFunctions.GUI\MathExpressions.NET.GUI.csproj", "{2C0616FA-AAC1-4F22-9655-731F308FE4F2}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Dependencies", "Dependencies", "{59BB7BFA-F088-41EB-AA54-0549D5DB1A2E}"
 	ProjectSection(SolutionItems) = preProject
@@ -17,9 +17,9 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Dependencies", "Dependencie
 		Dependencies\ZedGraph.dll = Dependencies\ZedGraph.dll
 	EndProjectSection
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MathFunctions.Tests", "MathFunctions.Tests\MathFunctions.Tests.csproj", "{BF78CC00-AB67-4D51-8B47-5A6DA94984AC}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MathExpressions.NET.Tests", "MathFunctions.Tests\MathExpressions.NET.Tests.csproj", "{BF78CC00-AB67-4D51-8B47-5A6DA94984AC}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MathFunctions.Benchmarks.GUI", "MathFunctions.Benchmarks.GUI\MathFunctions.Benchmarks.GUI.csproj", "{E48B7E84-C183-423B-8E83-5BBF3CB5DE0B}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MathExpressions.NET.Benchmarks.GUI", "MathFunctions.Benchmarks.GUI\MathExpressions.NET.Benchmarks.GUI.csproj", "{E48B7E84-C183-423B-8E83-5BBF3CB5DE0B}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

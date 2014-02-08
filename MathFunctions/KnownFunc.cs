@@ -5,7 +5,7 @@ using System.Text;
 using Mono.Cecil;
 using System.Reflection;
 
-namespace MathFunctions
+namespace MathExpressions.NET
 {
 	public class KnownFunc
 	{

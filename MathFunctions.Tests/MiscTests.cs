@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using NUnit.Framework;
 
-namespace MathFunctions.Tests
+namespace MathExpressions.NET.Tests
 {
 	[TestFixture]
 	public class MiscTests

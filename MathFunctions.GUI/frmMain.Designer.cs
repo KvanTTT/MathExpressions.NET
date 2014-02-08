@@ -1,4 +1,4 @@
-﻿namespace MathFunctions.GUI
+﻿namespace MathExpressions.NET.GUI
 {
 	partial class frmMain
 	{

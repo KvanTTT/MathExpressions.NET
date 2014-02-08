@@ -37,7 +37,7 @@ using System.Text;
 using System.Reflection;
 using System.Globalization;
 
-namespace MathFunctions
+namespace MathExpressions.NET
 {
 	/// <summary>
 	/// Represents a rational number

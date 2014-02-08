@@ -4,7 +4,7 @@ using System.Globalization;
 using System.Linq;
 using System.Text;
 
-namespace MathFunctions
+namespace MathExpressions.NET
 {
 	public class CalculatedNode : MathFuncNode
 	{

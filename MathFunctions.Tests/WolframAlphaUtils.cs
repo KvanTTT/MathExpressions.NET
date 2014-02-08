@@ -6,8 +6,9 @@ using System.Configuration;
 using WolframAlphaNET;
 using WolframAlphaNET.Misc;
 using WolframAlphaNET.Objects;
+using System.Globalization;
 
-namespace MathFunctions.Tests
+namespace MathExpressions.NET.Tests
 {
 	public static class WolframAlphaUtils
 	{
@@ -59,6 +60,21 @@ namespace MathFunctions.Tests
 			{
 				return false;
 			}
+		}
+
+		public static double GetValue(string expression, params KeyValuePair<string, double>[] values)
+		{
+			StringBuilder request = new StringBuilder(expression + " where ");
+			foreach (var value in values)
+				request.AppendFormat("{0}={1};", value.Key, value.Value.ToString(CultureInfo.InvariantCulture));
+			if (values.Length > 0)
+				request.Remove(request.Length - 1, 1);
+
+			WolframAlpha wolfram = new WolframAlpha(ConfigurationManager.AppSettings["WolframAlphaAppId"]);
+			QueryResult response = wolfram.Query(request.ToString());
+			var pod = response.GetPrimaryPod();
+
+			return double.Parse(pod.SubPods[0].Plaintext, CultureInfo.InvariantCulture);
 		}
 	}
 }

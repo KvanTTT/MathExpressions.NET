@@ -7,7 +7,7 @@ using System.Reflection;
 using System.Security.Policy;
 using System.IO;
 
-namespace MathFunctions.Tests
+namespace MathExpressions.NET.Tests
 {
 	[TestFixture]
 	public class MathFuncCompilationTests
@@ -50,6 +50,31 @@ namespace MathFunctions.Tests
 			{
 				var func = new Func<double, double>(x => x * x);
 				Assert.AreEqual(expectedFunc(5, func), mathAssembly.FuncDerivative.Invoke(null, new object[] { 5, func }));
+			}
+		}
+
+		[Test]
+		public void CompileSampleFunc()
+		{
+			var exprString = "x ^ 3 + sin(3 * ln(x * 1)) + x ^ ln(2 * sin(3 * ln(x))) - 2 * x ^ 3";
+			var properlyFunc = new Func<double, double>(x =>
+				Math.Pow(x, 3) + Math.Sin(3 * Math.Log(x * 1)) + Math.Pow(x, Math.Log(2 * Math.Sin(3 * Math.Log(x))) - 2 * Math.Pow(x, 3)));
+			using (var mathAssembly = new MathAssembly(exprString, "x"))
+			{
+				var rand = new Random();
+				int i = 0;
+				while (i < 5)
+				{
+					double x = rand.NextDouble();
+					var dotnet = properlyFunc(x);
+					if (!double.IsNaN(dotnet))
+					{
+						var correct = WolframAlphaUtils.GetValue(exprString, new KeyValuePair<string, double>("x", x));
+						var actual = mathAssembly.SimpleFunc(x);
+						Assert.LessOrEqual(Math.Abs(correct - actual), Math.Abs(dotnet - actual));
+						i++;
+					}
+				}
 			}
 		}
 	}

@@ -8,7 +8,7 @@
     <ProjectGuid>{AE661528-AFC9-4CCA-9ABD-C173E9779085}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>MathFunctions</RootNamespace>
+    <RootNamespace>MathExpressions.NET</RootNamespace>
     <AssemblyName>MathFunctions</AssemblyName>
     <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
