@@ -58,11 +58,11 @@
 			this.tbIlCode = new System.Windows.Forms.TextBox();
 			this.tabPage2 = new System.Windows.Forms.TabPage();
 			this.tbDerivativeIlCode = new System.Windows.Forms.TextBox();
+			this.label9 = new System.Windows.Forms.Label();
 			this.dgvErrors = new System.Windows.Forms.DataGridView();
 			this.clnPos = new System.Windows.Forms.DataGridViewTextBoxColumn();
 			this.clnDescription = new System.Windows.Forms.DataGridViewTextBoxColumn();
 			this.saveFileDialog1 = new System.Windows.Forms.SaveFileDialog();
-			this.label9 = new System.Windows.Forms.Label();
 			((System.ComponentModel.ISupportInitialize)(this.splitContainer3)).BeginInit();
 			this.splitContainer3.Panel1.SuspendLayout();
 			this.splitContainer3.Panel2.SuspendLayout();
@@ -445,6 +445,16 @@
 			this.tbDerivativeIlCode.TabIndex = 3;
 			this.tbDerivativeIlCode.KeyDown += new System.Windows.Forms.KeyEventHandler(this.tbIlCode_KeyDown);
 			// 
+			// label9
+			// 
+			this.label9.AutoSize = true;
+			this.label9.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
+			this.label9.Location = new System.Drawing.Point(15, 6);
+			this.label9.Name = "label9";
+			this.label9.Size = new System.Drawing.Size(44, 16);
+			this.label9.TabIndex = 14;
+			this.label9.Text = "Errors";
+			// 
 			// dgvErrors
 			// 
 			this.dgvErrors.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left) 
@@ -481,16 +491,6 @@
 			this.saveFileDialog1.FileName = "MathFuncLib";
 			this.saveFileDialog1.Filter = "Assemblies (*.dll)|*.dll";
 			// 
-			// label9
-			// 
-			this.label9.AutoSize = true;
-			this.label9.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
-			this.label9.Location = new System.Drawing.Point(15, 6);
-			this.label9.Name = "label9";
-			this.label9.Size = new System.Drawing.Size(44, 16);
-			this.label9.TabIndex = 14;
-			this.label9.Text = "Errors";
-			// 
 			// frmMain
 			// 
 			this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -499,7 +499,7 @@
 			this.Controls.Add(this.splitContainer3);
 			this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
 			this.Name = "frmMain";
-			this.Text = "Math Funcs Processing (parsing, simplification, derivatives, compilation)";
+			this.Text = "Math Expressions Processing (parsing, simplification, derivatives, compilation)";
 			this.FormClosed += new System.Windows.Forms.FormClosedEventHandler(this.frmMain_FormClosed);
 			this.Load += new System.EventHandler(this.frmMain_Load);
 			this.splitContainer3.Panel1.ResumeLayout(false);

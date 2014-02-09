@@ -57,7 +57,7 @@ namespace MathExpressions.NET.Tests
 		public void CompileSampleFunc()
 		{
 			var exprString = "x ^ 3 + sin(3 * ln(x * 1)) + x ^ ln(2 * sin(3 * ln(x))) - 2 * x ^ 3";
-			var properlyFunc = new Func<double, double>(x =>
+			var dotnetFunc = new Func<double, double>(x =>
 				Math.Pow(x, 3) + Math.Sin(3 * Math.Log(x * 1)) + Math.Pow(x, Math.Log(2 * Math.Sin(3 * Math.Log(x))) - 2 * Math.Pow(x, 3)));
 			using (var mathAssembly = new MathAssembly(exprString, "x"))
 			{
@@ -66,7 +66,7 @@ namespace MathExpressions.NET.Tests
 				while (i < 5)
 				{
 					double x = rand.NextDouble();
-					var dotnet = properlyFunc(x);
+					var dotnet = dotnetFunc(x);
 					if (!double.IsNaN(dotnet))
 					{
 						var correct = WolframAlphaUtils.GetValue(exprString, new KeyValuePair<string, double>("x", x));

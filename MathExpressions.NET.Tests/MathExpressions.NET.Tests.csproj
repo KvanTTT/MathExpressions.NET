@@ -59,7 +59,7 @@
     <Compile Include="WolframAlphaUtils.cs" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\MathFunctions\MathExpressions.NET.csproj">
+    <ProjectReference Include="..\MathExpressions.NET\MathExpressions.NET.csproj">
       <Project>{AE661528-AFC9-4CCA-9ABD-C173E9779085}</Project>
       <Name>MathExpressions.NET</Name>
     </ProjectReference>
