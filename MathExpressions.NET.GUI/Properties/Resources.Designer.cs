@@ -8,7 +8,7 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-namespace MathExpressions.NET.GUI.Properties {
+namespace MathExpressionsNET.GUI.Properties {
     using System;
     
     

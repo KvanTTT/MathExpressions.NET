@@ -6,7 +6,7 @@ using System.Linq;
 using System.Text;
 using System.Threading;
 
-namespace MathExpressions.NET.Tests
+namespace MathExpressionsNET.Tests
 {
 	[TestFixture]
 	public class MathFuncPrecompileTests

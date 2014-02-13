@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
-namespace MathExpressions.NET
+namespace MathExpressionsNET
 {
 	public enum MathNodeType
 	{

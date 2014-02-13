@@ -8,8 +8,8 @@
     <ProjectGuid>{2C0616FA-AAC1-4F22-9655-731F308FE4F2}</ProjectGuid>
     <OutputType>WinExe</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>MathExpressions.NET.GUI</RootNamespace>
-    <AssemblyName>MathFunctions.GUI</AssemblyName>
+    <RootNamespace>MathExpressionsNET.GUI</RootNamespace>
+    <AssemblyName>MathExpressions.NET.GUI</AssemblyName>
     <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
     <TargetFrameworkProfile>Client</TargetFrameworkProfile>
     <FileAlignment>512</FileAlignment>

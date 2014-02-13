@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using NUnit.Framework;
 
-namespace MathExpressions.NET.Tests
+namespace MathExpressionsNET.Tests
 {
 	[TestFixture]
 	public class MathFuncDerivativeTest
@@ -42,7 +42,7 @@ namespace MathExpressions.NET.Tests
 		[Test]
 		public void DerivativeDerivativeTest()
 		{
-			var f = new MathFunc("diff(x ^ 3)");
+			var f = new MathFunc("diff(x ^ 3, x)");
 			var derivative = f.GetDerivative();
 			Assert.IsTrue(derivative == "x * 6");
 		}
@@ -60,7 +60,15 @@ namespace MathExpressions.NET.Tests
 		{
 			var f = new MathFunc("f(x)");
 			var derivative = f.GetDerivative();
-			Assert.IsTrue(derivative == "diff(f(x))");
+			Assert.IsTrue(derivative == "diff(f(x), x)");
+		}
+
+		[Test]
+		public void UnknownFuncThirdDerivativeTest()
+		{
+			var f = new MathFunc("f(x)");
+			var derivative = f.GetDerivative().GetDerivative().GetDerivative();
+			Assert.IsTrue(derivative == "diff(diff(diff(f(x), x), x), x)");
 		}
 
 		[Test]

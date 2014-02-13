@@ -8,8 +8,8 @@
     <ProjectGuid>{BF78CC00-AB67-4D51-8B47-5A6DA94984AC}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>MathExpressions.NET.Tests</RootNamespace>
-    <AssemblyName>MathFunctions.Tests</AssemblyName>
+    <RootNamespace>MathExpressionsNET.Tests</RootNamespace>
+    <AssemblyName>MathExpressions.NET.Tests</AssemblyName>
     <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
   </PropertyGroup>

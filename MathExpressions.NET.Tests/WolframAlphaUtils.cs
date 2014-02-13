@@ -8,7 +8,7 @@ using WolframAlphaNET.Misc;
 using WolframAlphaNET.Objects;
 using System.Globalization;
 
-namespace MathExpressions.NET.Tests
+namespace MathExpressionsNET.Tests
 {
 	public static class WolframAlphaUtils
 	{

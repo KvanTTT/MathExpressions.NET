@@ -5,7 +5,7 @@ using System.Text;
 using System.IO;
 using NUnit.Framework;
 
-namespace MathExpressions.NET.Tests
+namespace MathExpressionsNET.Tests
 {
 	[TestFixture]
 	public class MathFuncTests

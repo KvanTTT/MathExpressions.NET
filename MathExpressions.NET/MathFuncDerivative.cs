@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Numerics;
 
-namespace MathExpressions.NET
+namespace MathExpressionsNET
 {
 	public partial class MathFunc
 	{
@@ -109,9 +109,15 @@ namespace MathExpressions.NET
 					if (funcNode.Childs[0].Type == MathNodeType.Function)
 					{
 						if (((FuncNode)funcNode.Childs[0]).IsKnown)
-							return GetDerivative(GetDerivative(funcNode.Childs[0]));
+						{
+							var der = GetDerivative(funcNode.Childs[0]);
+							if (der.Childs[0].Type == MathNodeType.Function && ((FuncNode)der).FunctionType == KnownFuncType.Diff)
+								return new FuncNode(KnownFuncType.Diff, der, Variable);
+							else
+								return GetDerivative(der);
+						}
 						else
-							return new FuncNode(KnownFuncType.Mult, new FuncNode(KnownFuncType.Diff, funcNode), GetDerivative(funcNode.Childs[0]));
+							return new FuncNode(KnownFuncType.Diff, GetDerivative(funcNode.Childs[0]), Variable);
 					}
 					else
 						return new ValueNode(0);
@@ -132,7 +138,7 @@ namespace MathExpressions.NET
 			else
 			{
 				return new FuncNode(KnownFuncType.Mult,
-					new FuncNode(KnownFuncType.Diff, (MathFuncNode)funcNode.Clone()),
+					new FuncNode(KnownFuncType.Diff, (MathFuncNode)funcNode.Clone(), Variable),
 					GetDerivative(funcNode.Childs[0]));
 			}
 		}

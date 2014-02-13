@@ -5,7 +5,7 @@ using System.Text;
 using System.Globalization;
 using System.Numerics;
 
-namespace MathExpressions.NET
+namespace MathExpressionsNET
 {
 	public class ValueNode : MathFuncNode
 	{

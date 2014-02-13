@@ -7,7 +7,7 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using GOLD;
-using MathExpressions.NET;
+using MathExpressionsNET;
 
 public class MathExprParser
 {
@@ -132,7 +132,7 @@ public class MathExprParser
 		//read tables using a BinaryReader.
 		AdditionMultiChilds = true;
 		MultiplicationMultiChilds = true;
-		parser.LoadTables(new BinaryReader(new MemoryStream(MathExpressions.NET.Properties.Resources.MathExpr)));
+		parser.LoadTables(new BinaryReader(new MemoryStream(MathExpressionsNET.Properties.Resources.MathExpr)));
 	}
 
 	public bool Parse(string str)

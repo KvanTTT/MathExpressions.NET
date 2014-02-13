@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using GOLD;
 
-namespace MathExpressions.NET
+namespace MathExpressionsNET
 {
 	public class ParserError
 	{

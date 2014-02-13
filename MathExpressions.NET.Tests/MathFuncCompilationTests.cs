@@ -7,7 +7,7 @@ using System.Reflection;
 using System.Security.Policy;
 using System.IO;
 
-namespace MathExpressions.NET.Tests
+namespace MathExpressionsNET.Tests
 {
 	[TestFixture]
 	public class MathFuncCompilationTests
@@ -25,7 +25,7 @@ namespace MathExpressions.NET.Tests
 			using (var mathAssembly = new MathAssembly("Sin(x) + x ^ (Ln(5 * x) - 10 / x)", "x"))
 			{
 				for (int i = 1; i < 10; i++)
-					Assert.AreEqual(expectedFunc(i), mathAssembly.SimpleFunc(i));
+					Assert.AreEqual(expectedFunc(i), mathAssembly.Func(i));
 			}
 		}
 
@@ -36,7 +36,7 @@ namespace MathExpressions.NET.Tests
 				Math.Cos(x * b) * b - Math.Log(a) / Math.Pow(Math.Log(x), 2) / x); // derivative of log(x, a) + sin(x * b)
 			using (var mathAssembly = new MathAssembly(new MathFunc("log(x, a) + sin(x * b)", "x").GetDerivative().ToString(), "x"))
 			{
-				Assert.AreEqual(expectedFunc(5, 3, 4), mathAssembly.Func.Invoke(null, new object[] { 5, 3, 4 }));
+				Assert.AreEqual(expectedFunc(5, 3, 4), mathAssembly.Func(5, 3, 4));
 			}
 		}
 
@@ -49,7 +49,7 @@ namespace MathExpressions.NET.Tests
 			using (var mathAssembly = new MathAssembly("sin(a(x))", "x"))
 			{
 				var func = new Func<double, double>(x => x * x);
-				Assert.AreEqual(expectedFunc(5, func), mathAssembly.FuncDerivative.Invoke(null, new object[] { 5, func }));
+				Assert.AreEqual(expectedFunc(5, func), mathAssembly.FuncDerivative(5, func));
 			}
 		}
 
@@ -70,7 +70,7 @@ namespace MathExpressions.NET.Tests
 					if (!double.IsNaN(dotnet))
 					{
 						var correct = WolframAlphaUtils.GetValue(exprString, new KeyValuePair<string, double>("x", x));
-						var actual = mathAssembly.SimpleFunc(x);
+						var actual = mathAssembly.Func(x);
 						Assert.LessOrEqual(Math.Abs(correct - actual), Math.Abs(dotnet - actual));
 						i++;
 					}

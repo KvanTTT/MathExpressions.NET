@@ -51,7 +51,7 @@ MultLiteral = '*' | '/'
                 | <FuncDef> '^' <FuncDef> 
                 | <Negation>
 
-<Negation> ::= AddLiteral <Value>
+<Negation> ::=  AddLiteral <Value>
                 | AddLiteral <FuncDef>
                 | <Value>
 

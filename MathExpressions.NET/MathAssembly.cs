@@ -5,7 +5,7 @@ using System.Linq;
 using System.Reflection;
 using System.Text;
 
-namespace MathExpressions.NET
+namespace MathExpressionsNET
 {
 	public class MathAssembly : IDisposable
 	{
@@ -16,26 +16,26 @@ namespace MathExpressions.NET
 		private string _fileName = "MathFuncLib.dll";
 		private object _mathFuncObj;
 
-		public MethodInfo Func
+		public MethodInfo FuncMethodInfo
 		{
 			get;
 			private set;
 		}
 
-		public MethodInfo FuncDerivative
+		public MethodInfo FuncDerivativeMethodInfo
 		{
 			get;
 			private set;
 		}
 
-		public double SimpleFunc(double x)
+		public double Func(params object[] x)
 		{
-			return (double)Func.Invoke(_mathFuncObj, new object[] { x });
+			return (double)FuncMethodInfo.Invoke(_mathFuncObj, x);
 		}
 
-		public double SimpleFuncDerivative(double x)
+		public double FuncDerivative(params object[] x)
 		{
-			return (double)FuncDerivative.Invoke(_mathFuncObj, new object[] { x });
+			return (double)FuncDerivativeMethodInfo.Invoke(_mathFuncObj, x);
 		}
 
 		public MathAssembly(string expression, string variable)
@@ -46,8 +46,8 @@ namespace MathExpressions.NET
 			_domain = AppDomain.CreateDomain("MathFuncDomain");
 			_mathFuncObj = _domain.CreateInstanceFromAndUnwrap(_fileName, mathAssembly.NamespaceName + "." + mathAssembly.ClassName);
 			var mathFuncObjType = _mathFuncObj.GetType();
-			Func = mathFuncObjType.GetMethod(mathAssembly.FuncName);
-			FuncDerivative = mathFuncObjType.GetMethod(mathAssembly.FuncDerivativeName);
+			FuncMethodInfo = mathFuncObjType.GetMethod(mathAssembly.FuncName);
+			FuncDerivativeMethodInfo = mathFuncObjType.GetMethod(mathAssembly.FuncDerivativeName);
 		}
 
 		public void Dispose()

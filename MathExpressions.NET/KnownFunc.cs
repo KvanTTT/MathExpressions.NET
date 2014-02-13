@@ -5,7 +5,7 @@ using System.Text;
 using Mono.Cecil;
 using System.Reflection;
 
-namespace MathExpressions.NET
+namespace MathExpressionsNET
 {
 	public class KnownFunc
 	{
@@ -73,6 +73,10 @@ namespace MathExpressions.NET
 
 		public static KnownFuncType[] ExpKnownFuncs = new KnownFuncType[] {
 			KnownFuncType.Add, KnownFuncType.Sub, KnownFuncType.Mult, KnownFuncType.Div, KnownFuncType.Exp
+		};
+
+		public static KnownFuncType[] NegKnownFuncs = new KnownFuncType[] {
+			KnownFuncType.Add, KnownFuncType.Sub, KnownFuncType.Mult, KnownFuncType.Div, KnownFuncType.Exp, KnownFuncType.Neg
 		};
 
 		public static Dictionary<KnownFuncType, string> UnaryFuncsNames = new Dictionary<KnownFuncType, string>();

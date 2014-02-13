@@ -8,11 +8,11 @@ using System.Text;
 using System.Windows.Forms;
 using System.IO;
 using GOLD;
-using MathExpressions.NET.GUI.Properties;
+using MathExpressionsNET.GUI.Properties;
 using System.Globalization;
 using System.Threading;
 
-namespace MathExpressions.NET.GUI
+namespace MathExpressionsNET.GUI
 {
 	public partial class frmMain : Form
 	{
@@ -130,10 +130,11 @@ namespace MathExpressions.NET.GUI
 
 				var variable = string.IsNullOrEmpty(tbVar.Text) ? null : new VarNode(tbVar.Text.ToLowerInvariant());
 
+				string input = tbInput.Text.Replace(Environment.NewLine, "");
 				MathFunc simplifiedFunc = null;
 				try
 				{
-					simplifiedFunc = new MathFunc(tbInput.Text, tbVar.Text).Simplify();
+					simplifiedFunc = new MathFunc(input, tbVar.Text).Simplify();
 					tbSimplification.Text = simplifiedFunc.ToString();
 					tbSimplifiedOpt.Text = simplifiedFunc.GetPrecompilied().ToString();
 				}
@@ -152,7 +153,7 @@ namespace MathExpressions.NET.GUI
 
 				try
 				{
-					var compileFunc = new MathFunc(tbInput.Text, tbVar.Text, true, true);
+					var compileFunc = new MathFunc(input, tbVar.Text, true, true);
 					compileFunc.Compile(Assembly, "Func");
 
 					var sb = new StringBuilder();
@@ -170,7 +171,7 @@ namespace MathExpressions.NET.GUI
 					MathFunc derivativeFunc = null;
 					try
 					{
-						derivativeFunc = new MathFunc(tbInput.Text, tbVar.Text).GetDerivative();
+						derivativeFunc = new MathFunc(input, tbVar.Text).GetDerivative();
 						tbDerivative.Text = derivativeFunc.ToString();
 						tbDerivativeOpt.Text = derivativeFunc.GetPrecompilied().ToString();
 					}
@@ -187,7 +188,6 @@ namespace MathExpressions.NET.GUI
 					try
 					{
 						var compileDerivativeFunc = new MathFunc(tbDerivative.Text, tbVar.Text, true, true);
-						compileDerivativeFunc.DerivativeDelta = double.Parse(tbDerivativeDelta.Text);
 						compileDerivativeFunc.Compile(Assembly, "FuncDerivative");
 						var sb = new StringBuilder();
 						compileDerivativeFunc.Instructions.ToList().ForEach(instr => sb.AppendLine(instr.ToString().Replace("IL_0000: ", "")));

@@ -5,7 +5,7 @@ using System.Text;
 using NUnit.Framework;
 using System.Numerics;
 
-namespace MathExpressions.NET.Tests
+namespace MathExpressionsNET.Tests
 {
 	[TestFixture]
 	public class RationalTests

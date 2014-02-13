@@ -4,7 +4,7 @@ using System.Globalization;
 using System.Linq;
 using System.Text;
 
-namespace MathExpressions.NET
+namespace MathExpressionsNET
 {
 	public abstract class MathFuncNode : IComparable, IComparable<MathFuncNode>, ICloneable
 	{

@@ -1,4 +1,4 @@
-﻿namespace MathExpressions.NET.GUI
+﻿namespace MathExpressionsNET.GUI
 {
 	partial class frmMain
 	{
@@ -50,8 +50,6 @@
 			this.label3 = new System.Windows.Forms.Label();
 			this.tbInput = new System.Windows.Forms.TextBox();
 			this.splitContainer4 = new System.Windows.Forms.SplitContainer();
-			this.label6 = new System.Windows.Forms.Label();
-			this.tbDerivativeDelta = new System.Windows.Forms.TextBox();
 			this.label4 = new System.Windows.Forms.Label();
 			this.tabControl1 = new System.Windows.Forms.TabControl();
 			this.tabPage1 = new System.Windows.Forms.TabPage();
@@ -152,9 +150,9 @@
 			this.label8.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
 			this.label8.Location = new System.Drawing.Point(15, 464);
 			this.label8.Name = "label8";
-			this.label8.Size = new System.Drawing.Size(104, 16);
+			this.label8.Size = new System.Drawing.Size(94, 16);
 			this.label8.TabIndex = 33;
-			this.label8.Text = "Deriv. Precomp.";
+			this.label8.Text = "Der. Precomp.";
 			// 
 			// label7
 			// 
@@ -250,9 +248,9 @@
 			// btnRebuildDerivatives
 			// 
 			this.btnRebuildDerivatives.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-			this.btnRebuildDerivatives.Location = new System.Drawing.Point(130, 295);
+			this.btnRebuildDerivatives.Location = new System.Drawing.Point(478, 291);
 			this.btnRebuildDerivatives.Name = "btnRebuildDerivatives";
-			this.btnRebuildDerivatives.Size = new System.Drawing.Size(87, 26);
+			this.btnRebuildDerivatives.Size = new System.Drawing.Size(96, 26);
 			this.btnRebuildDerivatives.TabIndex = 24;
 			this.btnRebuildDerivatives.Text = "Rebuild derivatives";
 			this.btnRebuildDerivatives.UseVisualStyleBackColor = true;
@@ -268,7 +266,7 @@
 			this.tbDerivatives.Multiline = true;
 			this.tbDerivatives.Name = "tbDerivatives";
 			this.tbDerivatives.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
-			this.tbDerivatives.Size = new System.Drawing.Size(563, 277);
+			this.tbDerivatives.Size = new System.Drawing.Size(569, 273);
 			this.tbDerivatives.TabIndex = 23;
 			this.tbDerivatives.Text = resources.GetString("tbDerivatives.Text");
 			// 
@@ -321,7 +319,7 @@
 			this.label3.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
 			this.label3.AutoSize = true;
 			this.label3.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
-			this.label3.Location = new System.Drawing.Point(13, 326);
+			this.label3.Location = new System.Drawing.Point(15, 327);
 			this.label3.Name = "label3";
 			this.label3.Size = new System.Drawing.Size(36, 16);
 			this.label3.TabIndex = 18;
@@ -348,8 +346,6 @@
 			// 
 			// splitContainer4.Panel1
 			// 
-			this.splitContainer4.Panel1.Controls.Add(this.label6);
-			this.splitContainer4.Panel1.Controls.Add(this.tbDerivativeDelta);
 			this.splitContainer4.Panel1.Controls.Add(this.label4);
 			// 
 			// splitContainer4.Panel2
@@ -358,25 +354,6 @@
 			this.splitContainer4.Size = new System.Drawing.Size(348, 505);
 			this.splitContainer4.SplitterDistance = 43;
 			this.splitContainer4.TabIndex = 12;
-			// 
-			// label6
-			// 
-			this.label6.AutoSize = true;
-			this.label6.Location = new System.Drawing.Point(147, 15);
-			this.label6.Name = "label6";
-			this.label6.Size = new System.Drawing.Size(81, 13);
-			this.label6.TabIndex = 13;
-			this.label6.Text = "Derivative delta";
-			// 
-			// tbDerivativeDelta
-			// 
-			this.tbDerivativeDelta.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
-			this.tbDerivativeDelta.Location = new System.Drawing.Point(234, 13);
-			this.tbDerivativeDelta.Name = "tbDerivativeDelta";
-			this.tbDerivativeDelta.Size = new System.Drawing.Size(100, 22);
-			this.tbDerivativeDelta.TabIndex = 12;
-			this.tbDerivativeDelta.Text = "0.000001";
-			this.tbDerivativeDelta.TextChanged += new System.EventHandler(this.tbInput_TextChanged);
 			// 
 			// label4
 			// 
@@ -428,7 +405,7 @@
 			this.tabPage2.Location = new System.Drawing.Point(4, 22);
 			this.tabPage2.Name = "tabPage2";
 			this.tabPage2.Padding = new System.Windows.Forms.Padding(3);
-			this.tabPage2.Size = new System.Drawing.Size(340, 432);
+			this.tabPage2.Size = new System.Drawing.Size(340, 371);
 			this.tabPage2.TabIndex = 1;
 			this.tabPage2.Text = "Derivative";
 			this.tabPage2.UseVisualStyleBackColor = true;
@@ -441,7 +418,7 @@
 			this.tbDerivativeIlCode.Name = "tbDerivativeIlCode";
 			this.tbDerivativeIlCode.ReadOnly = true;
 			this.tbDerivativeIlCode.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
-			this.tbDerivativeIlCode.Size = new System.Drawing.Size(334, 426);
+			this.tbDerivativeIlCode.Size = new System.Drawing.Size(334, 365);
 			this.tbDerivativeIlCode.TabIndex = 3;
 			this.tbDerivativeIlCode.KeyDown += new System.Windows.Forms.KeyEventHandler(this.tbIlCode_KeyDown);
 			// 
@@ -552,13 +529,11 @@
 		private System.Windows.Forms.CheckBox cbRealTimeUpdate;
 		private System.Windows.Forms.Button btnCalculate;
         private System.Windows.Forms.TextBox tbVar;
-        private System.Windows.Forms.Label label5;
-        private System.Windows.Forms.TextBox tbDerivativeDelta;
+		private System.Windows.Forms.Label label5;
         private System.Windows.Forms.Button btnSave;
 		private System.Windows.Forms.SaveFileDialog saveFileDialog1;
 		private System.Windows.Forms.TextBox tbDerivativeOpt;
 		private System.Windows.Forms.TextBox tbSimplifiedOpt;
-		private System.Windows.Forms.Label label6;
 		private System.Windows.Forms.Label label8;
 		private System.Windows.Forms.Label label7;
 		private System.Windows.Forms.Button btnGenerateFunc;

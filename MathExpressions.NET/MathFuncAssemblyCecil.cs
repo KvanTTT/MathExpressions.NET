@@ -6,7 +6,7 @@ using Mono.Cecil;
 using System.IO;
 using Mono.Cecil.Cil;
 
-namespace MathExpressions.NET
+namespace MathExpressionsNET
 {
 	public class MathFuncAssemblyCecil
 	{

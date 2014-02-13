@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
-namespace MathExpressions.NET
+namespace MathExpressionsNET
 {
 	public class FuncNode : MathFuncNode
 	{
@@ -140,10 +140,21 @@ namespace MathExpressions.NET
 						return ToString(parent, funcType, KnownFunc.ExpKnownFuncs);
 
 					case KnownFuncType.Neg:
-						return Childs[0].Type != MathNodeType.Function ? "-" + Childs[0].ToString(this) : "-(" + Childs[0].ToString(this) + ")";
+						if (Childs[0].Type == MathNodeType.Function)
+						{
+							var func = (FuncNode)Childs[0];
+							if (KnownFunc.NegKnownFuncs.Contains((KnownFuncType)func.FunctionType))
+								return "-(" + Childs[0].ToString(this) + ")";
+							else
+								return "-" + Childs[0].ToString(this);
+						}
+						else
+							return "-" + Childs[0].ToString(this);
 
 					case KnownFuncType.Diff:
-						return "(" + Childs[0].ToString(this) + ")'";
+						return Childs[0].Type == MathNodeType.Function && ((FuncNode)Childs[0]).FunctionType != KnownFuncType.Diff ?
+							Childs[0].ToString(this) + "'" : "(" + 
+							Childs[0].ToString(this) + ")'";
 
 					case KnownFuncType.Abs:
 						return string.Format("|{0}|", Childs[0].ToString(this));
