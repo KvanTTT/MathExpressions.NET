@@ -1,0 +1,23 @@
+h1. Wolfram API
+
+h2. This library provides:
+
+* An easy way of solving mathematical operations.
+* An easy way of requesting informations about specific words, topics, etc. (WIP)
+* Well documented and clean source code.
+* CLS-compliancy
+
+h2. In order to use, you need:
+
+* An application identifier (AppID) from Wolfram. You can get one for free, you just have to register your application.
+* .NET Framework 4.0
+
+h2. A very simple example
+
+<pre>
+var client = new WAClient("XXXXXX-XXXXXXXXXX"); // replace that with your AppID.
+var solution = client.Solve("33^4 + sqrt(12^2 + 13^2)"); // replace with any mathematical operations
+
+// 'solution' now contains the solution by Wolfram Alpha.
+// report bugs! :)
+</pre>

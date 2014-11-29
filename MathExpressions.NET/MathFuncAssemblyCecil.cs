@@ -47,22 +47,27 @@ namespace MathExpressionsNET
 			ClassName = className;
 		}
 
-		public void CompileFuncAndDerivative(string expression, string variable, string path = "", string fileName = "")
+        public void CompileFuncAndDerivative(string expression, string variable, string fileName = "")
+        {
+            CompileFuncAndDerivative(expression, variable, Path.GetDirectoryName(fileName), Path.GetFileName(fileName));
+        }
+
+		public void CompileFuncAndDerivative(string expression, string variable, string filePath = "", string name = "")
 		{
 			var func = new MathFunc(expression, variable, true, true);
 			var funcDer = new MathFunc(expression, variable, true, false).GetDerivative().GetPrecompilied();
 
-			Init(fileName);
+			Init(name);
 
 			func.Compile(this, FuncName);
 			funcDer.Compile(this, FuncDerivativeName);
 
-			Finalize(path, fileName);
+			Finalize(filePath, name);
 		}
 
 		public void Init(string fileName = "MathFuncLib.dll")
 		{
-			var name = new AssemblyNameDefinition(fileName.Replace(".dll", ""), new Version(1, 0, 0, 0));
+            var name = new AssemblyNameDefinition(Path.GetFileNameWithoutExtension(fileName), new Version(1, 0, 0, 0));
 			Assembly = AssemblyDefinition.CreateAssembly(name, fileName, ModuleKind.Dll);
 
 			ImportMath(Assembly);
