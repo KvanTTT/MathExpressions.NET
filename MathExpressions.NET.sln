@@ -10,6 +10,7 @@ EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Dependencies", "Dependencies", "{59BB7BFA-F088-41EB-AA54-0549D5DB1A2E}"
 	ProjectSection(SolutionItems) = preProject
 		Dependencies\GOLD Engine.dll = Dependencies\GOLD Engine.dll
+		Dependencies\Microsoft.VisualBasic.dll = Dependencies\Microsoft.VisualBasic.dll
 		Dependencies\WolframAlpha.NET.dll = Dependencies\WolframAlpha.NET.dll
 	EndProjectSection
 EndProject
