@@ -46,8 +46,9 @@
     <Reference Include="Microsoft.CSharp" />
     <Reference Include="System.Data" />
     <Reference Include="System.Xml" />
-    <Reference Include="WolframAlpha.NET">
-      <HintPath>..\Dependencies\WolframAlpha.NET.dll</HintPath>
+    <Reference Include="WolframAlpha.NET, Version=1.1.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\packages\WolframAlpha.NET.1.1.0\lib\WolframAlpha.NET.dll</HintPath>
     </Reference>
   </ItemGroup>
   <ItemGroup>
