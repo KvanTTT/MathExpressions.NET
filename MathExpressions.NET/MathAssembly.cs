@@ -10,11 +10,6 @@ namespace MathExpressionsNET
     [Serializable]
     public class MathAssembly : IDisposable
     {
-        private static string _chars = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
-        private static Random _rand = new Random();
-
-        private AppDomain _domain;
-        private string _fileName = "MathFuncLib.dll";
         private object _mathFuncObj;
 
         public MethodInfo FuncMethodInfo
@@ -42,10 +37,10 @@ namespace MathExpressionsNET
         public MathAssembly(string expression, string variable)
         {
             var mathAssembly = new MathFuncAssemblyCecil();
-            _fileName = "MathFuncLib" + "_" + GenerateRandomString(6) + ".dll";
-            mathAssembly.CompileFuncAndDerivative(expression, variable, "", _fileName);
-            _domain = AppDomain.CreateDomain("MathFuncDomain");
-            _mathFuncObj = _domain.CreateInstanceFromAndUnwrap(_fileName, mathAssembly.NamespaceName + "." + mathAssembly.ClassName);
+            var fileName = "MathFuncLib" + "_" + Guid.NewGuid().ToString() + ".dll";
+            var assemblyBytes = mathAssembly.CompileFuncAndDerivativeInMemory(expression, variable, fileName);
+            var assembly = Assembly.Load(assemblyBytes);
+            _mathFuncObj = assembly.CreateInstance(mathAssembly.NamespaceName + "." + mathAssembly.ClassName);
             var mathFuncObjType = _mathFuncObj.GetType();
             FuncMethodInfo = mathFuncObjType.GetMethod(mathAssembly.FuncName);
             FuncDerivativeMethodInfo = mathFuncObjType.GetMethod(mathAssembly.FuncDerivativeName);
@@ -53,31 +48,11 @@ namespace MathExpressionsNET
 
         public void Dispose()
         {
-            if (_domain != null)
-                AppDomain.Unload(_domain);
-            File.Delete(_fileName);            
-        }
-
-        void _domain_DomainUnload(object sender, EventArgs e)
-        {
-            throw new NotImplementedException();
         }
 
         ~MathAssembly()
         {
             Dispose();
-        }
-
-        public static string GenerateRandomString(int length)
-        {
-            byte[] bytes = new byte[length];
-            var random = new Random();
-            random.NextBytes(bytes);
-            StringBuilder result = new StringBuilder(length);
-            foreach (var b in bytes)
-                result.Append(_chars[b % _chars.Length]);
-
-            return result.ToString();
         }
     }
 }

@@ -47,23 +47,22 @@ namespace MathExpressionsNET
 			ClassName = className;
 		}
 
-        public void CompileFuncAndDerivative(string expression, string variable, string fileName = "")
+        public void CompileFuncAndDerivativeToFile(string expression, string variable, string fileName = "")
         {
-            CompileFuncAndDerivative(expression, variable, Path.GetDirectoryName(fileName), Path.GetFileName(fileName));
+            CompileFuncAndDerivativeToFile(expression, variable, Path.GetDirectoryName(fileName), Path.GetFileName(fileName));
         }
 
-		public void CompileFuncAndDerivative(string expression, string variable, string filePath = "", string name = "")
+		public void CompileFuncAndDerivativeToFile(string expression, string variable, string filePath = "", string name = "")
 		{
-			var func = new MathFunc(expression, variable, true, true);
-			var funcDer = new MathFunc(expression, variable, true, false).GetDerivative().GetPrecompilied();
-
-			Init(name);
-
-			func.Compile(this, FuncName);
-			funcDer.Compile(this, FuncDerivativeName);
-
-			Finalize(filePath, name);
+            CompileFuncAndDerivative(expression, variable, name);
+			SaveToFile(filePath, name);
 		}
+
+        public byte[] CompileFuncAndDerivativeInMemory(string expression, string variable, string name = "")
+        {
+            CompileFuncAndDerivative(expression, variable, name);
+            return SaveToBytes();
+        }
 
 		public void Init(string fileName = "MathFuncLib.dll")
 		{
@@ -86,11 +85,34 @@ namespace MathExpressionsNET
 			Class.Methods.Add(method);
 		}
 
-		public void Finalize(string path = "", string fileName = "")
+		public void SaveToFile(string path = "", string fileName = "")
 		{
 			Assembly.MainModule.Types.Add(Class);
 			Assembly.Write(Path.Combine(path, string.IsNullOrEmpty(fileName) ? NamespaceName + ".dll" : fileName));
 		}
+
+        public byte[] SaveToBytes()
+        {
+            Assembly.MainModule.Types.Add(Class);
+            byte[] result = null;
+            using (var stream = new MemoryStream())
+            {
+                Assembly.Write(stream);
+                result = stream.ToArray();
+            }
+            return result;
+        }
+
+        private void CompileFuncAndDerivative(string expression, string variable, string name = "")
+        {
+            var func = new MathFunc(expression, variable, true, true);
+            var funcDer = new MathFunc(expression, variable, true, false).GetDerivative().GetPrecompilied();
+
+            Init(name);
+
+            func.Compile(this, FuncName);
+            funcDer.Compile(this, FuncDerivativeName);
+        }
 
 		private void ImportMath(AssemblyDefinition assembly)
 		{

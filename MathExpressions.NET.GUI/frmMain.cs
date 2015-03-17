@@ -99,7 +99,7 @@ namespace MathExpressionsNET.GUI
 			if (saveFileDialog1.ShowDialog() == System.Windows.Forms.DialogResult.OK)
 			{
 				if (Assembly != null)
-					Assembly.Finalize(Path.GetDirectoryName(saveFileDialog1.FileName), Path.GetFileName(saveFileDialog1.FileName));
+					Assembly.SaveToFile(Path.GetDirectoryName(saveFileDialog1.FileName), Path.GetFileName(saveFileDialog1.FileName));
 			}
 		}
 
