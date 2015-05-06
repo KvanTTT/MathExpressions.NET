@@ -128,4 +128,5 @@ I compared generated IL code for example following function:
   ----------------------------------------------------------|--------------------------------------------------
   ldarg.0<br/>ldc.r8 3<br/>call float64 Math::Pow(float64, float64)<br/>ldc.r8 3<br/>ldarg.0<br/>ldc.r8 1<br/>mul<br/>call float64 Math::Log(float64)<br/>mul<br/>call float64 Math::Sin(float64)<br/>add<br/>ldarg.0<br/>ldc.r8 2<br/>ldc.r8 3<br/>ldarg.0<br/>call float64Math::Log(float64)<br/>mul<br/>call float64 Math::Sin(float64)<br/>mul<br/>call float64 Math::Log(float64)<br/>ldc.r8 2<br/>ldarg.0<br/>ldc.r83<br/>call float64 Math::Pow(float64, float64)<br/>mul<br/>sub<br/>call float64 Math::Pow(float64, float64)<br/>add<br/>ret  |  ldarg.0<br/>ldc.r8 2<br/>ldc.r8 3<br/>ldarg.0<br/>call float64 Math::Log(float64)<br/>mul<br/>call float64 Math::Sin(float64)<br/>stloc.0<br/>ldloc.0<br/>mul<br/>call float64 Math::Log(float64)<br/>call float64 Math::Pow(float64,float64)<br/>ldarg.0<br/>ldarg.0<br/>mul<br/>ldarg.0<br/>mul<br/>sub<br/>ldloc.0<br/>add<br/>ret<br/><br/><br/><br/><br/><br/><br/><br/><br/>
 
+
 More detail explanation available [on Russian](http://habrahabr.ru/post/150043/)
