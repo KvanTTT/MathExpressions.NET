@@ -32,6 +32,7 @@ namespace MathExpressionsNET
 			{ "asinh", KnownFuncType.Arcsinh},
 			{ "acosh", KnownFuncType.Arcosh},
 
+			{ "exp", KnownFuncType.Exp },
 			{ "ln", KnownFuncType.Ln},
 			{ "log10", KnownFuncType.Log10},
 
@@ -51,8 +52,8 @@ namespace MathExpressionsNET
 			{ "mult", KnownFuncType.Mult},
 			{ "/", KnownFuncType.Div},
 			{ "div", KnownFuncType.Div},
-			{ "^", KnownFuncType.Exp},
-			{ "exp", KnownFuncType.Exp},
+			{ "^", KnownFuncType.Pow},
+			{ "pow", KnownFuncType.Pow},
 			
 			{ "log", KnownFuncType.Log },
 			{ "diff", KnownFuncType.Diff }
@@ -72,11 +73,11 @@ namespace MathExpressionsNET
 		};
 
 		public static KnownFuncType[] ExpKnownFuncs = new KnownFuncType[] {
-			KnownFuncType.Add, KnownFuncType.Sub, KnownFuncType.Mult, KnownFuncType.Div, KnownFuncType.Exp
+			KnownFuncType.Add, KnownFuncType.Sub, KnownFuncType.Mult, KnownFuncType.Div, KnownFuncType.Pow
 		};
 
 		public static KnownFuncType[] NegKnownFuncs = new KnownFuncType[] {
-			KnownFuncType.Add, KnownFuncType.Sub, KnownFuncType.Mult, KnownFuncType.Div, KnownFuncType.Exp, KnownFuncType.Neg
+			KnownFuncType.Add, KnownFuncType.Sub, KnownFuncType.Mult, KnownFuncType.Div, KnownFuncType.Pow, KnownFuncType.Neg
 		};
 
 		public static Dictionary<KnownFuncType, string> UnaryFuncsNames = new Dictionary<KnownFuncType, string>();
@@ -130,7 +131,8 @@ namespace MathExpressionsNET
 				{ KnownFuncType.Trunc, mathType.GetMethod("Truncate", unaryFuncArgTypes) },
 				{ KnownFuncType.Round, mathType.GetMethod("Round", unaryFuncArgTypes) },
 
-				{ KnownFuncType.Exp, mathType.GetMethod("Pow", binaryFuncArgTypes) },
+				{ KnownFuncType.Exp, mathType.GetMethod("Exp", unaryFuncArgTypes)},
+				{ KnownFuncType.Pow, mathType.GetMethod("Pow", binaryFuncArgTypes) },
 				{ KnownFuncType.Sqrt, mathType.GetMethod("Sqrt", unaryFuncArgTypes) },
 				{ KnownFuncType.Log, mathType.GetMethod("Log", binaryFuncArgTypes) },
 			};

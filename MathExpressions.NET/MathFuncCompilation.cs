@@ -247,7 +247,7 @@ namespace MathExpressionsNET
 					return EmitDivFunc(funcNode);
 				case KnownFuncType.Neg:
 					return EmitNegFunc(funcNode, negExpAbs);
-				case KnownFuncType.Exp:
+				case KnownFuncType.Pow:
 					return EmitExpFunc(funcNode, negExpAbs);
 				case KnownFuncType.Diff:
 					return EmitDiffFunc(funcNode);
@@ -314,7 +314,7 @@ namespace MathExpressionsNET
 			firstItem = funcNode.Childs.FirstOrDefault(node =>
 			{
 				var func = node as FuncNode;
-				return !(func != null && FuncNodes[func].Count == 1 && func.FunctionType == KnownFuncType.Exp && func.Childs[1].LessThenZero());
+				return !(func != null && FuncNodes[func].Count == 1 && func.FunctionType == KnownFuncType.Pow && func.Childs[1].LessThenZero());
 			});
 
 			if (firstItem == null)
@@ -329,7 +329,7 @@ namespace MathExpressionsNET
 
 				var func = funcNode.Childs[i] as FuncNode;
 
-				if (func != null && FuncNodes[func].Count == 1 && func.FunctionType == KnownFuncType.Exp && func.Childs[1].LessThenZero())
+				if (func != null && FuncNodes[func].Count == 1 && func.FunctionType == KnownFuncType.Pow && func.Childs[1].LessThenZero())
 				{
 					EmitNode(funcNode.Childs[i], true);
 					IlInstructions.Add(new OpCodeArg(OpCodes.Div));

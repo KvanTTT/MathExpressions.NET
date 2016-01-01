@@ -123,7 +123,7 @@ namespace MathExpressionsNET
 				return Name;
 
 			if (parent.FunctionType == KnownFuncType.Mult || parent.FunctionType == KnownFuncType.Div ||
-				parent.FunctionType == KnownFuncType.Exp || parent.FunctionType == KnownFuncType.Neg)
+				parent.FunctionType == KnownFuncType.Pow || parent.FunctionType == KnownFuncType.Neg)
 			{
 				return '(' + Name + ')';
 			}

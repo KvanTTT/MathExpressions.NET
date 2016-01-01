@@ -49,6 +49,7 @@ namespace MathExpressionsNET
 			derivatives.AppendLine("cosh(f(x))' = f(x)' * sinh(x);");
 			derivatives.AppendLine("asinh(f(x))' = f(x)' / sqrt(f(x) ^ 2 + 1);");
 			derivatives.AppendLine("acosh(f(x))' = f(x)' / sqrt(f(x) ^ 2 - 1);");
+			derivatives.AppendLine("exp(f(x))' = exp(f(x)) * f(x)'");
 			derivatives.AppendLine("ln(f(x))' = f(x)' / f(x);");
 			derivatives.AppendLine("log(f(x), g(x))' = (ln(f(x)) * g(x)' / g(x) - f(x)' * ln(g(x)) / f(x)) / ln(f(x)) ^ 2;");
 			derivatives.AppendLine("abs(f(x))' = 1;");

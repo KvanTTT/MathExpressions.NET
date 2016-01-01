@@ -389,7 +389,7 @@ public class MathExprParser
 				if (MultiplicationMultiChilds)
 				{
 					if (KnownFunc.BinaryNamesFuncs[r[1].Data.ToString()] == KnownFuncType.Div)
-						Nodes.Push(new FuncNode(KnownFuncType.Exp, new MathFuncNode[] { Nodes.Pop(), new ValueNode(-1) }));
+						Nodes.Push(new FuncNode(KnownFuncType.Pow, new MathFuncNode[] { Nodes.Pop(), new ValueNode(-1) }));
 					ArgsCount[ArgsCount.Count - 1]++;
 				}
 				else
@@ -414,7 +414,7 @@ public class MathExprParser
 					PushFunc(KnownFuncType.Mult, 2);
 
 					if (KnownFunc.BinaryNamesFuncs[r[1].Data.ToString()] == KnownFuncType.Div)
-						Nodes.Push(new FuncNode(KnownFuncType.Exp, new MathFuncNode[] { Nodes.Pop(), new ValueNode(-1) }));
+						Nodes.Push(new FuncNode(KnownFuncType.Pow, new MathFuncNode[] { Nodes.Pop(), new ValueNode(-1) }));
 				}
 				else
 					PushBinaryFunction(r[1].Data.ToString());

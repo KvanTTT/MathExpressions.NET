@@ -85,7 +85,7 @@ namespace MathExpressionsNET
 				Childs.Add(arg);
 			if (FunctionType == KnownFuncType.Sqrt)
 			{
-				FunctionType = KnownFuncType.Exp;
+				FunctionType = KnownFuncType.Pow;
 				Childs.Add(new ValueNode(new Rational<long>(1, 2)));
 			}
 		}
@@ -136,7 +136,7 @@ namespace MathExpressionsNET
 					case KnownFuncType.Div:
 						return ToString(parent, funcType, KnownFunc.MultKnownFuncs);
 
-					case KnownFuncType.Exp:
+					case KnownFuncType.Pow:
 						return ToString(parent, funcType, KnownFunc.ExpKnownFuncs);
 
 					case KnownFuncType.Neg:

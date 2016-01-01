@@ -54,7 +54,7 @@ namespace MathExpressionsNET
 						node = PrecompileMultFunc(func);
 						break;
 
-					case KnownFuncType.Exp:
+					case KnownFuncType.Pow:
 						node = PrecompileExpFunc(parent, func);
 						break;
 				}
@@ -111,7 +111,7 @@ namespace MathExpressionsNET
 			firstItem = funcNode2.Childs.FirstOrDefault(node =>
 			{
 				var func = node as FuncNode;
-				return !(func != null && func.FunctionType == KnownFuncType.Exp && func.Childs[1].LessThenZero());
+				return !(func != null && func.FunctionType == KnownFuncType.Pow && func.Childs[1].LessThenZero());
 			});
 
 			if (firstItem == null)
@@ -128,16 +128,16 @@ namespace MathExpressionsNET
 					continue;
 
 				FuncNode funcChildNode = funcNode2.Childs[i] as FuncNode;
-				if (funcChildNode != null && funcChildNode.FunctionType == KnownFuncType.Exp && funcChildNode.Childs[1].LessThenZero())
+				if (funcChildNode != null && funcChildNode.FunctionType == KnownFuncType.Pow && funcChildNode.Childs[1].LessThenZero())
 				{
 					if (!funcChildNode.Childs[1].IsValueOrCalculated || funcChildNode.Childs[1].DoubleValue != -1.0)
 					{
 						FuncNode second;
 						if (!funcChildNode.Childs[1].IsValueOrCalculated)
-							second = new FuncNode(KnownFuncType.Exp, funcChildNode.Childs[0], funcChildNode.Childs[1].Abs());
+							second = new FuncNode(KnownFuncType.Pow, funcChildNode.Childs[0], funcChildNode.Childs[1].Abs());
 						else
 							second = Math.Abs(funcChildNode.Childs[1].DoubleValue) != 0.5 ?
-								new FuncNode(KnownFuncType.Exp, funcChildNode.Childs[0], funcChildNode.Childs[1].Abs()) :
+								new FuncNode(KnownFuncType.Pow, funcChildNode.Childs[0], funcChildNode.Childs[1].Abs()) :
 								new FuncNode(KnownFuncType.Sqrt, funcChildNode.Childs[0]);
 						result = new FuncNode(KnownFuncType.Div, result, second);
 					}
@@ -161,10 +161,10 @@ namespace MathExpressionsNET
 				{
 					FuncNode second;
 					if (!funcNode.Childs[1].IsValueOrCalculated)
-						second = new FuncNode(KnownFuncType.Exp, funcNode.Childs[0], funcNode.Childs[1].Abs());
+						second = new FuncNode(KnownFuncType.Pow, funcNode.Childs[0], funcNode.Childs[1].Abs());
 					else
 						second = Math.Abs(funcNode.Childs[1].DoubleValue) != 0.5 ?
-							new FuncNode(KnownFuncType.Exp, funcNode.Childs[0], funcNode.Childs[1].Abs()) :
+							new FuncNode(KnownFuncType.Pow, funcNode.Childs[0], funcNode.Childs[1].Abs()) :
 							new FuncNode(KnownFuncType.Sqrt, funcNode.Childs[0]);
 					return new FuncNode(KnownFuncType.Div, new CalculatedNode(1.0), second);
 				}
@@ -205,7 +205,7 @@ namespace MathExpressionsNET
 						result /= args[i].DoubleValue;
 					return new CalculatedNode(result);
 
-				case KnownFuncType.Exp:
+				case KnownFuncType.Pow:
 					if (args[1].DoubleValue == 0.5)
 						return new CalculatedNode(Math.Sqrt(args[0].DoubleValue));
 					else

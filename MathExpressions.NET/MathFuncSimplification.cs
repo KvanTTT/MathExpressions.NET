@@ -52,10 +52,10 @@ namespace MathExpressionsNET
 								(isNeg ? (powerNode.Type == MathNodeType.Value ?
 									(MathFuncNode)(new ValueNode(-((ValueNode)powerNode).Value)) : new FuncNode(KnownFuncType.Neg, powerNode)) : powerNode);
 
-					case KnownFuncType.Exp:
+					case KnownFuncType.Pow:
 						if (funcNode.Childs[0].Type == MathNodeType.Function)
 						{
-							if ((funcNode.Childs[0] as FuncNode).FunctionType == KnownFuncType.Exp)
+							if ((funcNode.Childs[0] as FuncNode).FunctionType == KnownFuncType.Pow)
 							{
 								funcNode.Childs[1] = Simplify(
 									new FuncNode(KnownFuncType.Mult, funcNode.Childs[0].Childs[1], funcNode.Childs[1]));
@@ -369,7 +369,7 @@ namespace MathExpressionsNET
 
 				if (nodesWithSameBasis.Count > 1)
 				{
-					newChilds.Add(Simplify(new FuncNode(KnownFuncType.Exp,
+					newChilds.Add(Simplify(new FuncNode(KnownFuncType.Pow,
 						basis,
 						Simplify(new FuncNode(KnownFuncType.Add,
 							nodesWithSameBasis.Select(node => PowerExpr(node)).ToList()))
@@ -415,9 +415,9 @@ namespace MathExpressionsNET
 					((FuncNode)funcNode.Childs[0]).FunctionType == KnownFuncType.Neg)
 				{
 					if (bValue.Value.Numerator % 2 == 0)
-						return new FuncNode(KnownFuncType.Exp, funcNode.Childs[0].Childs[0], new ValueNode(bValue.Value));
+						return new FuncNode(KnownFuncType.Pow, funcNode.Childs[0].Childs[0], new ValueNode(bValue.Value));
 					else
-						return new FuncNode(KnownFuncType.Neg, new FuncNode(KnownFuncType.Exp, funcNode.Childs[0].Childs[0], new ValueNode(bValue.Value)));
+						return new FuncNode(KnownFuncType.Neg, new FuncNode(KnownFuncType.Pow, funcNode.Childs[0].Childs[0], new ValueNode(bValue.Value)));
 				}
 			}
 
@@ -429,7 +429,7 @@ namespace MathExpressionsNET
 				else if (aValue.Value == 1)
 					return new ValueNode(1);
 				else if (bValue != null)
-					return (MathFuncNode)SimplifyValues(KnownFuncType.Exp, new List<ValueNode>() { aValue, bValue }) 
+					return (MathFuncNode)SimplifyValues(KnownFuncType.Pow, new List<ValueNode>() { aValue, bValue }) 
 						?? (MathFuncNode)funcNode;
 			}
 
@@ -439,21 +439,21 @@ namespace MathExpressionsNET
 		private MathFuncNode PowerExpr(MathFuncNode node)
 		{
 			return (node.Type == MathNodeType.Function &&
-					   ((FuncNode)node).FunctionType == KnownFuncType.Exp) ?
+					   ((FuncNode)node).FunctionType == KnownFuncType.Pow) ?
 					   node.Childs[1] : new ValueNode(1);
 		}
 
 		private MathFuncNode PowerIntoMult(IEnumerable<MathFuncNode> multChilds, MathFuncNode expNode)
 		{
 			var newChilds = multChilds.Select(child => 
-				Simplify(new FuncNode(KnownFuncType.Exp, child, expNode)));
+				Simplify(new FuncNode(KnownFuncType.Pow, child, expNode)));
 			return Simplify(new FuncNode(KnownFuncType.Mult, newChilds.ToList()));
 		}
 		
 		private MathFuncNode UnderPowerExpr(MathFuncNode node)
 		{
 			return (node.Type == MathNodeType.Function &&
-					   ((FuncNode)node).FunctionType == KnownFuncType.Exp) ?
+					   ((FuncNode)node).FunctionType == KnownFuncType.Pow) ?
 					   node.Childs[0] : node;
 		}
 		#endregion

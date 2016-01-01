@@ -76,7 +76,7 @@ namespace MathExpressionsNET
 					}
 					return new FuncNode(KnownFuncType.Add, newChilds);
 				}
-				else if (funcNode.FunctionType == KnownFuncType.Exp)
+				else if (funcNode.FunctionType == KnownFuncType.Pow)
 				{
 					if (funcNode.Childs[1].IsValueOrCalculated)
 					{
@@ -89,7 +89,7 @@ namespace MathExpressionsNET
 
 						return new FuncNode(KnownFuncType.Mult,
 								node1,
-								new FuncNode(KnownFuncType.Exp, (MathFuncNode)funcNode.Childs[0].Clone(), node2),
+								new FuncNode(KnownFuncType.Pow, (MathFuncNode)funcNode.Childs[0].Clone(), node2),
 								GetDerivative(funcNode.Childs[0]));
 					}
 
@@ -97,7 +97,7 @@ namespace MathExpressionsNET
 					if (constNode != null)
 						return new FuncNode(KnownFuncType.Mult,
 								new ConstNode(constNode.Name),
-								new FuncNode(KnownFuncType.Exp,
+								new FuncNode(KnownFuncType.Pow,
 									(MathFuncNode)funcNode.Childs[0].Clone(),
 									new FuncNode(KnownFuncType.Add, new ConstNode(constNode.Name), new ValueNode(-1))
 								),

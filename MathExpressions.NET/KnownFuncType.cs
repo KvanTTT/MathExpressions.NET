@@ -11,7 +11,7 @@ namespace MathExpressionsNET
 		Sub,
 		Mult,
 		Div,
-		Exp,
+		Pow,
 		Neg,
 		Sqrt,
 
@@ -31,6 +31,7 @@ namespace MathExpressionsNET
 		Arcsinh,
 		Arcosh,
 
+		Exp,
 		Ln,
 		Log10,
 		Log,

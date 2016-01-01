@@ -122,7 +122,7 @@ namespace MathExpressionsNET
 						result /= args[i].Value;
 					return new ValueNode(result);
 
-				case KnownFuncType.Exp:
+				case KnownFuncType.Pow:
 					if (args[1].Value.ToDouble() == 0.5)
 						temp = Math.Sqrt(args[0].Value.ToDouble());
 					else
@@ -194,6 +194,10 @@ namespace MathExpressionsNET
 
 				case KnownFuncType.Arcosh:
 					temp = Math.Log(args[0].DoubleValue + Math.Sqrt(args[0].DoubleValue * args[0].DoubleValue - 1));
+					break;
+
+				case KnownFuncType.Exp:
+					temp = Math.Exp(args[0].DoubleValue);
 					break;
 
 				case KnownFuncType.Ln:

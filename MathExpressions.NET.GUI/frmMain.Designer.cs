@@ -269,6 +269,7 @@
             this.tbDerivatives.Size = new System.Drawing.Size(569, 273);
             this.tbDerivatives.TabIndex = 23;
             this.tbDerivatives.Text = resources.GetString("tbDerivatives.Text");
+            this.tbDerivatives.KeyDown += new System.Windows.Forms.KeyEventHandler(this.tbIlCode_KeyDown);
             // 
             // label2
             // 
