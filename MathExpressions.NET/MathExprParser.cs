@@ -175,7 +175,7 @@ public class MathExprParser
 			{
 				case ParseMessage.LexicalError:
 					//Cannot recognize token
-					Errors.Add(new ParserError(parser.CurrentToken().Position(), string.Format("Lexical Error. Token {1} was not expected.", parser.CurrentToken().Data)));
+					Errors.Add(new ParserError(parser.CurrentToken().Position(), string.Format("Lexical Error. Token {0} was not expected.", parser.CurrentToken().Data)));
 					done = true;
 					break;
 
