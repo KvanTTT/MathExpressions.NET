@@ -19,18 +19,6 @@ namespace MathExpressionsNET.Tests
 		}
 
 		[Test]
-		public void MemoryConsumption()
-		{
-			for (int i = 0; i < 10000000; i++)
-			{
-				using (var mathAssembly = new MathAssembly("x ^ 2", "x"))
-				{
-					Assert.AreEqual(25, mathAssembly.Func(5));
-				}
-			}
-		}
-
-		[Test]
 		public void CompileFunc()
 		{
 			var expectedFunc = new Func<double, double>(x => Math.Sin(x) + Math.Pow(x, Math.Log(5 * x) - 10 / x));
@@ -42,7 +30,6 @@ namespace MathExpressionsNET.Tests
 		}
 
 		[Test]
-		[Ignore]
 		public void CompileFuncWithParameter()
 		{
 			var expectedFunc = new Func<double, double, double, double>((x, a, b) =>
