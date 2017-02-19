@@ -17,7 +17,7 @@ namespace MathExpressionsNET.Tests
 					Assert.AreEqual(Math.Pow(i, j), IntPow(i, j));
 		}
 
-		int IntPow(int x, int pow)
+		private int IntPow(int x, int pow)
 		{
 			int ret = x;
 			
