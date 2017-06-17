@@ -1,15 +1,14 @@
-MathExpressions.NET
-==============
+# MathExpressions.NET
 
 A library for parsing math expressions with rational numbers, finding their derivatives and compiling an optimal IL code.
 
-##Libraries##
+## Libraries
 * [GOLD Parsing System](http://goldparser.org/) - Code generation from math expression grammar.
 * [WolframAlpha.NET](https://github.com/Genbox/WolframAlpha.NET) - Symbolic derivatives testing.
 * ILSpy - IL assembly dissambler. For compilation tesing.
 * NUnit - General testing purposes.
 
-##Using##
+## Using
 
 * Simplification
 
@@ -62,7 +61,7 @@ A library for parsing math expressions with rational numbers, finding their deri
     }
     ```
 
-## Types of MathNodes ##
+## Types of MathNodes
 
 * **Calculated** - Calculated *decimal* constant.
 * **Value** - Calculated constant of *Rational<long, long>* format. Based on [Stephen M. McKamey implementation](http://exif-utils.googlecode.com/svn/trunk/ExifUtils/ExifUtils/Rational.cs).
@@ -70,7 +69,7 @@ A library for parsing math expressions with rational numbers, finding their deri
 * **Variable** - It have name, such as *x*, *y* etc.
 * **Function** - This node present known (*sin(x)*, *log(x, 3)*, x + a) or unknown (a(x), b'(x)) function. It may have one or more childs.
 
-## Steps of  math expression processing ##
+## Steps of  math expression processing
 
 * **Parsing and AST building**. Implemented with LALR [GOLD Parsing System](http://goldparser.org/). Output of this step is tree structure of MathFuncNode types, which was described above.
   * **Rational Numbers**.
@@ -112,7 +111,7 @@ For generated IL code for math functions without loops, following optimizations 
    One local variable is used for every calculated function. But it can be also used for another calculated result. So, it is posiible to reduce number of local variables by such way:
   ![Local vars count reducing](http://habrastorage.org/files/ab0/a27/c29/ab0a27c29a3843af9e32b867b78cf4de.png)
 
-## Testing ##
+## Testing
 
 * **WolframAlpha.NET**
   This lib for comparsion of expected derivative from WolframAlpha API and actual derivative.
