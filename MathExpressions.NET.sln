@@ -1,17 +1,11 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 2013
-VisualStudioVersion = 12.0.30723.0
+# Visual Studio 15
+VisualStudioVersion = 15.0.26730.16
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MathExpressions.NET", "MathExpressions.NET\MathExpressions.NET.csproj", "{AE661528-AFC9-4CCA-9ABD-C173E9779085}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MathExpressions.NET.GUI", "MathExpressions.NET.GUI\MathExpressions.NET.GUI.csproj", "{2C0616FA-AAC1-4F22-9655-731F308FE4F2}"
-EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Dependencies", "Dependencies", "{59BB7BFA-F088-41EB-AA54-0549D5DB1A2E}"
-	ProjectSection(SolutionItems) = preProject
-		Dependencies\GOLD Engine.dll = Dependencies\GOLD Engine.dll
-		Dependencies\Microsoft.VisualBasic.dll = Dependencies\Microsoft.VisualBasic.dll
-	EndProjectSection
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MathExpressions.NET.Tests", "MathExpressions.NET.Tests\MathExpressions.NET.Tests.csproj", "{BF78CC00-AB67-4D51-8B47-5A6DA94984AC}"
 EndProject
@@ -70,5 +64,8 @@ Global
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {F89188E7-5E5C-48F1-8841-EBF3719BB0A0}
 	EndGlobalSection
 EndGlobal
