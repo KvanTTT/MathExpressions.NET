@@ -7,8 +7,6 @@
 			Name = variable;
 		}
 
-		public override MathNodeType Type => MathNodeType.Variable;
-
 		public override bool IsTerminal => true;
 	}
 }

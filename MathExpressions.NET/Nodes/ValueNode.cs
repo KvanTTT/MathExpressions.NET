@@ -24,8 +24,6 @@
 			Name = Value.ToString();
 		}
 
-		public override MathNodeType Type => MathNodeType.Value;
-
 		public override bool IsTerminal => true;
 
 		public override bool Equals(object obj)

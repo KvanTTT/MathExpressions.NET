@@ -8,8 +8,6 @@ namespace MathExpressionsNET
 
 		public override double DoubleValue => Value;
 
-		public override MathNodeType Type => MathNodeType.Calculated;
-
 		public override bool IsTerminal => true;
 
 		public CalculatedNode(CalculatedNode node)

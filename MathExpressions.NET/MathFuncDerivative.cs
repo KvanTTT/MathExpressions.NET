@@ -18,17 +18,17 @@ namespace MathExpressionsNET
 
 		private MathFuncNode GetDerivative(MathFuncNode node)
 		{
-			switch (node.Type)
+			switch (node)
 			{
-				case MathNodeType.Calculated:
+				case CalculatedNode calculatedNode:
 					return new CalculatedNode(0.0);
-				case MathNodeType.Value:
-				case MathNodeType.Constant:
+				case ValueNode valueNode:
+				case ConstNode constNode:
 					return new ValueNode(0);
-				case MathNodeType.Variable:
+				case VarNode varNode:
 					return new ValueNode(1);
-				case MathNodeType.Function:
-					return GetFuncDerivative((FuncNode)node);
+				case FuncNode funcNode:
+					return GetFuncDerivative(funcNode);
 			}
 			return null;
 		}
@@ -36,8 +36,8 @@ namespace MathExpressionsNET
 		private void GetDerivatives(MathFuncNode root)
 		{
 			for (int i = 0; i < root.Children.Count; i++)
-				if (root.Children[i].Type == MathNodeType.Function)
-					if (((FuncNode)root.Children[i]).FunctionType == KnownFuncType.Diff)
+				if (root.Children[i] is FuncNode funcNode)
+					if (funcNode.FunctionType == KnownFuncType.Diff)
 						root.Children[i] = GetDerivative(root.Children[i].Children[0]);
 					else
 						GetDerivatives(root.Children[i]);
@@ -77,11 +77,11 @@ namespace MathExpressionsNET
 				{
 					if (funcNode.Children[1].IsValueOrCalculated)
 					{
-						var node1 = funcNode.Children[1].Type == MathNodeType.Value ? (MathFuncNode)
-							new ValueNode((ValueNode)funcNode.Children[1]) :
+						var node1 = funcNode.Children[1] is ValueNode childValueNode1 ?
+							(MathFuncNode)new ValueNode(childValueNode1) :
 							new CalculatedNode((CalculatedNode)funcNode.Children[1]);
-						var node2 = funcNode.Children[1].Type == MathNodeType.Value ? (MathFuncNode)
-							new ValueNode(((ValueNode)funcNode.Children[1]).Value - 1) :
+						var node2 = funcNode.Children[1] is ValueNode childValueNode2 ?
+							(MathFuncNode)new ValueNode(childValueNode2.Value - 1) :
 							new CalculatedNode(((CalculatedNode)funcNode.Children[1]).Value - 1);
 
 						return new FuncNode(KnownFuncType.Mult,
@@ -90,8 +90,7 @@ namespace MathExpressionsNET
 								GetDerivative(funcNode.Children[0]));
 					}
 
-					var constNode = funcNode.Children[1] as ConstNode;
-					if (constNode != null)
+					if (funcNode.Children[1] is ConstNode constNode)
 						return new FuncNode(KnownFuncType.Mult,
 								new ConstNode(constNode.Name),
 								new FuncNode(KnownFuncType.Pow,
@@ -103,12 +102,12 @@ namespace MathExpressionsNET
 				}
 				else if (funcNode.FunctionType == KnownFuncType.Diff)
 				{
-					if (funcNode.Children[0].Type == MathNodeType.Function)
+					if (funcNode.Children[0] is FuncNode childFuncNode)
 					{
-						if (((FuncNode)funcNode.Children[0]).IsKnown)
+						if (childFuncNode.IsKnown)
 						{
 							var der = GetDerivative(funcNode.Children[0]);
-							if (der.Children[0].Type == MathNodeType.Function && ((FuncNode)der).FunctionType == KnownFuncType.Diff)
+							if (der.Children[0] is FuncNode && ((FuncNode)der).FunctionType == KnownFuncType.Diff)
 								return new FuncNode(KnownFuncType.Diff, der, Variable);
 							else
 								return GetDerivative(der);
@@ -165,42 +164,41 @@ namespace MathExpressionsNET
 					return new FuncNode((FuncNode)_currentFunc.Children[ind]);
 			}
 
-			MathFuncNode result;
-			switch (node.Type)
+			MathFuncNode result = null;
+			switch (node)
 			{
-				case MathNodeType.Calculated:
+				case CalculatedNode calculatedNode:
 					result = new CalculatedNode(((CalculatedNode)node).Value);
 					break;
-				case MathNodeType.Value:
+				case ValueNode valueNode:
 					result = new ValueNode((ValueNode)node);
 					break;
-				case MathNodeType.Constant:
-				case MathNodeType.Variable:
+				case ConstNode constNode:
+				case VarNode varNode:
 					result = node;
 					break;
-				default:
-				case MathNodeType.Function:
-					result = ((FuncNode)node).FunctionType != null ?
+				case FuncNode funcNode:
+					result = funcNode.FunctionType != null ?
 						new FuncNode((KnownFuncType)((FuncNode)node).FunctionType) :
 						new FuncNode(node.Name);
 					break;
 			}
 
 			for (int i = 0; i < node.Children.Count; i++)
-				switch (node.Children[i].Type)
+				switch (node.Children[i])
 				{
-					case MathNodeType.Calculated:
-						result.Children.Add(new CalculatedNode((CalculatedNode)node.Children[i]));
+					case CalculatedNode calculatedNode:
+						result.Children.Add(new CalculatedNode(calculatedNode));
 						break;
-					case MathNodeType.Value:
-						result.Children.Add(new ValueNode((ValueNode)node.Children[i]));
+					case ValueNode valueNode:
+						result.Children.Add(new ValueNode(valueNode));
 						break;
-					case MathNodeType.Constant:
-					case MathNodeType.Variable:
+					case ConstNode constNode:
+					case VarNode varNode:
 						result.Children.Add(node.Children[i]);
 						break;
-					case MathNodeType.Function:
-						result.Children.Add(MakeSubstitution((FuncNode)node.Children[i]));
+					case FuncNode funcNode:
+						result.Children.Add(MakeSubstitution(funcNode));
 						break;
 				}
 			return result;

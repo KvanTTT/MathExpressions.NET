@@ -57,7 +57,7 @@ namespace MathExpressionsNET
 			Simplications = new List<MathFunc>();
 			Permutations = new List<MathFunc>();
 
-			foreach (var statement in mathFuncs)
+			foreach (MathFunc statement in mathFuncs)
 			{
 				if (statement.RightNode.NodeCount < statement.LeftNode.NodeCount)
 					Simplications.Add(statement);

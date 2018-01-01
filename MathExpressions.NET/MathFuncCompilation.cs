@@ -133,11 +133,11 @@ namespace MathExpressionsNET
 			foreach (var child in node.Children)
 				SetParamsAndUnknownFuncsArgNumbers(child);
 
-			if (node.Type == MathNodeType.Function && !((FuncNode)node).IsKnown)
+			if (node is FuncNode funcNode && !funcNode.IsKnown)
 				node.ArgNumber = UnknownFuncs[node.Name].ArgNumber;
-			else if (node.Type == MathNodeType.Constant)
+			else if (node is ConstNode)
 				node.ArgNumber = Parameters[node.Name].ArgNumber;
-			else if (node.Type == MathNodeType.Variable)
+			else if (node is VarNode)
 				node.ArgNumber = Variable.ArgNumber;
 		}
 
@@ -195,24 +195,23 @@ namespace MathExpressionsNET
 
 		private void EmitNode(MathFuncNode node, bool negExpAbs = false)
 		{
-			switch (node.Type)
+			switch (node)
 			{
-				case MathNodeType.Calculated:
+				case CalculatedNode calculatedNode:
 					IlInstructions.Add(new OpCodeArg(OpCodes.Ldc_R8,
-						negExpAbs ? Math.Abs(((CalculatedNode)node).Value) : ((CalculatedNode)node).Value));
+						negExpAbs ? Math.Abs(calculatedNode.Value) : calculatedNode.Value));
 					break;
-				case MathNodeType.Value:
+				case ValueNode valueNode:
 					IlInstructions.Add(new OpCodeArg(OpCodes.Ldc_R8,
-						negExpAbs ? Math.Abs(((ValueNode)node).Value.ToDouble()) : ((ValueNode)node).Value.ToDouble()));
+						negExpAbs ? Math.Abs(valueNode.Value.ToDouble()) : valueNode.Value.ToDouble()));
 					break;
 
-				case MathNodeType.Constant:
-				case MathNodeType.Variable:
+				case ConstNode constNode:
+				case VarNode varNode:
 					IlInstructions.Add(new OpCodeArg(OpCodes.Ldarg, node.ArgNumber));
 					break;
 
-				case MathNodeType.Function:
-					var funcNode = node as FuncNode;
+				case FuncNode funcNode:
 					var func = FuncNodes[funcNode];
 					if (!func.Calculated)
 					{
@@ -368,8 +367,8 @@ namespace MathExpressionsNET
 
 		private bool EmitExpFunc(FuncNode funcNode, bool negExpAbs)
 		{
-			if ((funcNode.Children[1].Type == MathNodeType.Value && ((ValueNode)funcNode.Children[1]).Value.IsInteger) ||
-				(funcNode.Children[1].Type == MathNodeType.Calculated && ((CalculatedNode)funcNode.Children[1]).Value % 1 == 0))
+			if ((funcNode.Children[1] is ValueNode valueNode && valueNode.Value.IsInteger) ||
+				(funcNode.Children[1] is CalculatedNode calculatedNode && calculatedNode.Value % 1 == 0))
 			{
 				int powerValue = (int)funcNode.Children[1].DoubleValue;
 				int power = Math.Abs(powerValue);
@@ -444,11 +443,12 @@ namespace MathExpressionsNET
 			else
 			{
 				var child1 = funcNode.Children[1];
-				if ((child1.Type == MathNodeType.Value && ((ValueNode)child1).Value.Abs() == new Rational<long>(1, 2, false)) ||
-					(child1.Type == MathNodeType.Calculated && Math.Abs(((CalculatedNode)child1).Value) == 0.5))
+				if ((child1 is ValueNode child1ValueNode && child1ValueNode.Value.Abs() == new Rational<long>(1, 2, false)) ||
+					(child1 is CalculatedNode child1CalcNode && Math.Abs(child1CalcNode.Value) == 0.5))
 				{
-					if (!negExpAbs && ((child1.Type == MathNodeType.Value && ((ValueNode)child1).Value < 0) ||
-							(child1.Type == MathNodeType.Calculated && ((CalculatedNode)child1).Value < 0)))
+					if (!negExpAbs &&
+						(child1 is ValueNode child1ValueNode2 && child1ValueNode2.Value < 0) ||
+						(child1 is CalculatedNode child1CalcNode2 && child1CalcNode2.Value < 0))
 					{
 						IlInstructions.Add(new OpCodeArg(OpCodes.Ldc_R8, 1.0));
 						EmitNode(funcNode.Children[0]);
@@ -480,7 +480,7 @@ namespace MathExpressionsNET
 		{
 			var diffFunc = funcNode.Children[0];
 			var arg = diffFunc.Children[0];
-			bool isUnknownFunc = diffFunc.Type == MathNodeType.Function && !((FuncNode)diffFunc).IsKnown;
+			bool isUnknownFunc = diffFunc is FuncNode diffFuncNode && !diffFuncNode.IsKnown;
 
 			var diff = FuncNodes[(FuncNode)diffFunc];
 

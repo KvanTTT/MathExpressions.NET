@@ -10,8 +10,6 @@ namespace MathExpressionsNET
 
 		public bool IsKnown => FunctionType != null;
 
-		public override MathNodeType Type => MathNodeType.Function;
-
 		public override bool IsTerminal => false;
 
 		public FuncNode(KnownFuncType type)
@@ -86,25 +84,22 @@ namespace MathExpressionsNET
 			Name = node.Name;
 			Number = node.Number;
 			for (int i = 0; i < node.Children.Count; i++)
-				switch (node.Children[i].Type)
+				switch (node.Children[i])
 				{
-					case MathNodeType.Value:
-						Children.Add(new ValueNode(((ValueNode)node.Children[i]).Value));
+					case ValueNode valueNode:
+						Children.Add(new ValueNode(valueNode.Value));
 						break;
-					case MathNodeType.Constant:
-					case MathNodeType.Variable:
+					case ConstNode constNode:
+					case VarNode varNode:
 						Children.Add(node.Children[i]);
 						break;
-					case MathNodeType.Function:
-						Children.Add(new FuncNode((FuncNode)node.Children[i]));
+					case FuncNode funcNode:
+						Children.Add(new FuncNode(funcNode));
 						break;
 				}
 		}
 
-		public MathFuncNode LeftNode
-		{
-			get { return Children[0]; }
-		}
+		public MathFuncNode LeftNode => Children[0];
 
 		public override string ToString()
 		{
@@ -130,10 +125,9 @@ namespace MathExpressionsNET
 						return ToString(parent, funcType, KnownFunc.ExpKnownFuncs);
 
 					case KnownFuncType.Neg:
-						if (Children[0].Type == MathNodeType.Function)
+						if (Children[0] is FuncNode funcNode)
 						{
-							var func = (FuncNode)Children[0];
-							if (KnownFunc.NegKnownFuncs.Contains((KnownFuncType)func.FunctionType))
+							if (KnownFunc.NegKnownFuncs.Contains((KnownFuncType)funcNode.FunctionType))
 								return "-(" + Children[0].ToString(this) + ")";
 							else
 								return "-" + Children[0].ToString(this);
@@ -142,7 +136,7 @@ namespace MathExpressionsNET
 							return "-" + Children[0].ToString(this);
 
 					case KnownFuncType.Diff:
-						return Children[0].Type == MathNodeType.Function && ((FuncNode)Children[0]).FunctionType != KnownFuncType.Diff ?
+						return Children[0] is FuncNode funcNode2 && funcNode2.FunctionType != KnownFuncType.Diff ?
 							Children[0].ToString(this) + "'" : "(" + 
 							Children[0].ToString(this) + ")'";
 

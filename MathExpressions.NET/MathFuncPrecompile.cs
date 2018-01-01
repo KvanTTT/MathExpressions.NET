@@ -26,8 +26,7 @@ namespace MathExpressionsNET
 				if (ContainsNaNHelper(node.Children[i]))
 					return true;
 
-			CalculatedNode calcNode = node as CalculatedNode;
-			if (calcNode != null && double.IsNaN(calcNode.DoubleValue))
+			if (node is CalculatedNode calcNode && double.IsNaN(calcNode.DoubleValue))
 				return true;
 			else
 				return false;
@@ -35,14 +34,15 @@ namespace MathExpressionsNET
 
 		private MathFuncNode Precompile(MathFuncNode parent, MathFuncNode node)
 		{
-			if (node.Type == MathNodeType.Value)
-				return new CalculatedNode(((ValueNode)node).Value);
-			else if (node.Type == MathNodeType.Function)
+			if (node is ValueNode valueNode)
+			{
+				return new CalculatedNode(valueNode.Value);
+			}
+			else if (node is FuncNode func)
 			{
 				for (int i = 0; i < node.Children.Count; i++)
 					node.Children[i] = Precompile(node, node.Children[i]);
 
-				FuncNode func = (FuncNode)node;
 				switch (func.FunctionType)
 				{
 					case KnownFuncType.Add:
@@ -58,10 +58,15 @@ namespace MathExpressionsNET
 						break;
 				}
 
-				if (node.Children.Count > 0 && node.Children.All(child => child.Type == MathNodeType.Value || child.Type == MathNodeType.Calculated))
-					return (MathFuncNode)CalculateValues(((FuncNode)node).FunctionType, node.Children) ?? (MathFuncNode)node;
+				if (node.Children.Count > 0 && node.Children.All(child =>
+					child is ValueNode || child is CalculatedNode))
+				{
+					return CalculateValues(func.FunctionType, node.Children) ?? node;
+				}
 				else
+				{
 					return node;
+				}
 			}
 			else
 				return node;
@@ -126,8 +131,7 @@ namespace MathExpressionsNET
 				if (funcNode2.Children[i] == firstItem)
 					continue;
 
-				FuncNode funcChildNode = funcNode2.Children[i] as FuncNode;
-				if (funcChildNode != null && funcChildNode.FunctionType == KnownFuncType.Pow && funcChildNode.Children[1].LessThenZero())
+				if (funcNode2.Children[i] is FuncNode funcChildNode && funcChildNode.FunctionType == KnownFuncType.Pow && funcChildNode.Children[1].LessThenZero())
 				{
 					if (!funcChildNode.Children[1].IsValueOrCalculated || funcChildNode.Children[1].DoubleValue != -1.0)
 					{
@@ -284,14 +288,14 @@ namespace MathExpressionsNET
 		private FuncNode FoldCalculatedSummands(FuncNode sum)
 		{
 			var result = sum.Children
-				.Where(child => child.Type == MathNodeType.Calculated || child.Type == MathNodeType.Value)
+				.Where(child => child is CalculatedNode || child is ValueNode)
 				.Select(summand => summand.DoubleValue)
 				.Aggregate(0.0, (t, factor) => t += factor);
 
 			if (result != 0.0)
 			{
 				var newChildren = new List<MathFuncNode>() { new CalculatedNode(result) };
-				newChildren.AddRange(sum.Children.Where(c => c.Type != MathNodeType.Calculated && c.Type != MathNodeType.Value));
+				newChildren.AddRange(sum.Children.Where(c => !(c is CalculatedNode) && !(c is ValueNode)));
 
 				return new FuncNode(KnownFuncType.Sub, newChildren);
 			}
@@ -302,14 +306,14 @@ namespace MathExpressionsNET
 		private FuncNode MultCalculatedFactors(FuncNode mult)
 		{
 			var result = mult.Children
-				.Where(child => child.Type == MathNodeType.Calculated || child.Type == MathNodeType.Value)
+				.Where(child => child is CalculatedNode || child is ValueNode)
 				.Select(factor => factor.DoubleValue)
 				.Aggregate(1.0, (t, factor) => t *= factor);
 
 			if (result != 1.0)
 			{
 				var newChildren = new List<MathFuncNode>() { new CalculatedNode(result) };
-				newChildren.AddRange(mult.Children.Where(c => c.Type != MathNodeType.Calculated && c.Type != MathNodeType.Value));
+				newChildren.AddRange(mult.Children.Where(c => !(c is CalculatedNode) && !(c is ValueNode)));
 
 				return new FuncNode(KnownFuncType.Mult, newChildren);
 			}
