@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 
 namespace MathExpressionsNET
 {
@@ -36,15 +35,17 @@ namespace MathExpressionsNET
 
 		public MathFunc(string str, string v = null, bool simplify = true, bool precompile = false)
 		{
-			if (!Helper.Parser.Parse(str))
-				throw new Exception("Impossible to parse input string");
+			List<MathFunc> mathFuncs = new MathExprConverter().Convert(str);
+			MathFunc first = mathFuncs.FirstOrDefault();
 
-			LeftNode = Helper.Parser.FirstStatement.LeftNode;
-			RightNode = Helper.Parser.FirstStatement.RightNode;
+			LeftNode = first.LeftNode;
+			RightNode = first.RightNode;
 			Root = RightNode;
 
 			if (string.IsNullOrEmpty(v))
+			{
 				ConstToVars();
+			}
 			else
 			{
 				Variable = new VarNode(v);
@@ -60,7 +61,7 @@ namespace MathExpressionsNET
 				Root = Precompile(null, Root);
 		}
 
-		public MathFunc(MathFuncNode root, 
+		public MathFunc(MathFuncNode root,
 			VarNode variable = null, IEnumerable<ConstNode> parameters = null,
 			bool calculateConstants = false, bool simplify = false)
 			: this(new FuncNode("f", new List<MathFuncNode>() { variable }), root, variable, parameters,

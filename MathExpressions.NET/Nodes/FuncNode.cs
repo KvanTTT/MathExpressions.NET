@@ -44,7 +44,7 @@ namespace MathExpressionsNET
 		{
 		}
 
-		public FuncNode(KnownFuncType type, IList<MathFuncNode> args)
+		public FuncNode(KnownFuncType type, IEnumerable<MathFuncNode> args)
 		{
 			FunctionType = type;
 			string name;
@@ -54,7 +54,7 @@ namespace MathExpressionsNET
 				Name = name;
 			else
 				Name = FunctionType.ToString();
-			foreach (var arg in args)
+			foreach (MathFuncNode arg in args)
 				Childs.Add(arg);
 		}
 
@@ -63,16 +63,16 @@ namespace MathExpressionsNET
 		{
 		}
 
-		public FuncNode(string name, IList<MathFuncNode> args)
+		public FuncNode(string name, IEnumerable<MathFuncNode> args)
 		{
 			var lowercasename = name.ToLower();
-			if (args.Count >= 2)
+			if (args.Count() >= 2)
 			{
 				KnownFuncType functionType;
 				if (KnownFunc.BinaryNamesFuncs.TryGetValue(lowercasename, out functionType))
 					FunctionType = functionType;
 			}
-			else if (args.Count == 1)
+			else if (args.Count() == 1)
 			{
 				KnownFuncType functionType;
 				if (KnownFunc.UnaryNamesFuncs.TryGetValue(lowercasename, out functionType))
@@ -81,7 +81,7 @@ namespace MathExpressionsNET
 					FunctionType = functionType;
 			}
 			Name = lowercasename;
-			foreach (var arg in args)
+			foreach (MathFuncNode arg in args)
 				Childs.Add(arg);
 			if (FunctionType == KnownFuncType.Sqrt)
 			{

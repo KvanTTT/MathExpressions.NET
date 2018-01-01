@@ -1,21 +1,16 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.IO;
-using NUnit.Framework;
+﻿using NUnit.Framework;
 
 namespace MathExpressionsNET.Tests
 {
 	[TestFixture]
 	public class MathFuncTests
 	{
-		MathExprParser Parser;
+		MathExprConverter Parser;
 
 		[SetUp]
 		public void Init()
 		{
-			Parser = new MathExprParser();
+			Parser = new MathExprConverter();
 		}
 
 		[Test]
