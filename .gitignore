@@ -106,5 +106,8 @@ Generated_Code #added for RIA/Silverlight projects
 _UpgradeReport_Files/
 Backup*/
 UpgradeLog*.XML
-/*.suo
-/MathFunctions.v11.suo
+.vs/
+
+# Generated
+
+**/Generated/*
