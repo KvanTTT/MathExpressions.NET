@@ -117,9 +117,13 @@ namespace MathExpressionsNET
 					{
 						case FuncNode otherFuncNode:
 							if (Name != other.Name)
+							{
 								result = Name.CompareTo(other.Name);
+							}
 							else if (Children.Count != other.Children.Count)
+							{
 								result = -Children.Count.CompareTo(other.Children.Count);
+							}
 							else
 							{
 								for (int i = 0; i < Children.Count; i++)
@@ -202,8 +206,7 @@ namespace MathExpressionsNET
 
 		public void Sort()
 		{
-			var funcNode = this as FuncNode;
-			if (funcNode != null)
+			if (this is FuncNode funcNode)
 			{
 				foreach (MathFuncNode child in Children)
 					child.Sort();

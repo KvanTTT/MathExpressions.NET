@@ -86,16 +86,18 @@ namespace MathExpressionsNET
 			else if (context.Minus() != null)
 			{
 				funcType = KnownFuncType.Sub;
+				var second = new FuncNode(KnownFuncType.Neg, new MathFuncNode[] { arg2 });
+				var result = new FuncNode(KnownFuncType.Add, new MathFuncNode[] { arg1, second });
+				return result;
 			}
 			else if (context.Mult() != null)
 			{
 				funcType = KnownFuncType.Mult;
 			}
 			else if (context.Div() != null)
-			{ 
-				funcType = KnownFuncType.Mult;
+			{
 				var second = new FuncNode(KnownFuncType.Pow, new MathFuncNode[] { arg2, new ValueNode(-1) });
-				var result = new FuncNode(funcType, new MathFuncNode[] { arg1, second });
+				var result = new FuncNode(KnownFuncType.Mult, new MathFuncNode[] { arg1, second });
 				return result;
 			}
 			else
