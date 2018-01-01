@@ -248,9 +248,9 @@ namespace MathExpressionsNET
 				if (LeftNode.Type == MathNodeType.Function)
 				{
 					Variable = null;
-					if (LeftNode.Childs.Count > 1 && ((FuncNode)LeftNode).Childs[1] != null)
+					if (LeftNode.Children.Count > 1 && ((FuncNode)LeftNode).Children[1] != null)
 					{
-						var secondNode = ((FuncNode)LeftNode).Childs[1];
+						var secondNode = ((FuncNode)LeftNode).Children[1];
 						if (secondNode.Type == MathNodeType.Constant)
 							Variable = new VarNode(secondNode.Name);
 						else if (secondNode.Type == MathNodeType.Variable)
@@ -269,36 +269,36 @@ namespace MathExpressionsNET
 		protected void GetFirstParam(MathFuncNode node)
 		{
 			if (Variable == null)
-				for (int i = 0; i < node.Childs.Count; i++)
+				for (int i = 0; i < node.Children.Count; i++)
 					if (Variable == null)
-						if (node.Childs[i].Type == MathNodeType.Constant)
+						if (node.Children[i].Type == MathNodeType.Constant)
 						{
-							Variable = new VarNode(node.Childs[i].Name);
+							Variable = new VarNode(node.Children[i].Name);
 							break;
 						}
-						else if (node.Childs[i].Type == MathNodeType.Variable)
+						else if (node.Children[i].Type == MathNodeType.Variable)
 						{
-							Variable = (VarNode)node.Childs[i];
+							Variable = (VarNode)node.Children[i];
 							break;
 						}
 						else
-							GetFirstParam(node.Childs[i]);
+							GetFirstParam(node.Children[i]);
 		}
 
 		protected void ConstToVar(MathFuncNode node)
 		{
-			for (int i = 0; i < node.Childs.Count; i++)
-				if (node.Childs[i] == null || node.Childs[i].Name == Variable.Name)
-					node.Childs[i] = Variable;
-				else if (node.Childs[i].Type == MathNodeType.Variable)
-					node.Childs[i] = new ConstNode(node.Childs[i].Name);
+			for (int i = 0; i < node.Children.Count; i++)
+				if (node.Children[i] == null || node.Children[i].Name == Variable.Name)
+					node.Children[i] = Variable;
+				else if (node.Children[i].Type == MathNodeType.Variable)
+					node.Children[i] = new ConstNode(node.Children[i].Name);
 				else
-					ConstToVar(node.Childs[i]);
+					ConstToVar(node.Children[i]);
 		}
 
 		protected void FindParamsAndUnknownFuncs(MathFuncNode node)
 		{
-			foreach (var child in node.Childs)
+			foreach (var child in node.Children)
 				FindParamsAndUnknownFuncs(child);
 
 			if (node.Type == MathNodeType.Function && !((FuncNode)node).IsKnown)
@@ -313,31 +313,13 @@ namespace MathExpressionsNET
 			}
 		}
 
-		public bool IsValue
-		{
-			get
-			{
-				return Root.IsValueOrCalculated;
-			}
-		}
+		public bool IsValue => Root.IsValueOrCalculated;
 
-		public bool IsCalculated
-		{
-			get
-			{
-				return Root.IsCalculated;
-			}
-		}
+		public bool IsCalculated => Root.IsCalculated;
 
-		public override string ToString()
-		{
-			return Root.ToString();
-		}
+		public override string ToString() => Root.ToString();
 
-		public string ToShortString()
-		{
-			return Root.ToString().Replace(" ", "");
-		}
+		public string ToShortString() => Root.ToString().Replace(" ", "");
 
 		public override bool Equals(object obj)
 		{

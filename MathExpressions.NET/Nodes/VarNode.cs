@@ -7,14 +7,8 @@
 			Name = variable;
 		}
 
-		public override MathNodeType Type
-		{
-			get { return MathNodeType.Variable; }
-		}
+		public override MathNodeType Type => MathNodeType.Variable;
 
-		public override bool IsTerminal
-		{
-			get { return true; }
-		}
+		public override bool IsTerminal => true;
 	}
 }

@@ -17,7 +17,7 @@ namespace MathExpressionsNET
 
 			foreach (var statement in mathFuncs)
 			{
-				string funcNodeName = statement.LeftNode.Childs[0].Name;
+				string funcNodeName = statement.LeftNode.Children[0].Name;
 				Derivatives.Add(funcNodeName, statement);
 			}
 		}

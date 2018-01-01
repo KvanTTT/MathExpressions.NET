@@ -33,7 +33,7 @@ namespace MathExpressionsNET
 		public MathAssembly(string expression, string variable)
 		{
 			var mathAssembly = new MathFuncAssemblyCecil();
-			var fileName = "MathFuncLib" + "_" + Guid.NewGuid().ToString() + ".dll";
+			var fileName = $"MathFuncLib_{Guid.NewGuid()}.dll";
 			var assemblyBytes = mathAssembly.CompileFuncAndDerivativeInMemory(expression, variable, fileName);
 			var assembly = Assembly.Load(assemblyBytes);
 			_mathFuncObj = assembly.CreateInstance(mathAssembly.NamespaceName + "." + mathAssembly.ClassName);

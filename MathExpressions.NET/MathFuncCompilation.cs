@@ -1,9 +1,8 @@
-﻿using System;
+﻿using Mono.Cecil;
+using Mono.Cecil.Cil;
+using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using Mono.Cecil;
-using Mono.Cecil.Cil;
 
 namespace MathExpressionsNET
 {
@@ -14,9 +13,7 @@ namespace MathExpressionsNET
 		public bool Calculated;
 
 		public override string ToString()
-		{
-			return string.Format("Number = {0}; Count = {1}; Calculated = {2}", Number, Count, Calculated);
-		}
+			=> $"Number = {Number}; Count = {Count}; Calculated = {Calculated}";
 	}
 
 	public struct OpCodeArg
@@ -133,7 +130,7 @@ namespace MathExpressionsNET
 
 		protected void SetParamsAndUnknownFuncsArgNumbers(MathFuncNode node)
 		{
-			foreach (var child in node.Childs)
+			foreach (var child in node.Children)
 				SetParamsAndUnknownFuncsArgNumbers(child);
 
 			if (node.Type == MathNodeType.Function && !((FuncNode)node).IsKnown)
@@ -172,10 +169,10 @@ namespace MathExpressionsNET
 			{
 				FuncNodes.Add(funcNode, new CountNumber() { Number = LocalVarNumber, Count = 1, Calculated = false });
 				funcNode.Number = LocalVarNumber;
-				LocalVarNumber += funcNode.Childs.Count;
+				LocalVarNumber += funcNode.Children.Count;
 			}
 
-			foreach (var child in node.Childs)
+			foreach (var child in node.Children)
 				DefineLocals(child);
 		}
 
@@ -184,10 +181,10 @@ namespace MathExpressionsNET
 			var funcNode = node as FuncNode;
 			if (funcNode != null)
 			{
-				funcNode.Number = LocalVarNumber - funcNode.Number - funcNode.Childs.Count;
+				funcNode.Number = LocalVarNumber - funcNode.Number - funcNode.Children.Count;
 				FuncNodes[funcNode].Number = funcNode.Number;
 
-				foreach (var child in funcNode.Childs)
+				foreach (var child in funcNode.Children)
 					InvertLocalVariablesNumbers(child);
 			}
 		}
@@ -263,31 +260,31 @@ namespace MathExpressionsNET
 		{
 			MathFuncNode firstItem = null;
 
-			firstItem = funcNode.Childs.FirstOrDefault(node =>
+			firstItem = funcNode.Children.FirstOrDefault(node =>
 			{
 				var func = node as FuncNode;
 				return !(func != null && FuncNodes[func].Count == 1 && func.LessThenZero());
 			});
 
 			if (firstItem == null)
-				firstItem = funcNode.Childs[0];
+				firstItem = funcNode.Children[0];
 
 			EmitNode(firstItem);
 
-			for (int i = 0; i < funcNode.Childs.Count; i++)
+			for (int i = 0; i < funcNode.Children.Count; i++)
 			{
-				if (funcNode.Childs[i] == firstItem)
+				if (funcNode.Children[i] == firstItem)
 					continue;
 
-				var func = funcNode.Childs[i] as FuncNode;
+				var func = funcNode.Children[i] as FuncNode;
 				if (func != null && FuncNodes[func].Count == 1 && func.LessThenZero())
 				{
-					EmitNode(func.Childs[0], true);
+					EmitNode(func.Children[0], true);
 					IlInstructions.Add(new OpCodeArg(OpCodes.Sub));
 				}
 				else
 				{
-					EmitNode(funcNode.Childs[i]);
+					EmitNode(funcNode.Children[i]);
 					IlInstructions.Add(new OpCodeArg(OpCodes.Add));
 				}
 			}
@@ -297,10 +294,10 @@ namespace MathExpressionsNET
 
 		private bool EmitSubFunc(FuncNode funcNode)
 		{
-			EmitNode(funcNode.Childs[0]);
-			for (int i = 1; i < funcNode.Childs.Count; i++)
+			EmitNode(funcNode.Children[0]);
+			for (int i = 1; i < funcNode.Children.Count; i++)
 			{
-				EmitNode(funcNode.Childs[i]);
+				EmitNode(funcNode.Children[i]);
 				IlInstructions.Add(new OpCodeArg(OpCodes.Sub));
 			}
 
@@ -311,32 +308,32 @@ namespace MathExpressionsNET
 		{
 			MathFuncNode firstItem = null;
 
-			firstItem = funcNode.Childs.FirstOrDefault(node =>
+			firstItem = funcNode.Children.FirstOrDefault(node =>
 			{
 				var func = node as FuncNode;
-				return !(func != null && FuncNodes[func].Count == 1 && func.FunctionType == KnownFuncType.Pow && func.Childs[1].LessThenZero());
+				return !(func != null && FuncNodes[func].Count == 1 && func.FunctionType == KnownFuncType.Pow && func.Children[1].LessThenZero());
 			});
 
 			if (firstItem == null)
-				firstItem = funcNode.Childs[0];
+				firstItem = funcNode.Children[0];
 
 			EmitNode(firstItem);
 
-			for (int i = 0; i < funcNode.Childs.Count; i++)
+			for (int i = 0; i < funcNode.Children.Count; i++)
 			{
-				if (funcNode.Childs[i] == firstItem)
+				if (funcNode.Children[i] == firstItem)
 					continue;
 
-				var func = funcNode.Childs[i] as FuncNode;
+				var func = funcNode.Children[i] as FuncNode;
 
-				if (func != null && FuncNodes[func].Count == 1 && func.FunctionType == KnownFuncType.Pow && func.Childs[1].LessThenZero())
+				if (func != null && FuncNodes[func].Count == 1 && func.FunctionType == KnownFuncType.Pow && func.Children[1].LessThenZero())
 				{
-					EmitNode(funcNode.Childs[i], true);
+					EmitNode(funcNode.Children[i], true);
 					IlInstructions.Add(new OpCodeArg(OpCodes.Div));
 				}
 				else
 				{
-					EmitNode(funcNode.Childs[i]);
+					EmitNode(funcNode.Children[i]);
 					if (IlInstructions[IlInstructions.Count - 1].OpCode == OpCodes.Ldc_R8 && (double)IlInstructions[IlInstructions.Count - 1].Arg == 1.0)
 						IlInstructions.RemoveAt(IlInstructions.Count - 1);
 					else
@@ -349,10 +346,10 @@ namespace MathExpressionsNET
 
 		private bool EmitDivFunc(FuncNode funcNode)
 		{
-			EmitNode(funcNode.Childs[0]);
-			for (int i = 1; i < funcNode.Childs.Count; i++)
+			EmitNode(funcNode.Children[0]);
+			for (int i = 1; i < funcNode.Children.Count; i++)
 			{
-				EmitNode(funcNode.Childs[i]);
+				EmitNode(funcNode.Children[i]);
 				IlInstructions.Add(new OpCodeArg(OpCodes.Div));
 			}
 
@@ -361,7 +358,7 @@ namespace MathExpressionsNET
 
 		private bool EmitNegFunc(FuncNode funcNode, bool negExpAbs)
 		{
-			EmitNode(funcNode.Childs[0]);
+			EmitNode(funcNode.Children[0]);
 
 			if (!negExpAbs)
 				IlInstructions.Add(new OpCodeArg(OpCodes.Neg));
@@ -371,10 +368,10 @@ namespace MathExpressionsNET
 
 		private bool EmitExpFunc(FuncNode funcNode, bool negExpAbs)
 		{
-			if ((funcNode.Childs[1].Type == MathNodeType.Value && ((ValueNode)funcNode.Childs[1]).Value.IsInteger) ||
-				(funcNode.Childs[1].Type == MathNodeType.Calculated && ((CalculatedNode)funcNode.Childs[1]).Value % 1 == 0))
+			if ((funcNode.Children[1].Type == MathNodeType.Value && ((ValueNode)funcNode.Children[1]).Value.IsInteger) ||
+				(funcNode.Children[1].Type == MathNodeType.Calculated && ((CalculatedNode)funcNode.Children[1]).Value % 1 == 0))
 			{
-				int powerValue = (int)funcNode.Childs[1].DoubleValue;
+				int powerValue = (int)funcNode.Children[1].DoubleValue;
 				int power = Math.Abs(powerValue);
 				if (negExpAbs)
 					powerValue = power;
@@ -382,7 +379,7 @@ namespace MathExpressionsNET
 				if (powerValue < 0)
 					IlInstructions.Add(new OpCodeArg(OpCodes.Ldc_R8, 1.0));
 
-				EmitNode(funcNode.Childs[0]);
+				EmitNode(funcNode.Children[0]);
 
 				if (power == 1)
 				{
@@ -446,7 +443,7 @@ namespace MathExpressionsNET
 			}
 			else
 			{
-				var child1 = funcNode.Childs[1];
+				var child1 = funcNode.Children[1];
 				if ((child1.Type == MathNodeType.Value && ((ValueNode)child1).Value.Abs() == new Rational<long>(1, 2, false)) ||
 					(child1.Type == MathNodeType.Calculated && Math.Abs(((CalculatedNode)child1).Value) == 0.5))
 				{
@@ -454,23 +451,23 @@ namespace MathExpressionsNET
 							(child1.Type == MathNodeType.Calculated && ((CalculatedNode)child1).Value < 0)))
 					{
 						IlInstructions.Add(new OpCodeArg(OpCodes.Ldc_R8, 1.0));
-						EmitNode(funcNode.Childs[0]);
+						EmitNode(funcNode.Children[0]);
 						IlInstructions.Add(new OpCodeArg(OpCodes.Call, MathFuncAssembly.TypesReferences[KnownFuncType.Sqrt]));
 						IlInstructions.Add(new OpCodeArg(OpCodes.Div));
 					}
 					else
 					{
-						EmitNode(funcNode.Childs[0]);
+						EmitNode(funcNode.Children[0]);
 						IlInstructions.Add(new OpCodeArg(OpCodes.Call, MathFuncAssembly.TypesReferences[KnownFuncType.Sqrt]));
 					}
 				}
 				else
 				{
-					EmitNode(funcNode.Childs[0]);
+					EmitNode(funcNode.Children[0]);
 					if (negExpAbs)
-						EmitNode(funcNode.Childs[1].Abs());
+						EmitNode(funcNode.Children[1].Abs());
 					else
-						EmitNode(funcNode.Childs[1]);
+						EmitNode(funcNode.Children[1]);
 
 					IlInstructions.Add(new OpCodeArg(OpCodes.Call, MathFuncAssembly.TypesReferences[(KnownFuncType)funcNode.FunctionType]));
 				}
@@ -481,8 +478,8 @@ namespace MathExpressionsNET
 
 		private bool EmitDiffFunc(FuncNode funcNode)
 		{
-			var diffFunc = funcNode.Childs[0];
-			var arg = diffFunc.Childs[0];
+			var diffFunc = funcNode.Children[0];
+			var arg = diffFunc.Children[0];
 			bool isUnknownFunc = diffFunc.Type == MathNodeType.Function && !((FuncNode)diffFunc).IsKnown;
 
 			var diff = FuncNodes[(FuncNode)diffFunc];
@@ -513,7 +510,7 @@ namespace MathExpressionsNET
 			MethodReference value;
 			if (funcNode.FunctionType != null && MathFuncAssembly.TypesReferences.TryGetValue((KnownFuncType)funcNode.FunctionType, out value))
 			{
-				foreach (var child in funcNode.Childs)
+				foreach (var child in funcNode.Children)
 					EmitNode(child);
 
 				IlInstructions.Add(new OpCodeArg(OpCodes.Call, value));
@@ -523,7 +520,7 @@ namespace MathExpressionsNET
 			else if (funcNode.FunctionType == KnownFuncType.Cot)
 			{
 				IlInstructions.Add(new OpCodeArg(OpCodes.Ldc_R8, 1.0));
-				EmitNode(funcNode.Childs[0]);
+				EmitNode(funcNode.Children[0]);
 				IlInstructions.Add(new OpCodeArg(OpCodes.Call, KnownFunc.TypesMethods[KnownFuncType.Tan]));
 				IlInstructions.Add(new OpCodeArg(OpCodes.Div));
 
@@ -532,7 +529,7 @@ namespace MathExpressionsNET
 			else if (funcNode.FunctionType == KnownFuncType.Arccot)
 			{
 				IlInstructions.Add(new OpCodeArg(OpCodes.Ldc_R8, 1.0));
-				EmitNode(funcNode.Childs[0]);
+				EmitNode(funcNode.Children[0]);
 				IlInstructions.Add(new OpCodeArg(OpCodes.Div));
 				IlInstructions.Add(new OpCodeArg(OpCodes.Call, KnownFunc.TypesMethods[KnownFuncType.Arctan]));
 
@@ -540,9 +537,9 @@ namespace MathExpressionsNET
 			}
 			else if (funcNode.FunctionType == KnownFuncType.Arcsinh)
 			{
-				EmitNode(funcNode.Childs[0]);
-				EmitNode(funcNode.Childs[0]);
-				EmitNode(funcNode.Childs[0]);
+				EmitNode(funcNode.Children[0]);
+				EmitNode(funcNode.Children[0]);
+				EmitNode(funcNode.Children[0]);
 				IlInstructions.Add(new OpCodeArg(OpCodes.Mul));
 				IlInstructions.Add(new OpCodeArg(OpCodes.Ldc_R8, 1.0));
 				IlInstructions.Add(new OpCodeArg(OpCodes.Add));
@@ -554,12 +551,12 @@ namespace MathExpressionsNET
 			}
 			else if (funcNode.FunctionType == KnownFuncType.Arcosh)
 			{
-				EmitNode(funcNode.Childs[0]);
-				EmitNode(funcNode.Childs[0]);
+				EmitNode(funcNode.Children[0]);
+				EmitNode(funcNode.Children[0]);
 				IlInstructions.Add(new OpCodeArg(OpCodes.Ldc_R8, 1.0));
 				IlInstructions.Add(new OpCodeArg(OpCodes.Add));
 				IlInstructions.Add(new OpCodeArg(OpCodes.Call, KnownFunc.TypesMethods[KnownFuncType.Sqrt]));
-				EmitNode(funcNode.Childs[0]);
+				EmitNode(funcNode.Children[0]);
 				IlInstructions.Add(new OpCodeArg(OpCodes.Ldc_R8, 1.0));
 				IlInstructions.Add(new OpCodeArg(OpCodes.Sub));
 				IlInstructions.Add(new OpCodeArg(OpCodes.Call, KnownFunc.TypesMethods[KnownFuncType.Sqrt]));
@@ -577,7 +574,7 @@ namespace MathExpressionsNET
 		{
 			IlInstructions.Add(new OpCodeArg(OpCodes.Ldarg, funcNode.ArgNumber));
 
-			foreach (var child in funcNode.Childs)
+			foreach (var child in funcNode.Children)
 				EmitNode(child);
 
 			IlInstructions.Add(new OpCodeArg(OpCodes.Callvirt, MathFuncAssembly.InvokeFuncRef));

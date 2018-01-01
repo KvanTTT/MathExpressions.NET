@@ -1,61 +1,33 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Globalization;
-using System.Linq;
-using System.Text;
+﻿using System.Globalization;
 
 namespace MathExpressionsNET
 {
 	public class CalculatedNode : MathFuncNode
 	{
-		private double _value;
+		public double Value { get; set; }
 
-		public double Value
-		{
-			get
-			{
-				return _value;
-			}
-			set
-			{
-				_value = value;
-			}
-		}
+		public override double DoubleValue => Value;
 
-		public override double DoubleValue
-		{
-			get
-			{
-				return Value;
-			}
-		}
+		public override MathNodeType Type => MathNodeType.Calculated;
 
-		public override MathNodeType Type
-		{
-			get { return MathNodeType.Calculated; }
-		}
-
-		public override bool IsTerminal
-		{
-			get { return true; }
-		}
+		public override bool IsTerminal => true;
 
 		public CalculatedNode(CalculatedNode node)
 		{
-			_value = node.Value;
-			Name = _value.ToString(CultureInfo.InvariantCulture);
+			Value = node.Value;
+			Name = Value.ToString(CultureInfo.InvariantCulture);
 		}
 
 		public CalculatedNode(double value)
 		{
-			_value = value;
-			Name = _value.ToString(CultureInfo.InvariantCulture);
+			Value = value;
+			Name = Value.ToString(CultureInfo.InvariantCulture);
 		}
 
 		public CalculatedNode(Rational<long> value)
 		{
-			_value = (double)value.ToDecimal(CultureInfo.InvariantCulture);
-			Name = _value.ToString(CultureInfo.InvariantCulture);
+			Value = (double)value.ToDecimal(CultureInfo.InvariantCulture);
+			Name = Value.ToString(CultureInfo.InvariantCulture);
 		}
 	}
 }

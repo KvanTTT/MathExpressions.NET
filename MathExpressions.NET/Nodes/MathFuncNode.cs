@@ -6,21 +6,15 @@ namespace MathExpressionsNET
 {
 	public abstract class MathFuncNode : IComparable, IComparable<MathFuncNode>, ICloneable
 	{
-		internal List<MathFuncNode> Childs = new List<MathFuncNode>();
+		internal List<MathFuncNode> Children = new List<MathFuncNode>();
 		internal int Number = -1;
 		internal int ArgNumber = -1;
 
 		#region Properties
 		
-		public abstract MathNodeType Type
-		{
-			get;
-		}
+		public abstract MathNodeType Type { get; }
 
-		public abstract bool IsTerminal
-		{
-			get;
-		}
+		public abstract bool IsTerminal { get; }
 
 		public string Name
 		{
@@ -28,27 +22,15 @@ namespace MathExpressionsNET
 			protected set;
 		}
 
-		public bool IsValueOrCalculated
-		{
-			get
-			{
-				return Type == MathNodeType.Value || Type == MathNodeType.Calculated;
-			}
-		}
+		public bool IsValueOrCalculated => Type == MathNodeType.Value || Type == MathNodeType.Calculated;
 
-		public virtual double DoubleValue
-		{
-			get
-			{
-				throw new Exception();
-			}
-		}
+		public virtual double DoubleValue => throw new Exception();
 
 		public bool IsCalculated
 		{
 			get
 			{
-				foreach (var child in Childs)
+				foreach (var child in Children)
 					if (child.Type == MathNodeType.Function)
 					{
 						FuncNode funcNode = (FuncNode)child;
@@ -68,7 +50,7 @@ namespace MathExpressionsNET
 			get
 			{
 				int result = 1;
-				foreach (var child in Childs)
+				foreach (var child in Children)
 					result += child != null ? child.NodeCount : 1;
 				return result;
 			}
@@ -139,13 +121,13 @@ namespace MathExpressionsNET
 						case MathNodeType.Function:
 							if (Name != other.Name)
 								result = Name.CompareTo(other.Name);
-							else if (Childs.Count != other.Childs.Count)
-								result = -Childs.Count.CompareTo(other.Childs.Count);
+							else if (Children.Count != other.Children.Count)
+								result = -Children.Count.CompareTo(other.Children.Count);
 							else
 							{
-								for (int i = 0; i < Childs.Count; i++)
+								for (int i = 0; i < Children.Count; i++)
 								{
-									result = Childs[i].CompareTo(other.Childs[i]);
+									result = Children[i].CompareTo(other.Children[i]);
 									if (result != 0)
 										break;
 								}
@@ -232,10 +214,10 @@ namespace MathExpressionsNET
 			var funcNode = this as FuncNode;
 			if (funcNode != null)
 			{
-				foreach (var child in Childs)
+				foreach (var child in Children)
 					child.Sort();
 				if (funcNode.FunctionType == KnownFuncType.Add || funcNode.FunctionType == KnownFuncType.Mult)
-					Childs.Sort();
+					Children.Sort();
 			}
 		}
 
@@ -288,7 +270,7 @@ namespace MathExpressionsNET
 					return this;
 				case MathNodeType.Function:
 					if (((FuncNode)this).FunctionType == KnownFuncType.Neg)
-						return this.Childs[0];
+						return this.Children[0];
 					else
 						return this;
 				default:
