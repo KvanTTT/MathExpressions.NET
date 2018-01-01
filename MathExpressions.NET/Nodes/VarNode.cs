@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-
-namespace MathExpressionsNET
+﻿namespace MathExpressionsNET
 {
 	public class VarNode : MathFuncNode
 	{
@@ -12,14 +7,6 @@ namespace MathExpressionsNET
 			Name = variable;
 		}
 
-		public override MathNodeType Type
-		{
-			get { return MathNodeType.Variable; }
-		}
-
-		public override bool IsTerminal
-		{
-			get { return true; }
-		}
+		public override bool IsTerminal => true;
 	}
 }

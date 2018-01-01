@@ -1,10 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using Mono.Cecil;
-using System.IO;
+﻿using Mono.Cecil;
 using Mono.Cecil.Cil;
+using System;
+using System.Collections.Generic;
+using System.IO;
 
 namespace MathExpressionsNET
 {
@@ -70,7 +68,7 @@ namespace MathExpressionsNET
 			Assembly = AssemblyDefinition.CreateAssembly(name, fileName, ModuleKind.Dll);
 
 			ImportMath(Assembly);
-			InvokeFuncRef = Assembly.MainModule.Import(typeof(Func<double, double>).GetMethod("Invoke"));
+			InvokeFuncRef = Assembly.MainModule.Import(typeof(Func<double, double>).GetMethod(nameof(System.Reflection.MethodInfo.Invoke)));
 			DoubleType = Assembly.MainModule.TypeSystem.Double;
 
 			Class = new TypeDefinition(NamespaceName, ClassName,

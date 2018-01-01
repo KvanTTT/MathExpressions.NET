@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using NUnit.Framework;
-using System.Numerics;
+﻿using NUnit.Framework;
 
 namespace MathExpressionsNET.Tests
 {
@@ -13,9 +8,7 @@ namespace MathExpressionsNET.Tests
 		[Test]
 		public void ConversionTest()
 		{
-			Rational<long> r;
-
-			Assert.IsTrue(Rational<long>.FromDecimal(0.0000000000000000000000000000m, out r));
+			Assert.IsTrue(Rational<long>.FromDecimal(0.0000000000000000000000000000m, out Rational<long> r));
 			Assert.IsTrue(new Rational<long>(0, 1) == r);
 
 			Assert.IsTrue(Rational<long>.FromDecimal(53.0000000000000000000000000000m, out r));
@@ -58,9 +51,7 @@ namespace MathExpressionsNET.Tests
 		[Test]
 		public void DecimalPlacesTest()
 		{
-			Rational<long> r;
-
-			Assert.IsTrue(Rational<long>.FromDecimal(0.33333333m, out r, 8, false));
+			Assert.IsTrue(Rational<long>.FromDecimal(0.33333333m, out Rational<long> r, 8, false));
 			Assert.IsTrue(new Rational<long>(1, 3) == r);
 
 			Assert.IsTrue(Rational<long>.FromDecimal(0.33333333m, out r, 9, false));
@@ -70,9 +61,7 @@ namespace MathExpressionsNET.Tests
 		[Test]
 		public void TrimEndZeroesTest()
 		{
-			Rational<long> r;
-
-			Assert.IsTrue(Rational<long>.FromDecimal(0.33m, out r, 28, true));
+			Assert.IsTrue(Rational<long>.FromDecimal(0.33m, out Rational<long> r, 28, true));
 			Assert.IsTrue(new Rational<long>(1, 3) == r);
 
 			Assert.IsTrue(Rational<long>.FromDecimal(0.33m, out r, 28, false));
@@ -85,9 +74,7 @@ namespace MathExpressionsNET.Tests
 		[Test]
 		public void MinPeriodRepeatTest()
 		{
-			Rational<long> r;
-
-			Assert.IsTrue(Rational<long>.FromDecimal(0.123412m, out r, 28, true, 1.5m));
+			Assert.IsTrue(Rational<long>.FromDecimal(0.123412m, out Rational<long> r, 28, true, 1.5m));
 			Assert.IsTrue(new Rational<long>(1234, 9999) == r);
 
 			Assert.IsTrue(Rational<long>.FromDecimal(0.123412m, out r, 28, false, 1.5m));
@@ -103,9 +90,7 @@ namespace MathExpressionsNET.Tests
 		[Test]
 		public void DigitsForRealTest()
 		{
-			Rational<long> r;
-
-			Assert.IsTrue(Rational<long>.FromDecimal(0.12345678m, out r, 28, true, 2, 9));
+			Assert.IsTrue(Rational<long>.FromDecimal(0.12345678m, out Rational<long> r, 28, true, 2, 9));
 			Assert.IsTrue(new Rational<long>(12345678, 100000000) == r);
 
 			Assert.IsFalse(Rational<long>.FromDecimal(0.12345678m, out r, 28, true, 2, 8));

@@ -1,35 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Globalization;
-using System.Numerics;
-
-namespace MathExpressionsNET
+﻿namespace MathExpressionsNET
 {
 	public class ValueNode : MathFuncNode
 	{
-		private Rational<long> _value;
+		public Rational<long> Value { get; set; }
 
-		public Rational<long> Value
-		{
-			get
-			{
-				return _value;
-			}
-			set
-			{
-				_value = value;
-			}
-		}
-
-		public override double DoubleValue
-		{
-			get
-			{
-				return Value.ToDouble(null);
-			}
-		}
+		public override double DoubleValue => Value.ToDouble(null);
 
 		public ValueNode(ValueNode node)
 		{
@@ -49,15 +24,7 @@ namespace MathExpressionsNET
 			Name = Value.ToString();
 		}
 
-		public override MathNodeType Type
-		{
-			get { return MathNodeType.Value; }
-		}
-
-		public override bool IsTerminal
-		{
-			get { return true; }
-		}
+		public override bool IsTerminal => true;
 
 		public override bool Equals(object obj)
 		{

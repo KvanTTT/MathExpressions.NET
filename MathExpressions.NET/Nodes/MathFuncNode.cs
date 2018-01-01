@@ -1,28 +1,18 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Globalization;
-using System.Linq;
-using System.Text;
 
 namespace MathExpressionsNET
 {
 	public abstract class MathFuncNode : IComparable, IComparable<MathFuncNode>, ICloneable
 	{
-		internal List<MathFuncNode> Childs = new List<MathFuncNode>();
+		internal List<MathFuncNode> Children = new List<MathFuncNode>();
 		internal int Number = -1;
 		internal int ArgNumber = -1;
 
 		#region Properties
-		
-		public abstract MathNodeType Type
-		{
-			get;
-		}
 
-		public abstract bool IsTerminal
-		{
-			get;
-		}
+		public abstract bool IsTerminal { get; }
 
 		public string Name
 		{
@@ -30,34 +20,21 @@ namespace MathExpressionsNET
 			protected set;
 		}
 
-		public bool IsValueOrCalculated
-		{
-			get
-			{
-				return Type == MathNodeType.Value || Type == MathNodeType.Calculated;
-			}
-		}
+		public bool IsValueOrCalculated => this is ValueNode || this is CalculatedNode;
 
-		public virtual double DoubleValue
-		{
-			get
-			{
-				throw new Exception();
-			}
-		}
+		public virtual double DoubleValue => throw new Exception();
 
 		public bool IsCalculated
 		{
 			get
 			{
-				foreach (var child in Childs)
-					if (child.Type == MathNodeType.Function)
+				foreach (MathFuncNode child in Children)
+					if (child is FuncNode funcNode)
 					{
-						FuncNode funcNode = (FuncNode)child;
 						if (!funcNode.IsKnown || !funcNode.IsCalculated)
 							return false;
 					}
-					else if (child.Type != MathNodeType.Value && child.Type != MathNodeType.Calculated)
+					else if (!(child is ValueNode) && !(child is CalculatedNode))
 					{
 						return false;
 					}
@@ -70,7 +47,7 @@ namespace MathExpressionsNET
 			get
 			{
 				int result = 1;
-				foreach (var child in Childs)
+				foreach (MathFuncNode child in Children)
 					result += child != null ? child.NodeCount : 1;
 				return result;
 			}
@@ -133,95 +110,93 @@ namespace MathExpressionsNET
 		public int CompareTo(MathFuncNode other)
 		{
 			int result = 0;
-			switch (Type)
+			switch (this)
 			{
-				case MathNodeType.Function:
-					switch (other.Type)
+				case FuncNode funcNode:
+					switch (other)
 					{
-						case MathNodeType.Function:
+						case FuncNode otherFuncNode:
 							if (Name != other.Name)
+							{
 								result = Name.CompareTo(other.Name);
-							else if (Childs.Count != other.Childs.Count)
-								result = -Childs.Count.CompareTo(other.Childs.Count);
+							}
+							else if (Children.Count != other.Children.Count)
+							{
+								result = -Children.Count.CompareTo(other.Children.Count);
+							}
 							else
 							{
-								for (int i = 0; i < Childs.Count; i++)
+								for (int i = 0; i < Children.Count; i++)
 								{
-									result = Childs[i].CompareTo(other.Childs[i]);
+									result = Children[i].CompareTo(other.Children[i]);
 									if (result != 0)
 										break;
 								}
 							}
 							break;
-						case MathNodeType.Variable:
-						case MathNodeType.Constant:
-						case MathNodeType.Value:
-						case MathNodeType.Calculated:
+						default:
 							result = -1;
 							break;
 					}
 					break;
-				case MathNodeType.Variable:
-					switch (other.Type)
+				case VarNode varNode:
+					switch (other)
 					{
-						case MathNodeType.Function:
+						case FuncNode otherFuncNode:
 							result = 1;
 							break;
-						case MathNodeType.Variable:
+						case VarNode otherVarNode:
 							result = Name.CompareTo(other.Name);
 							break;
-						case MathNodeType.Constant:
-						case MathNodeType.Value:
-						case MathNodeType.Calculated:
+						default:
 							result = -1;
 							break;
 					}
 					break;
-				case MathNodeType.Constant:
-					switch (other.Type)
+				case ConstNode constNode:
+					switch (other)
 					{
-						case MathNodeType.Function:
-						case MathNodeType.Variable:
+						case FuncNode otherFuncNode:
+						case VarNode otherVarNode:
 							result = 1;
 							break;
-						case MathNodeType.Constant:
+						case ConstNode otherConstNode:
 							result = Name.CompareTo(other.Name);
 							break;
-						case MathNodeType.Value:
-						case MathNodeType.Calculated:
+						default:
 							result = -1;
 							break;
 					}
 					break;
-				case MathNodeType.Value:
-					switch (other.Type)
+				case ValueNode valueNode:
+					switch (other)
 					{
-						case MathNodeType.Function:
-						case MathNodeType.Variable:
-						case MathNodeType.Constant:
+						case FuncNode otherFuncNode:
+						case VarNode otherVarNode:
+						case ConstNode otherConstNode:
 							result = 1;
 							break;
-						case MathNodeType.Value:
-							result = ((ValueNode)this).Value.CompareTo(((ValueNode)other).Value);
+						case ValueNode otherValueNode:
+							result = valueNode.Value.CompareTo(otherValueNode.Value);
 							break;
-						case MathNodeType.Calculated:
-							result = ((ValueNode)this).Value.ToDouble(CultureInfo.InvariantCulture).CompareTo(((CalculatedNode)other).Value);
+						case CalculatedNode otherCalculatedNode:
+							result = valueNode.Value.ToDouble(CultureInfo.InvariantCulture).CompareTo(otherCalculatedNode.Value);
 							break;
 					}
 					break;
-				case MathNodeType.Calculated:
-					switch (other.Type)
+				case CalculatedNode calculatedNode:
+					switch (other)
 					{
-						case MathNodeType.Function:
-						case MathNodeType.Variable:
-						case MathNodeType.Constant:
+						case FuncNode otherFuncNode:
+						case VarNode otherVarNode:
+						case ConstNode otherConstNode:
 							result = 1;
 							break;
-						case MathNodeType.Value:
-							result = ((CalculatedNode)this).Value.CompareTo(((ValueNode)other).Value.ToDouble(CultureInfo.InvariantCulture));
+						case ValueNode otherValueNode:
+							result = calculatedNode.Value.CompareTo(otherValueNode.Value.ToDouble(CultureInfo.InvariantCulture));
 							break;
-						case MathNodeType.Calculated:
-							result = ((CalculatedNode)this).Value.CompareTo(((CalculatedNode)other).Value);
+						case CalculatedNode otherCalculatedNode:
+							result = calculatedNode.Value.CompareTo(otherCalculatedNode.Value);
 							break;
 					}
 					break;
@@ -231,28 +206,27 @@ namespace MathExpressionsNET
 
 		public void Sort()
 		{
-			var funcNode = this as FuncNode;
-			if (funcNode != null)
+			if (this is FuncNode funcNode)
 			{
-				foreach (var child in Childs)
+				foreach (MathFuncNode child in Children)
 					child.Sort();
 				if (funcNode.FunctionType == KnownFuncType.Add || funcNode.FunctionType == KnownFuncType.Mult)
-					Childs.Sort();
+					Children.Sort();
 			}
 		}
 
 		public object Clone()
 		{
-			switch (Type)
+			switch (this)
 			{
-				case MathNodeType.Calculated:
-					return new CalculatedNode(((CalculatedNode)this).Value);
-				case MathNodeType.Value:
-					return new ValueNode((ValueNode)this);
-				case MathNodeType.Variable:
-				case MathNodeType.Constant:
+				case CalculatedNode calculatedNode:
+					return new CalculatedNode(calculatedNode.Value);
+				case ValueNode valueNode:
+					return new ValueNode(valueNode);
+				case VarNode varNode:
+				case ConstNode constNode:
 					return this;
-				case MathNodeType.Function:
+				case FuncNode funcNode:
 					return new FuncNode((FuncNode)this);
 				default:
 					return this;
@@ -261,17 +235,17 @@ namespace MathExpressionsNET
 
 		public bool LessThenZero()
 		{
-			switch (Type)
+			switch (this)
 			{
-				case MathNodeType.Calculated:
-					return ((CalculatedNode)this).Value < 0;
-				case MathNodeType.Value:
-					return ((ValueNode)this).Value < 0;
-				case MathNodeType.Variable:
-				case MathNodeType.Constant:
+				case CalculatedNode calculatedNode:
+					return calculatedNode.Value < 0;
+				case ValueNode valueNode:
+					return valueNode.Value < 0;
+				case VarNode varNode:
+				case ConstNode constNode:
 					return false;
-				case MathNodeType.Function:
-					return ((FuncNode)this).FunctionType == KnownFuncType.Neg;
+				case FuncNode funcNode:
+					return funcNode.FunctionType == KnownFuncType.Neg;
 				default:
 					return false;
 			}
@@ -279,18 +253,18 @@ namespace MathExpressionsNET
 
 		public MathFuncNode Abs()
 		{
-			switch (Type)
+			switch (this)
 			{
-				case MathNodeType.Calculated:
-					return new CalculatedNode(Math.Abs(((CalculatedNode)this).Value));
-				case MathNodeType.Value:
-					return new ValueNode(((ValueNode)this).Value.Abs());
-				case MathNodeType.Variable:
-				case MathNodeType.Constant:
+				case CalculatedNode calculatedNode:
+					return new CalculatedNode(Math.Abs(calculatedNode.Value));
+				case ValueNode valueNode:
+					return new ValueNode(valueNode.Value.Abs());
+				case VarNode varNode:
+				case ConstNode constNode:
 					return this;
-				case MathNodeType.Function:
-					if (((FuncNode)this).FunctionType == KnownFuncType.Neg)
-						return this.Childs[0];
+				case FuncNode funcNode:
+					if (funcNode.FunctionType == KnownFuncType.Neg)
+						return Children[0];
 					else
 						return this;
 				default:

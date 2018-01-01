@@ -1,0 +1,2 @@
+cd MathExpressions.NET
+java -jar "..\packages\Antlr4.CodeGenerator.4.6.4\tools\antlr4-csharp-4.6.4-complete.jar" MathExpr.g4 -o Generated -no-listener -visitor -Dlanguage=CSharp_v4_5 -Werror -package MathExpressionsNET

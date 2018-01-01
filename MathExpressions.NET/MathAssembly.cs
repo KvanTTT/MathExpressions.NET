@@ -1,9 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
 using System.Reflection;
-using System.Text;
 
 namespace MathExpressionsNET
 {
@@ -37,7 +33,7 @@ namespace MathExpressionsNET
 		public MathAssembly(string expression, string variable)
 		{
 			var mathAssembly = new MathFuncAssemblyCecil();
-			var fileName = "MathFuncLib" + "_" + Guid.NewGuid().ToString() + ".dll";
+			var fileName = $"MathFuncLib_{Guid.NewGuid()}.dll";
 			var assemblyBytes = mathAssembly.CompileFuncAndDerivativeInMemory(expression, variable, fileName);
 			var assembly = Assembly.Load(assemblyBytes);
 			_mathFuncObj = assembly.CreateInstance(mathAssembly.NamespaceName + "." + mathAssembly.ClassName);

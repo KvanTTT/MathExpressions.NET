@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
@@ -9,20 +8,9 @@ namespace MathExpressionsNET
 	{
 		public readonly KnownFuncType? FunctionType;
 
-		public bool IsKnown
-		{
-			get { return FunctionType != null; }
-		}
+		public bool IsKnown => FunctionType != null;
 
-		public override MathNodeType Type
-		{
-			get { return MathNodeType.Function; }
-		}
-
-		public override bool IsTerminal
-		{
-			get { return false; }
-		}
+		public override bool IsTerminal => false;
 
 		public FuncNode(KnownFuncType type)
 			: this(type, new List<MathFuncNode>())
@@ -44,7 +32,7 @@ namespace MathExpressionsNET
 		{
 		}
 
-		public FuncNode(KnownFuncType type, IList<MathFuncNode> args)
+		public FuncNode(KnownFuncType type, IEnumerable<MathFuncNode> args)
 		{
 			FunctionType = type;
 			string name;
@@ -54,8 +42,8 @@ namespace MathExpressionsNET
 				Name = name;
 			else
 				Name = FunctionType.ToString();
-			foreach (var arg in args)
-				Childs.Add(arg);
+			foreach (MathFuncNode arg in args)
+				Children.Add(arg);
 		}
 
 		public FuncNode(string name)
@@ -63,16 +51,16 @@ namespace MathExpressionsNET
 		{
 		}
 
-		public FuncNode(string name, IList<MathFuncNode> args)
+		public FuncNode(string name, IEnumerable<MathFuncNode> args)
 		{
 			var lowercasename = name.ToLower();
-			if (args.Count >= 2)
+			if (args.Count() >= 2)
 			{
 				KnownFuncType functionType;
 				if (KnownFunc.BinaryNamesFuncs.TryGetValue(lowercasename, out functionType))
 					FunctionType = functionType;
 			}
-			else if (args.Count == 1)
+			else if (args.Count() == 1)
 			{
 				KnownFuncType functionType;
 				if (KnownFunc.UnaryNamesFuncs.TryGetValue(lowercasename, out functionType))
@@ -81,12 +69,12 @@ namespace MathExpressionsNET
 					FunctionType = functionType;
 			}
 			Name = lowercasename;
-			foreach (var arg in args)
-				Childs.Add(arg);
+			foreach (MathFuncNode arg in args)
+				Children.Add(arg);
 			if (FunctionType == KnownFuncType.Sqrt)
 			{
 				FunctionType = KnownFuncType.Pow;
-				Childs.Add(new ValueNode(new Rational<long>(1, 2)));
+				Children.Add(new ValueNode(new Rational<long>(1, 2)));
 			}
 		}
 
@@ -95,26 +83,23 @@ namespace MathExpressionsNET
 			FunctionType = node.FunctionType;
 			Name = node.Name;
 			Number = node.Number;
-			for (int i = 0; i < node.Childs.Count; i++)
-				switch (node.Childs[i].Type)
+			for (int i = 0; i < node.Children.Count; i++)
+				switch (node.Children[i])
 				{
-					case MathNodeType.Value:
-						Childs.Add(new ValueNode(((ValueNode)node.Childs[i]).Value));
+					case ValueNode valueNode:
+						Children.Add(new ValueNode(valueNode.Value));
 						break;
-					case MathNodeType.Constant:
-					case MathNodeType.Variable:
-						Childs.Add(node.Childs[i]);
+					case ConstNode constNode:
+					case VarNode varNode:
+						Children.Add(node.Children[i]);
 						break;
-					case MathNodeType.Function:
-						Childs.Add(new FuncNode((FuncNode)node.Childs[i]));
+					case FuncNode funcNode:
+						Children.Add(new FuncNode(funcNode));
 						break;
 				}
 		}
 
-		public MathFuncNode LeftNode
-		{
-			get { return Childs[0]; }
-		}
+		public MathFuncNode LeftNode => Children[0];
 
 		public override string ToString()
 		{
@@ -140,30 +125,29 @@ namespace MathExpressionsNET
 						return ToString(parent, funcType, KnownFunc.ExpKnownFuncs);
 
 					case KnownFuncType.Neg:
-						if (Childs[0].Type == MathNodeType.Function)
+						if (Children[0] is FuncNode funcNode)
 						{
-							var func = (FuncNode)Childs[0];
-							if (KnownFunc.NegKnownFuncs.Contains((KnownFuncType)func.FunctionType))
-								return "-(" + Childs[0].ToString(this) + ")";
+							if (KnownFunc.NegKnownFuncs.Contains((KnownFuncType)funcNode.FunctionType))
+								return "-(" + Children[0].ToString(this) + ")";
 							else
-								return "-" + Childs[0].ToString(this);
+								return "-" + Children[0].ToString(this);
 						}
 						else
-							return "-" + Childs[0].ToString(this);
+							return "-" + Children[0].ToString(this);
 
 					case KnownFuncType.Diff:
-						return Childs[0].Type == MathNodeType.Function && ((FuncNode)Childs[0]).FunctionType != KnownFuncType.Diff ?
-							Childs[0].ToString(this) + "'" : "(" + 
-							Childs[0].ToString(this) + ")'";
+						return Children[0] is FuncNode funcNode2 && funcNode2.FunctionType != KnownFuncType.Diff ?
+							Children[0].ToString(this) + "'" : "(" + 
+							Children[0].ToString(this) + ")'";
 
 					case KnownFuncType.Abs:
-						return string.Format("|{0}|", Childs[0].ToString(this));
+						return string.Format("|{0}|", Children[0].ToString(this));
 				}
 			}
 			var builder = new StringBuilder((FunctionType == KnownFuncType.Sqrt ? "√" : Name) + "(");
-			foreach (var arg in Childs)
+			foreach (var arg in Children)
 				builder.AppendFormat("{0}, ", arg.ToString(this));
-			if (Childs.Count != 0)
+			if (Children.Count != 0)
 				builder.Remove(builder.Length - 2, 2);
 			builder.Append(')');
 			return builder.ToString();
@@ -175,7 +159,7 @@ namespace MathExpressionsNET
 		{
 			var builder = new StringBuilder();
 
-			if (parent == null || parent.Name == null || parent.Childs.Count <= 1)
+			if (parent == null || parent.Name == null || parent.Children.Count <= 1)
 			{
 				AppendMathFunctionNode(builder, funcType);
 				return builder.ToString();
@@ -197,9 +181,9 @@ namespace MathExpressionsNET
 
 		private void AppendMathFunctionNode(StringBuilder builder, KnownFuncType funcType)
 		{
-			builder.Append(Childs[0].ToString(this) + " ");
-			for (int i = 1; i < Childs.Count; i++)
-				builder.AppendFormat("{0} {1} ", KnownFunc.BinaryFuncsNames[funcType], Childs[i].ToString(this));
+			builder.Append(Children[0].ToString(this) + " ");
+			for (int i = 1; i < Children.Count; i++)
+				builder.AppendFormat("{0} {1} ", KnownFunc.BinaryFuncsNames[funcType], Children[i].ToString(this));
 			builder.Remove(builder.Length - 1, 1);
 		}
 
@@ -217,17 +201,17 @@ namespace MathExpressionsNET
 
 			if (funcNode != null)
 			{
-				if (Name != funcNode.Name || Childs.Count != funcNode.Childs.Count)
+				if (Name != funcNode.Name || Children.Count != funcNode.Children.Count)
 					return false;
 
-				bool allChildsAreEqual = true;
-				for (int i = 0; i < funcNode.Childs.Count; i++)
-					if (!Childs[i].Equals(funcNode.Childs[i]))
+				bool allChildrenAreEqual = true;
+				for (int i = 0; i < funcNode.Children.Count; i++)
+					if (!Children[i].Equals(funcNode.Children[i]))
 					{
-						allChildsAreEqual = false;
+						allChildrenAreEqual = false;
 						break;
 					}
-				if (!allChildsAreEqual)
+				if (!allChildrenAreEqual)
 					return false;
 
 				return true;
@@ -247,7 +231,7 @@ namespace MathExpressionsNET
 		public override int GetHashCode()
 		{
 			int hash = 0;
-			foreach (var child in Childs)
+			foreach (var child in Children)
 				hash ^= child.GetHashCode();
 			return hash ^ (FunctionType != null ? (int)FunctionType : Name.GetHashCode());
 		}

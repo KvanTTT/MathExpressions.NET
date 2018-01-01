@@ -1,7 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 
 namespace MathExpressionsNET
 {
@@ -21,16 +19,16 @@ namespace MathExpressionsNET
 			var funcNode = node as FuncNode;
 			if (funcNode != null)
 			{
-				for (int i = 0; i < funcNode.Childs.Count; i++)
-					funcNode.Childs[i] = Simplify(funcNode.Childs[i]);
+				for (int i = 0; i < funcNode.Children.Count; i++)
+					funcNode.Children[i] = Simplify(funcNode.Children[i]);
 
 				switch (funcNode.FunctionType)
 				{
 					case KnownFuncType.Neg:
-						if (funcNode.Childs[0].Type == MathNodeType.Value)
-							return new ValueNode(-((ValueNode)funcNode.Childs[0]).Value);
-						else if (funcNode.Childs[0].Type == MathNodeType.Function && ((FuncNode)funcNode.Childs[0]).FunctionType == KnownFuncType.Neg)
-							return funcNode.Childs[0].Childs[0];
+						if (funcNode.Children[0] is ValueNode valueNode)
+							return new ValueNode(-valueNode.Value);
+						else if (funcNode.Children[0] is FuncNode firstChildFuncNode && firstChildFuncNode.FunctionType == KnownFuncType.Neg)
+							return funcNode.Children[0].Children[0];
 						break;
 
 					case KnownFuncType.Add:
@@ -42,30 +40,30 @@ namespace MathExpressionsNET
 						BuildMultichildTree(funcNode);
 						var addResult = BreakOnAddNodes(funcNode);
 						var multResult = MultValues(funcNode);
-						bool isNeg = multResult.Type == MathNodeType.Function && ((FuncNode)multResult).FunctionType == KnownFuncType.Neg;
-						var powerNode = ReducePowers(isNeg ? multResult.Childs[0] : multResult);
-						powerNode.Childs = powerNode.Childs.Except(powerNode.Childs.Where(child => child.Type == MathNodeType.Value &&
-							((ValueNode)child).Value == 1)).ToList();
+						bool isNeg = multResult is FuncNode && ((FuncNode)multResult).FunctionType == KnownFuncType.Neg;
+						var powerNode = ReducePowers(isNeg ? multResult.Children[0] : multResult);
+						powerNode.Children = powerNode.Children.Except(powerNode.Children.Where(child =>
+							child is ValueNode childValueNode && childValueNode.Value == 1)).ToList();
 
 						return addResult != null && addResult.NodeCount <= (isNeg ? powerNode.NodeCount + 1 : powerNode.NodeCount) ?
 							addResult :
-								(isNeg ? (powerNode.Type == MathNodeType.Value ?
-									(MathFuncNode)(new ValueNode(-((ValueNode)powerNode).Value)) : new FuncNode(KnownFuncType.Neg, powerNode)) : powerNode);
+								(isNeg ? (powerNode is ValueNode powerValueNode ?
+									(MathFuncNode)(new ValueNode(-powerValueNode.Value)) : new FuncNode(KnownFuncType.Neg, powerNode)) : powerNode);
 
 					case KnownFuncType.Pow:
-						if (funcNode.Childs[0].Type == MathNodeType.Function)
+						if (funcNode.Children[0] is FuncNode childFuncNode)
 						{
-							if ((funcNode.Childs[0] as FuncNode).FunctionType == KnownFuncType.Pow)
+							if (childFuncNode.FunctionType == KnownFuncType.Pow)
 							{
-								funcNode.Childs[1] = Simplify(
-									new FuncNode(KnownFuncType.Mult, funcNode.Childs[0].Childs[1], funcNode.Childs[1]));
-								funcNode.Childs[0] = funcNode.Childs[0].Childs[0];
+								funcNode.Children[1] = Simplify(
+									new FuncNode(KnownFuncType.Mult, funcNode.Children[0].Children[1], funcNode.Children[1]));
+								funcNode.Children[0] = funcNode.Children[0].Children[0];
 								return ExpValue(funcNode);
 							}
-							else if ((funcNode.Childs[0] as FuncNode).FunctionType == KnownFuncType.Mult)
+							else if (childFuncNode.FunctionType == KnownFuncType.Mult)
 							{
 								var expResult = ExpValue(funcNode);
-								var multNode = PowerIntoMult(funcNode.Childs[0].Childs, funcNode.Childs[1]);
+								var multNode = PowerIntoMult(funcNode.Children[0].Children, funcNode.Children[1]);
 								return (multNode.NodeCount <= expResult.NodeCount) ? multNode : expResult;
 							}
 						}
@@ -73,11 +71,11 @@ namespace MathExpressionsNET
 						return ExpValue(funcNode);
 
 					/*case KnownFuncType.Diff:
-						return Simplify(GetDerivative(funcNode.Childs[0]));*/
+						return Simplify(GetDerivative(funcNode.Children[0]));*/
 
 					default:
-						if (funcNode.Childs.All(child => child.Type == MathNodeType.Value))
-							return (MathFuncNode)SimplifyValues(funcNode.FunctionType, funcNode.Childs.Select(child => (ValueNode)child).ToList())
+						if (funcNode.Children.All(child => child is ValueNode childValueNode))
+							return (MathFuncNode)SimplifyValues(funcNode.FunctionType, funcNode.Children.Select(child => (ValueNode)child).ToList())
 								?? (MathFuncNode)funcNode;
 						break;
 				}
@@ -92,26 +90,30 @@ namespace MathExpressionsNET
 
 		private MathFuncNode FoldValues(FuncNode funcNode)
 		{
-			var values = funcNode.Childs
-				.Where(child => child.Type == MathNodeType.Value)
+			var values = funcNode.Children
+				.Where(child => child is ValueNode)
 				.Select(valueChild => ((ValueNode)valueChild).Value);
 
 			Rational<long> result = 0;
-			foreach (var value in values)
+			foreach (Rational<long> value in values)
 				result += value;
 
-			var notValuesNodes = funcNode.Childs
-				.Where(child => child.Type != MathNodeType.Value).ToList();
+			var notValuesNodes = funcNode.Children
+				.Where(child => !(child is ValueNode)).ToList();
 
 			if (result == 0)
+			{
 				return
 					notValuesNodes.Count == 0 ? new ValueNode(0) :
 					notValuesNodes.Count == 1 ? notValuesNodes.First() :
 					new FuncNode(KnownFuncType.Add, notValuesNodes.ToList());
+			}
 			else
 			{
 				if (notValuesNodes.Count == 0)
+				{
 					return new ValueNode(result);
+				}
 				else
 				{
 					notValuesNodes.Add(new ValueNode(result));
@@ -122,54 +124,53 @@ namespace MathExpressionsNET
 
 		private void BuildMultichildTree(FuncNode beginNode)
 		{
-			var newChilds = new List<MathFuncNode>();
-			BuildMultichildTree(beginNode, beginNode, newChilds, false);
-			beginNode.Childs = newChilds;
+			var newChildren = new List<MathFuncNode>();
+			BuildMultichildTree(beginNode, beginNode, newChildren, false);
+			beginNode.Children = newChildren;
 		}
 
-		private void BuildMultichildTree(FuncNode beginNode, FuncNode funcNode, List<MathFuncNode> newChilds, bool neg)
+		private void BuildMultichildTree(FuncNode beginNode, FuncNode funcNode, List<MathFuncNode> newChildren, bool neg)
 		{
-			foreach (var child in funcNode.Childs)
+			foreach (var child in funcNode.Children)
 			{
 				var childFuncNode = child as FuncNode;
 				if (childFuncNode != null)
 				{
 					if (childFuncNode.FunctionType == beginNode.FunctionType)
 					{
-						BuildMultichildTree(beginNode, childFuncNode, newChilds, neg);
+						BuildMultichildTree(beginNode, childFuncNode, newChildren, neg);
 						continue;
 					}
 					else if (childFuncNode.FunctionType == KnownFuncType.Neg)
 					{
-						BuildMultichildTree(beginNode, childFuncNode, newChilds, !neg);
+						BuildMultichildTree(beginNode, childFuncNode, newChildren, !neg);
 						continue;
 					}
 				}
 
 				if (neg && (beginNode.FunctionType == KnownFuncType.Add ||
-					(beginNode.FunctionType == KnownFuncType.Mult && child == funcNode.Childs.First())))
+					(beginNode.FunctionType == KnownFuncType.Mult && child == funcNode.Children.First())))
 				{
-					if (child.Type == MathNodeType.Value)
-						newChilds.Add(new ValueNode(-((ValueNode)child).Value));
+					if (child is ValueNode valueNode)
+						newChildren.Add(new ValueNode(-valueNode.Value));
 					else
-						newChilds.Add(new FuncNode(KnownFuncType.Neg, child));
+						newChildren.Add(new FuncNode(KnownFuncType.Neg, child));
 				}
 				else
-					newChilds.Add(child);
+					newChildren.Add(child);
 			}
 		}
 
 		private MathFuncNode ReduceAddition(MathFuncNode node1, MathFuncNode node2)
 		{
-			var node1neg = node1.Type == MathNodeType.Function && (node1 as FuncNode).FunctionType == KnownFuncType.Neg;
-			var node2neg = node2.Type == MathNodeType.Function && (node2 as FuncNode).FunctionType == KnownFuncType.Neg;
-			var node11 = node1neg ? node1.Childs[0] : node1;
-			var node21 = node2neg ? node2.Childs[0] : node2;
+			var node1neg = node1 is FuncNode funcNode1 && funcNode1.FunctionType == KnownFuncType.Neg;
+			var node2neg = node2 is FuncNode funcNode2 && funcNode2.FunctionType == KnownFuncType.Neg;
+			var node11 = node1neg ? node1.Children[0] : node1;
+			var node21 = node2neg ? node2.Children[0] : node2;
 
 			MathFuncNode valueNode1 = null;
-			if (node11.Type == MathNodeType.Function &&
-				(node11 as FuncNode).FunctionType == KnownFuncType.Mult)
-					valueNode1 = node11.Childs.Where(child => child.IsValueOrCalculated).FirstOrDefault();
+			if (node11 is FuncNode funcNode11 && funcNode11.FunctionType == KnownFuncType.Mult)
+				valueNode1 = node11.Children.Where(child => child.IsValueOrCalculated).FirstOrDefault();
 			if (valueNode1 == null)
 				valueNode1 = node11.IsValueOrCalculated ? node11 : new ValueNode(new Rational<long>(1, 1));
 			var value1 = ((ValueNode)valueNode1).Value;
@@ -177,24 +178,23 @@ namespace MathExpressionsNET
 				value1 *= -1;
 
 			MathFuncNode valueNode2 = null;
-			if (node21.Type == MathNodeType.Function &&
-				(node21 as FuncNode).FunctionType == KnownFuncType.Mult)
-				valueNode2 = node21.Childs.Where(child => child.IsValueOrCalculated).FirstOrDefault();
+			if (node21 is FuncNode funcNode21 && funcNode21.FunctionType == KnownFuncType.Mult)
+				valueNode2 = node21.Children.Where(child => child.IsValueOrCalculated).FirstOrDefault();
 			if (valueNode2 == null)
 				valueNode2 = node21.IsValueOrCalculated ? node21 : new ValueNode(new Rational<long>(1, 1));
 			var value2 = ((ValueNode)valueNode2).Value;
 			if (node2neg)
 				value2 *= -1;
 
-			var notValueNodes1 = node11.Type == MathNodeType.Function &&
-				(node11 as FuncNode).FunctionType == KnownFuncType.Mult ?
-				node11.Childs.Where(child => !child.IsValueOrCalculated).ToList() :
+			var notValueNodes1 = node11 is FuncNode funcNode111 &&
+				funcNode111.FunctionType == KnownFuncType.Mult ?
+				node11.Children.Where(child => !child.IsValueOrCalculated).ToList() :
 				node11.IsValueOrCalculated ?
 				new List<MathFuncNode>() { } :
 				new List<MathFuncNode>() { node11 };
-			var notValueNodes2 = node21.Type == MathNodeType.Function &&
-				(node21 as FuncNode).FunctionType == KnownFuncType.Mult ?
-				node21.Childs.Where(child => !child.IsValueOrCalculated).ToList() :
+			var notValueNodes2 = node21 is FuncNode funcNode211 &&
+				funcNode211.FunctionType == KnownFuncType.Mult ?
+				node21.Children.Where(child => !child.IsValueOrCalculated).ToList() :
 				node21.IsValueOrCalculated ?
 				new List<MathFuncNode>() { } :
 				new List<MathFuncNode>() { node21 };
@@ -218,16 +218,16 @@ namespace MathExpressionsNET
 		private void ReduceSummands(FuncNode funcNode)
 		{
 			int i = 0;
-			while (i < funcNode.Childs.Count)
+			while (i < funcNode.Children.Count)
 			{
 				int j = i + 1;
-				while (j < funcNode.Childs.Count)
+				while (j < funcNode.Children.Count)
 				{
-					var newNode = ReduceAddition(funcNode.Childs[i], funcNode.Childs[j]);
+					var newNode = ReduceAddition(funcNode.Children[i], funcNode.Children[j]);
 					if (newNode != null)
 					{
-						funcNode.Childs[i] = newNode;
-						funcNode.Childs.RemoveAt(j);
+						funcNode.Children[i] = newNode;
+						funcNode.Children.RemoveAt(j);
 					}
 					else
 						j++;
@@ -242,39 +242,42 @@ namespace MathExpressionsNET
 
 		private MathFuncNode BreakOnAddNodes(FuncNode funcNode)
 		{
-			var addNodes = funcNode.Childs.Where(child =>
-						child.Type == MathNodeType.Function &&
-						((FuncNode)child).FunctionType == KnownFuncType.Add).ToList();
+			var addNodes = funcNode.Children.Where(child =>
+						child is FuncNode childFuncNode &&
+						childFuncNode.FunctionType == KnownFuncType.Add).ToList();
 
 			if (addNodes.Count != 0)
 			{
-				var funcNodesExceptAddNodes = funcNode.Childs.Except(addNodes);
+				var funcNodesExceptAddNodes = funcNode.Children.Except(addNodes);
 				var ar = new int[addNodes.Count];
-				var lengthAr = addNodes.Select(addNode => addNode.Childs.Count).ToArray();
+				var lengthAr = addNodes.Select(addNode => addNode.Children.Count).ToArray();
 
-				var newAddChilds = new List<MathFuncNode>();
-				var newChilds = new List<MathFuncNode>();
+				var newAddChildren = new List<MathFuncNode>();
+				var newChildren = new List<MathFuncNode>();
 
 				do
 				{
-					newAddChilds.Clear();
-					newAddChilds.AddRange(funcNodesExceptAddNodes);
+					newAddChildren.Clear();
+					newAddChildren.AddRange(funcNodesExceptAddNodes);
 					for (int j = 0; j < ar.Length; j++)
-						newAddChilds.Add(addNodes[j].Childs[ar[j]]);
+						newAddChildren.Add(addNodes[j].Children[ar[j]]);
 
-					newChilds.Add(Simplify(new FuncNode(KnownFuncType.Mult, newAddChilds)));
+					newChildren.Add(Simplify(new FuncNode(KnownFuncType.Mult, newAddChildren)));
 				}
 				while (IncArray(ar, lengthAr));
 
-				return Simplify(new FuncNode(KnownFuncType.Add, newChilds));
+				return Simplify(new FuncNode(KnownFuncType.Add, newChildren));
 			}
 			else
+			{
 				return null;
+			}
 		}
 
 		private bool IncArray(int[] ar, int[] lengthAr)
 		{
 			int c = 1;
+
 			for (int i = 0; i < ar.Length; i++)
 			{
 				ar[i] += c;
@@ -292,12 +295,13 @@ namespace MathExpressionsNET
 
 		private MathFuncNode MultValues(MathFuncNode funcNode)
 		{
-			var values = funcNode.Childs
-				.Where(child => child.Type == MathNodeType.Value)
-				.Select(valueChild => ((ValueNode)valueChild).Value);
+			var values = funcNode.Children
+				.Where(child => child is ValueNode)
+				.Cast<ValueNode>()
+				.Select(valueChild => valueChild.Value);
 
-			values = values.Concat(funcNode.Childs
-				.Where(child => child.Type == MathNodeType.Function && ((FuncNode)child).FunctionType == KnownFuncType.Neg)
+			values = values.Concat(funcNode.Children
+				.Where(child => child is FuncNode childFuncNode && childFuncNode.FunctionType == KnownFuncType.Neg)
 				.Select(valueChild => new Rational<long>(-1, 1)));
 
 			Rational<long> result = 1;
@@ -307,11 +311,11 @@ namespace MathExpressionsNET
 			if (result == 0)
 				return new ValueNode(0);
 
-			var notValuesNodes = funcNode.Childs
-				.Where(child => child.Type != MathNodeType.Value && !(child.Type == MathNodeType.Function && ((FuncNode)child).FunctionType == KnownFuncType.Neg))
-				.Concat(funcNode.Childs
-				.Where(child => child.Type == MathNodeType.Function && ((FuncNode)child).FunctionType == KnownFuncType.Neg)
-				.Select(negChild => negChild.Childs[0])).ToList();
+			var notValuesNodes = funcNode.Children
+				.Where(child => !(child is ValueNode) && !(child is FuncNode childFuncNode && childFuncNode.FunctionType == KnownFuncType.Neg))
+				.Concat(funcNode.Children
+				.Where(child => child is FuncNode childFuncNode && childFuncNode.FunctionType == KnownFuncType.Neg)
+				.Select(negChild => negChild.Children[0])).ToList();
 
 			if (result == 1)
 			{
@@ -347,44 +351,44 @@ namespace MathExpressionsNET
 
 		private MathFuncNode ReducePowers(MathFuncNode funcNode)
 		{
-			if (funcNode.Type != MathNodeType.Function)
+			if (!(funcNode is FuncNode))
 				return funcNode;
 
-			var newChilds = new List<MathFuncNode>();
-			bool[] markedNodes = new bool[funcNode.Childs.Count];
+			var newChildren = new List<MathFuncNode>();
+			bool[] markedNodes = new bool[funcNode.Children.Count];
 
-			for (int i = 0; i < funcNode.Childs.Count; i++)
+			for (int i = 0; i < funcNode.Children.Count; i++)
 			{
-				var basis = UnderPowerExpr(funcNode.Childs[i]);
+				var basis = UnderPowerExpr(funcNode.Children[i]);
 				var nodesWithSameBasis = new List<MathFuncNode>();
 				if (!markedNodes[i])
-					nodesWithSameBasis.Add(funcNode.Childs[i]);
+					nodesWithSameBasis.Add(funcNode.Children[i]);
 
-				for (int j = i + 1; j < funcNode.Childs.Count; j++)
-					if (basis.Equals(UnderPowerExpr(funcNode.Childs[j])) && !markedNodes[j])
+				for (int j = i + 1; j < funcNode.Children.Count; j++)
+					if (basis.Equals(UnderPowerExpr(funcNode.Children[j])) && !markedNodes[j])
 					{
-						nodesWithSameBasis.Add(funcNode.Childs[j]);
+						nodesWithSameBasis.Add(funcNode.Children[j]);
 						markedNodes[j] = true;
 					}
 
 				if (nodesWithSameBasis.Count > 1)
 				{
-					newChilds.Add(Simplify(new FuncNode(KnownFuncType.Pow,
+					newChildren.Add(Simplify(new FuncNode(KnownFuncType.Pow,
 						basis,
 						Simplify(new FuncNode(KnownFuncType.Add,
 							nodesWithSameBasis.Select(node => PowerExpr(node)).ToList()))
 					)));
 				}
 				else if (!markedNodes[i])
-					newChilds.Add(funcNode.Childs[i]);
+					newChildren.Add(funcNode.Children[i]);
 			}
 
-			if (funcNode.Childs.Count != newChilds.Count)
+			if (funcNode.Children.Count != newChildren.Count)
 			{
-				if (newChilds.Count == 1)
-					return newChilds[0];
+				if (newChildren.Count == 1)
+					return newChildren[0];
 				else
-					return new FuncNode(KnownFuncType.Mult, newChilds);
+					return new FuncNode(KnownFuncType.Mult, newChildren);
 			}
 			else
 				return funcNode;
@@ -395,33 +399,33 @@ namespace MathExpressionsNET
 
 		private MathFuncNode ExpValue(FuncNode funcNode)
 		{
-			var bValue = funcNode.Childs[1] as ValueNode;
+			var bValue = funcNode.Children[1] as ValueNode;
 			if (bValue != null)
 			{
 				if (bValue.Value == 0)
 					return new ValueNode(1);
 				else if (bValue.Value == 1)
-					return funcNode.Childs[0];
-				/*else if (funcNode.Childs[0].Type == MathNodeType.Value)
+					return funcNode.Children[0];
+				/*else if (funcNode.Children[0].Type == MathNodeType.Value)
 				{
-					double a = funcNode.Childs[0].Value.ToDouble();
+					double a = funcNode.Children[0].Value.ToDouble();
 					double b = bValue.Value.ToDouble();
 					double r = b == 0.5 ? Math.Sqrt(a) : Math.Pow(a, b);
 					Rational<long> result;
 					Rational<long>.FromDecimal((decimal)r, out result);
 					return new ValueNode(result);
 				}*/
-				else if (bValue.Value.IsInteger && funcNode.Childs[0].Type == MathNodeType.Function &&
-					((FuncNode)funcNode.Childs[0]).FunctionType == KnownFuncType.Neg)
+				else if (bValue.Value.IsInteger && funcNode.Children[0] is FuncNode childFuncNode &&
+					childFuncNode.FunctionType == KnownFuncType.Neg)
 				{
 					if (bValue.Value.Numerator % 2 == 0)
-						return new FuncNode(KnownFuncType.Pow, funcNode.Childs[0].Childs[0], new ValueNode(bValue.Value));
+						return new FuncNode(KnownFuncType.Pow, funcNode.Children[0].Children[0], new ValueNode(bValue.Value));
 					else
-						return new FuncNode(KnownFuncType.Neg, new FuncNode(KnownFuncType.Pow, funcNode.Childs[0].Childs[0], new ValueNode(bValue.Value)));
+						return new FuncNode(KnownFuncType.Neg, new FuncNode(KnownFuncType.Pow, funcNode.Children[0].Children[0], new ValueNode(bValue.Value)));
 				}
 			}
 
-			var aValue = funcNode.Childs[0] as ValueNode;
+			var aValue = funcNode.Children[0] as ValueNode;
 			if (aValue != null)
 			{
 				if (aValue.Value == 0)
@@ -438,24 +442,23 @@ namespace MathExpressionsNET
 
 		private MathFuncNode PowerExpr(MathFuncNode node)
 		{
-			return (node.Type == MathNodeType.Function &&
-					   ((FuncNode)node).FunctionType == KnownFuncType.Pow) ?
-					   node.Childs[1] : new ValueNode(1);
+			return (node is FuncNode funcNode && funcNode.FunctionType == KnownFuncType.Pow)
+				? node.Children[1] : new ValueNode(1);
 		}
 
-		private MathFuncNode PowerIntoMult(IEnumerable<MathFuncNode> multChilds, MathFuncNode expNode)
+		private MathFuncNode PowerIntoMult(IEnumerable<MathFuncNode> multChildren, MathFuncNode expNode)
 		{
-			var newChilds = multChilds.Select(child => 
+			var newChildren = multChildren.Select(child => 
 				Simplify(new FuncNode(KnownFuncType.Pow, child, expNode)));
-			return Simplify(new FuncNode(KnownFuncType.Mult, newChilds.ToList()));
+			return Simplify(new FuncNode(KnownFuncType.Mult, newChildren.ToList()));
 		}
 		
 		private MathFuncNode UnderPowerExpr(MathFuncNode node)
 		{
-			return (node.Type == MathNodeType.Function &&
-					   ((FuncNode)node).FunctionType == KnownFuncType.Pow) ?
-					   node.Childs[0] : node;
+			return (node is FuncNode funcNode && funcNode.FunctionType == KnownFuncType.Pow) ?
+				node.Children[0] : node;
 		}
+
 		#endregion
 
 		#endregion
