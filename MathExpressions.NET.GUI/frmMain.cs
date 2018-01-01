@@ -1,16 +1,11 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
-using System.Drawing;
+﻿using MathExpressionsNET.GUI.Properties;
+using System;
+using System.Globalization;
+using System.IO;
 using System.Linq;
 using System.Text;
-using System.Windows.Forms;
-using System.IO;
-using GOLD;
-using MathExpressionsNET.GUI.Properties;
-using System.Globalization;
 using System.Threading;
+using System.Windows.Forms;
 
 namespace MathExpressionsNET.GUI
 {
@@ -52,8 +47,7 @@ namespace MathExpressionsNET.GUI
 
 		private void dgvErrors_CellDoubleClick(object sender, DataGridViewCellEventArgs e)
 		{
-			int pos;
-			if (int.TryParse(dgvErrors[0, e.RowIndex].Value.ToString(), out pos))
+			if (int.TryParse(dgvErrors[0, e.RowIndex].Value.ToString(), out int pos))
 			{
 				tbInput.Select(pos, 0);
 				tbInput.Focus();
@@ -96,7 +90,7 @@ namespace MathExpressionsNET.GUI
 
 		private void btnSave_Click(object sender, EventArgs e)
 		{
-			if (saveFileDialog1.ShowDialog() == System.Windows.Forms.DialogResult.OK)
+			if (saveFileDialog1.ShowDialog() == DialogResult.OK)
 			{
 				if (Assembly != null)
 					Assembly.SaveToFile(Path.GetDirectoryName(saveFileDialog1.FileName), Path.GetFileName(saveFileDialog1.FileName));
@@ -141,8 +135,8 @@ namespace MathExpressionsNET.GUI
 				catch (Exception ex)
 				{
 					dgvErrors.Rows.Add(string.Empty, ex.Message);
-					foreach (var error in Helper.Parser.Errors)
-						dgvErrors.Rows.Add(error.Position == null ? string.Empty : error.Position.Column.ToString(), error.Message);
+					//foreach (var error in Helper.Parser.Errors)
+					//	dgvErrors.Rows.Add(error.Position == null ? string.Empty : error.Position.Column.ToString(), error.Message);
 					tbSimplification.Text = null;
 					tbSimplifiedOpt.Text = null;
 					tbDerivative.Text = null;
@@ -178,8 +172,8 @@ namespace MathExpressionsNET.GUI
 					catch (Exception ex)
 					{
 						dgvErrors.Rows.Add(string.Empty, ex.Message);
-						foreach (var error in Helper.Parser.Errors)
-							dgvErrors.Rows.Add(error.Position == null ? string.Empty : error.Position.Column.ToString(), error.Message);
+						//foreach (var error in Helper.Parser.Errors)
+						//	dgvErrors.Rows.Add(error.Position == null ? string.Empty : error.Position.Column.ToString(), error.Message);
 						tbDerivative.Text = null;
 						tbDerivativeOpt.Text = null;
 						tbDerivativeIlCode.Text = null;

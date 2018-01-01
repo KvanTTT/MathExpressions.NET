@@ -168,10 +168,10 @@ namespace MathExpressionsNET
 			switch (node)
 			{
 				case CalculatedNode calculatedNode:
-					result = new CalculatedNode(((CalculatedNode)node).Value);
+					result = new CalculatedNode(calculatedNode.Value);
 					break;
 				case ValueNode valueNode:
-					result = new ValueNode((ValueNode)node);
+					result = new ValueNode(valueNode);
 					break;
 				case ConstNode constNode:
 				case VarNode varNode:
@@ -179,7 +179,7 @@ namespace MathExpressionsNET
 					break;
 				case FuncNode funcNode:
 					result = funcNode.FunctionType != null ?
-						new FuncNode((KnownFuncType)((FuncNode)node).FunctionType) :
+						new FuncNode((KnownFuncType)funcNode.FunctionType) :
 						new FuncNode(node.Name);
 					break;
 			}

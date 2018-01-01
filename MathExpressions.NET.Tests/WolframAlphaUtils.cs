@@ -27,8 +27,7 @@ namespace MathExpressionsNET.Tests
 
 			try
 			{
-				double d;
-				return double.TryParse(result.GetPrimaryPod().SubPods[0].Plaintext, out d) && d == 0.0;
+				return double.TryParse(result.GetPrimaryPod().SubPods[0].Plaintext, out double d) && d == 0.0;
 			}
 			catch
 			{

@@ -68,7 +68,7 @@ namespace MathExpressionsNET
 			Assembly = AssemblyDefinition.CreateAssembly(name, fileName, ModuleKind.Dll);
 
 			ImportMath(Assembly);
-			InvokeFuncRef = Assembly.MainModule.Import(typeof(Func<double, double>).GetMethod("Invoke"));
+			InvokeFuncRef = Assembly.MainModule.Import(typeof(Func<double, double>).GetMethod(nameof(System.Reflection.MethodInfo.Invoke)));
 			DoubleType = Assembly.MainModule.TypeSystem.Double;
 
 			Class = new TypeDefinition(NamespaceName, ClassName,
