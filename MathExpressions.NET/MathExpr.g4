@@ -26,7 +26,7 @@ expression
 	;
 
 expressionList
-	: 
+	: expression (',' expression)*
 	;
 
 number
