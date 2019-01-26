@@ -118,7 +118,7 @@ namespace MathExpressionsNET
 				param.Value.ArgNumber = paramNumber++;
 			}
 
-			var unknownFuncType = assembly.MainModule.Import(typeof(Func<double, double>));
+			var unknownFuncType = assembly.MainModule.ImportReference(typeof(Func<double, double>));
 			foreach (var func in UnknownFuncs)
 			{
 				method.Parameters.Add(new ParameterDefinition(func.Value.Name, ParameterAttributes.None, unknownFuncType));
