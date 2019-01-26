@@ -12,6 +12,12 @@
     </ItemGroup>
 
     <ItemGroup>
+        <None Update="DefaultDerivatives.txt">
+            <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+        </None>
+    </ItemGroup>
+
+    <ItemGroup>
       <PackageReference Include="Antlr4.CodeGenerator" Version="4.6.6" />
       <PackageReference Include="Antlr4.Runtime" Version="4.6.6" />
       <PackageReference Include="Mono.Cecil" Version="0.10.1" />
