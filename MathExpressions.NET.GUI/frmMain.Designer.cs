@@ -1,4 +1,4 @@
-﻿namespace MathExpressionsNET.GUI
+namespace MathExpressionsNET.GUI
 {
 	partial class frmMain
 	{
@@ -268,7 +268,6 @@
             this.tbDerivatives.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
             this.tbDerivatives.Size = new System.Drawing.Size(569, 273);
             this.tbDerivatives.TabIndex = 23;
-            this.tbDerivatives.Text = resources.GetString("tbDerivatives.Text");
             this.tbDerivatives.KeyDown += new System.Windows.Forms.KeyEventHandler(this.tbIlCode_KeyDown);
             // 
             // label2
@@ -475,7 +474,6 @@
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(952, 669);
             this.Controls.Add(this.splitContainer3);
-            this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.Name = "frmMain";
             this.Text = "Math Expressions Processing (parsing, simplification, derivatives, compilation)";
             this.FormClosed += new System.Windows.Forms.FormClosedEventHandler(this.frmMain_FormClosed);
