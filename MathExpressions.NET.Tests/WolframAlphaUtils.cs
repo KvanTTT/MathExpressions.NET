@@ -7,11 +7,25 @@ using WolframAlphaNET;
 using WolframAlphaNET.Misc;
 using WolframAlphaNET.Objects;
 using System.Globalization;
+using System.IO;
+using System.Runtime.CompilerServices;
 
 namespace MathExpressionsNET.Tests
 {
 	public static class WolframAlphaUtils
 	{
+		private static string WolframAlphaAppId;
+		
+		static WolframAlphaUtils()
+		{
+			InitWolframAlphaAppId();
+		}
+
+		static void InitWolframAlphaAppId([CallerFilePath] string path = "")
+		{
+			WolframAlphaAppId = File.ReadAllText(Path.Combine(Path.GetDirectoryName(path), "WolframAlphaAppId")).Trim();
+		}
+		
 		public static bool CheckDerivative(string expression, string derivative)
 		{
 			return CheckEquality("diff(" + expression + ")", derivative);
@@ -19,7 +33,7 @@ namespace MathExpressionsNET.Tests
 
 		public static bool CheckEquality(string expression1, string expression2)
 		{
-			WolframAlpha wolfram = new WolframAlpha(ConfigurationManager.AppSettings["WolframAlphaAppId"]);
+			WolframAlpha wolfram = new WolframAlpha(WolframAlphaAppId);
 
 			string query = "(" + expression1.Replace(" ", "") + ")-(" + expression2.Replace(" ", "") + ")";
 			QueryResult result = wolfram.Query(query);
@@ -39,7 +53,7 @@ namespace MathExpressionsNET.Tests
 		{
 			try
 			{
-				WolframAlpha wolfram = new WolframAlpha(ConfigurationManager.AppSettings["WolframAlphaAppId"]);
+				WolframAlpha wolfram = new WolframAlpha(WolframAlphaAppId);
 
 				QueryResult result = wolfram.Query("diff(" + expression + ")");
 				string answer = result.Pods[0].SubPods[0].Plaintext;
@@ -69,7 +83,7 @@ namespace MathExpressionsNET.Tests
 			if (values.Length > 0)
 				request.Remove(request.Length - 1, 1);
 
-			WolframAlpha wolfram = new WolframAlpha(ConfigurationManager.AppSettings["WolframAlphaAppId"]);
+			WolframAlpha wolfram = new WolframAlpha(WolframAlphaAppId);
 			QueryResult response = wolfram.Query(request.ToString());
 			var pod = response.GetPrimaryPod();
 
