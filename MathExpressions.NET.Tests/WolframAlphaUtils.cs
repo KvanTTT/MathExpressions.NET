@@ -1,19 +1,19 @@
 ﻿using System.Collections.Generic;
-using System.Linq;
 using System.Text;
-using WolframAlphaNET;
-using WolframAlphaNET.Misc;
-using WolframAlphaNET.Objects;
 using System.Globalization;
 using System.IO;
+using System.Linq;
 using System.Runtime.CompilerServices;
+using WolframAlphaNet;
+using WolframAlphaNet.Misc;
+using WolframAlphaNet.Objects;
 
 namespace MathExpressionsNET.Tests
 {
 	public static class WolframAlphaUtils
 	{
 		private static string WolframAlphaAppId;
-		
+
 		static WolframAlphaUtils()
 		{
 			InitWolframAlphaAppId();
@@ -23,7 +23,7 @@ namespace MathExpressionsNET.Tests
 		{
 			WolframAlphaAppId = File.ReadAllText(Path.Combine(Path.GetDirectoryName(path), "WolframAlphaAppId")).Trim();
 		}
-		
+
 		public static bool CheckDerivative(string expression, string derivative)
 		{
 			return CheckEquality("diff(" + expression + ")", derivative);
