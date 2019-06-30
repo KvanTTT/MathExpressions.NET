@@ -1,5 +1,5 @@
-﻿using MathExpressionsNET.GUI.Properties;
-using System;
+﻿using System;
+using System.Drawing;
 using System.Globalization;
 using System.IO;
 using System.Linq;
@@ -14,6 +14,10 @@ namespace MathExpressionsNET.GUI
 		const long TimerDelay = 1000;
 		MathFuncAssemblyCecil Assembly;
 		System.Threading.Timer UpdateTimer;
+		string SettingsFilePath = Path.Combine(
+			Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData),
+			"MathExpressions.NET.xml");
+		static Settings Settings = new Settings();
 
 		public frmMain()
 		{
@@ -27,16 +31,27 @@ namespace MathExpressionsNET.GUI
 
 		private void frmMain_Load(object sender, EventArgs e)
 		{
-			tbDerivatives.Text = Settings.Default.Derivatives;
+			Icon = new Icon("icon_small.ico");
+
+			if (!Settings.TryLoad(SettingsFilePath, out Settings))
+			{
+				string currentDir = Path.GetDirectoryName(System.Reflection.Assembly.GetEntryAssembly().Location);
+				Settings = new Settings
+				{
+					Derivatives = File.ReadAllText(Path.Combine(currentDir, "DefaultDerivatives.txt"))
+				};
+			}
+
+			tbDerivatives.Text = Settings.Derivatives;
+			tbInput.Text = Settings.InputExpression;
+			cbRealTimeUpdate.Checked = Settings.RealTimeUpdate;
 			btnRebuildDerivatives_Click(null, null);
-			tbInput.Text = Settings.Default.InputExpression;
-			cbRealTimeUpdate.Checked = Settings.Default.RealTimeUpdate;
 		}
 
 		private void frmMain_FormClosed(object sender, FormClosedEventArgs e)
 		{
-			Settings.Default.InputExpression = tbInput.Text;
-			Settings.Default.Save();
+			Settings.InputExpression = tbInput.Text;
+			Settings.TrySave(SettingsFilePath);
 		}
 
 		private void tbInput_TextChanged(object sender, EventArgs e)
@@ -60,8 +75,8 @@ namespace MathExpressionsNET.GUI
 			{
 				Helper.InitDerivatives(tbDerivatives.Text);
 				btnCalculate_Click(sender, e);
-				Settings.Default.Derivatives = tbDerivatives.Text;
-				Settings.Default.Save();
+				Settings.Derivatives = tbDerivatives.Text;
+				Settings.TrySave(SettingsFilePath);
 			}
 			/*catch (Exception ex)
 			{
@@ -76,8 +91,8 @@ namespace MathExpressionsNET.GUI
 
 		private void cbRealTimeUpdate_CheckedChanged(object sender, EventArgs e)
 		{
-			Settings.Default.RealTimeUpdate = cbRealTimeUpdate.Checked;
-			Settings.Default.Save();
+			Settings.RealTimeUpdate = cbRealTimeUpdate.Checked;
+			Settings.TrySave(SettingsFilePath);
 
 			if (cbRealTimeUpdate.Checked)
 				UpdateTimer.Change(TimerDelay, Timeout.Infinite);

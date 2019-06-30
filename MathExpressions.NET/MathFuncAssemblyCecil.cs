@@ -68,7 +68,7 @@ namespace MathExpressionsNET
 			Assembly = AssemblyDefinition.CreateAssembly(name, fileName, ModuleKind.Dll);
 
 			ImportMath(Assembly);
-			InvokeFuncRef = Assembly.MainModule.Import(typeof(Func<double, double>).GetMethod(nameof(System.Reflection.MethodInfo.Invoke)));
+			InvokeFuncRef = Assembly.MainModule.ImportReference(typeof(Func<double, double>).GetMethod(nameof(System.Reflection.MethodInfo.Invoke)));
 			DoubleType = Assembly.MainModule.TypeSystem.Double;
 
 			Class = new TypeDefinition(NamespaceName, ClassName,
@@ -78,7 +78,7 @@ namespace MathExpressionsNET
 			var methodAttributes = MethodAttributes.Public | MethodAttributes.HideBySig | MethodAttributes.SpecialName | MethodAttributes.RTSpecialName;
 			var method = new MethodDefinition(".ctor", methodAttributes, Assembly.MainModule.TypeSystem.Void);
 			method.Body.Instructions.Add(Instruction.Create(OpCodes.Ldarg_0));
-			method.Body.Instructions.Add(Instruction.Create(OpCodes.Call, Assembly.MainModule.Import(typeof(object).GetConstructor(new Type[0]))));
+			method.Body.Instructions.Add(Instruction.Create(OpCodes.Call, Assembly.MainModule.ImportReference(typeof(object).GetConstructor(new Type[0]))));
 			method.Body.Instructions.Add(Instruction.Create(OpCodes.Ret));
 			Class.Methods.Add(method);
 		}
@@ -116,7 +116,7 @@ namespace MathExpressionsNET
 		{
 			TypesReferences = new Dictionary<KnownFuncType, MethodReference>();
 			foreach (var typeMethod in KnownFunc.TypesMethods)
-				TypesReferences.Add(typeMethod.Key, assembly.MainModule.Import(typeMethod.Value));
+				TypesReferences.Add(typeMethod.Key, assembly.MainModule.ImportReference(typeMethod.Value));
 		}
 	}
 }
