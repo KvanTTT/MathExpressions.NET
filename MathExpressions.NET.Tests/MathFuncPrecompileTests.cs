@@ -1,6 +1,6 @@
-﻿using NUnit.Framework;
-using System.Globalization;
+﻿using System.Globalization;
 using System.Threading;
+using NUnit.Framework;
 
 namespace MathExpressionsNET.Tests
 {
@@ -17,7 +17,7 @@ namespace MathExpressionsNET.Tests
 		public static void FoldConstantsTest()
 		{
 			MathFunc func = new MathFunc("cos(ln(sin(2)))").GetPrecompilied();
-			Assert.IsTrue(double.Parse(func.ToString()) == 0.995483012754421);
+			Assert.AreEqual(0.99548301275442141d, double.Parse(func.ToString()));
 		}
 
 		[Test]

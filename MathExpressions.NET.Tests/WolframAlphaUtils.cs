@@ -1,8 +1,8 @@
 ﻿using System.Collections.Generic;
-using System.Text;
 using System.Globalization;
 using System.IO;
 using System.Runtime.CompilerServices;
+using System.Text;
 using System.Threading;
 using WolframAlphaNet;
 using WolframAlphaNet.Misc;

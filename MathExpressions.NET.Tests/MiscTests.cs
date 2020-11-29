@@ -17,7 +17,7 @@ namespace MathExpressionsNET.Tests
 		private int IntPow(int x, int pow)
 		{
 			int ret = x;
-			
+
 			pow--;
 			do
 			{
@@ -27,7 +27,7 @@ namespace MathExpressionsNET.Tests
 				pow >>= 1;
 			}
 			while (pow != 0);
-			
+
 			return ret;
 		}
 	}

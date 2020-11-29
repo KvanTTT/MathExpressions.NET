@@ -39,7 +39,7 @@ namespace MathExpressionsNET.Tests
 		public void CompileFuncWithUnknownFunc()
 		{
 			double delta = 0.000001;
-			var expectedFunc = new Func<double, Func<double, double>, double>((x, f) => 
+			var expectedFunc = new Func<double, Func<double, double>, double>((x, f) =>
 				Math.Cos(f(x)) * (f(x + delta) - f(x)) / delta); // derivative of sin(f(x))
 			using (var mathAssembly = new MathAssembly("sin(a(x))", "x"))
 			{

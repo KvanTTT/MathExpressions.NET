@@ -5,14 +5,6 @@ namespace MathExpressionsNET.Tests
 	[TestFixture]
 	public class MathFuncTests
 	{
-		MathExprConverter Parser;
-
-		[SetUp]
-		public void Init()
-		{
-			Parser = new MathExprConverter();
-		}
-
 		[Test]
 		public void IsValueTest()
 		{
