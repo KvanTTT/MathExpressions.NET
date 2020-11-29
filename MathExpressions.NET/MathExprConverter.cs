@@ -49,7 +49,7 @@ namespace MathExpressionsNET
 			{
 				_matchFuncs.Add(new MathFunc(left, right, null, _parameters.Select(p => p.Value)));
 			}
-			else
+			else if (left != null)
 			{
 				_matchFuncs.Add(new MathFunc(left, null, _parameters.Select(p => p.Value)));
 			}

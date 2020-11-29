@@ -425,8 +425,7 @@ namespace MathExpressionsNET
 				}
 			}
 
-			var aValue = funcNode.Children[0] as ValueNode;
-			if (aValue != null)
+			if (funcNode.Children[0] is ValueNode aValue)
 			{
 				if (aValue.Value == 0)
 					return new ValueNode(0);

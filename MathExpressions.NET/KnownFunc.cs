@@ -53,7 +53,7 @@ namespace MathExpressionsNET
 			["div"] = KnownFuncType.Div,
 			["^"] = KnownFuncType.Pow,
 			["pow"] = KnownFuncType.Pow,
-			
+
 			["log"] = KnownFuncType.Log,
 			["diff"] = KnownFuncType.Diff
 		};
@@ -63,19 +63,17 @@ namespace MathExpressionsNET
 			KnownFuncType.Abs, KnownFuncType.Sgn, KnownFuncType.Trunc, KnownFuncType.Round, KnownFuncType.Diff
 		};
 
-		public static KnownFuncType[] AddKnownFuncs = new KnownFuncType[] {
-			KnownFuncType.Add, KnownFuncType.Sub
-		};
+		public static KnownFuncType[] AddKnownFuncs = { KnownFuncType.Add, KnownFuncType.Sub };
 
-		public static KnownFuncType[] MultKnownFuncs = new KnownFuncType[] {
+		public static KnownFuncType[] MultKnownFuncs = {
 			KnownFuncType.Add, KnownFuncType.Sub, KnownFuncType.Mult, KnownFuncType.Div
 		};
 
-		public static KnownFuncType[] ExpKnownFuncs = new KnownFuncType[] {
+		public static KnownFuncType[] ExpKnownFuncs = {
 			KnownFuncType.Add, KnownFuncType.Sub, KnownFuncType.Mult, KnownFuncType.Div, KnownFuncType.Pow
 		};
 
-		public static KnownFuncType[] NegKnownFuncs = new KnownFuncType[] {
+		public static KnownFuncType[] NegKnownFuncs = {
 			KnownFuncType.Add, KnownFuncType.Sub, KnownFuncType.Mult, KnownFuncType.Div, KnownFuncType.Pow, KnownFuncType.Neg
 		};
 
@@ -122,22 +120,22 @@ namespace MathExpressionsNET
 				[KnownFuncType.Sin] = mathType.GetMethod(nameof(Sin), unaryFuncArgTypes),
 				[KnownFuncType.Cos] = mathType.GetMethod(nameof(Cos), unaryFuncArgTypes),
 				[KnownFuncType.Tan] = mathType.GetMethod(nameof(Tan), unaryFuncArgTypes),
-				
+
 				[KnownFuncType.Arcsin] = mathType.GetMethod(nameof(Asin), unaryFuncArgTypes),
 				[KnownFuncType.Arccos] = mathType.GetMethod(nameof(Acos), unaryFuncArgTypes),
 				[KnownFuncType.Arctan] = mathType.GetMethod(nameof(Atan), unaryFuncArgTypes),
-				
+
 				[KnownFuncType.Sinh] = mathType.GetMethod(nameof(Sinh), unaryFuncArgTypes),
 				[KnownFuncType.Cosh] = mathType.GetMethod(nameof(Cosh), unaryFuncArgTypes),
-				
+
 				[KnownFuncType.Ln] = mathType.GetMethod(nameof(Log), unaryFuncArgTypes),
 				[KnownFuncType.Log10] = mathType.GetMethod(nameof(Log10), unaryFuncArgTypes),
-				
+
 				[KnownFuncType.Abs] = mathType.GetMethod(nameof(Abs), unaryFuncArgTypes),
 				[KnownFuncType.Sgn] = mathType.GetMethod(nameof(Sign), unaryFuncArgTypes),
 				[KnownFuncType.Trunc] = mathType.GetMethod(nameof(Truncate), unaryFuncArgTypes),
 				[KnownFuncType.Round] = mathType.GetMethod(nameof(Round), unaryFuncArgTypes),
-				
+
 				[KnownFuncType.Exp] = mathType.GetMethod(nameof(Exp), unaryFuncArgTypes),
 				[KnownFuncType.Pow] = mathType.GetMethod(nameof(Pow), binaryFuncArgTypes),
 				[KnownFuncType.Sqrt] = mathType.GetMethod(nameof(Sqrt), unaryFuncArgTypes),
