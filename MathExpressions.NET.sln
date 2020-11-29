@@ -4,8 +4,6 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MathExpressions.NET", "Math
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MathExpressions.NET.Tests", "MathExpressions.NET.Tests\MathExpressions.NET.Tests.csproj", "{3FC94923-2B87-427D-9F03-80CA429ABFAA}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MathExpressions.NET.GUI", "MathExpressions.NET.GUI\MathExpressions.NET.GUI.csproj", "{0766A8B8-B705-4E25-B703-A0CDDB6F14C6}"
-EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -20,9 +18,5 @@ Global
 		{3FC94923-2B87-427D-9F03-80CA429ABFAA}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{3FC94923-2B87-427D-9F03-80CA429ABFAA}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{3FC94923-2B87-427D-9F03-80CA429ABFAA}.Release|Any CPU.Build.0 = Release|Any CPU
-		{0766A8B8-B705-4E25-B703-A0CDDB6F14C6}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{0766A8B8-B705-4E25-B703-A0CDDB6F14C6}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{0766A8B8-B705-4E25-B703-A0CDDB6F14C6}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{0766A8B8-B705-4E25-B703-A0CDDB6F14C6}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal
